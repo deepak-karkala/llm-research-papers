@@ -2,16 +2,16 @@
 'use client';
 
 import React from 'react';
-import { SeaRoute, MapFeature } from '../../../types/data'; // Adjust path as needed
-import styles from './SeaRouteDisplay.module.css'; // We'll create this CSS module
+import { SeaRoute, MapFeature, SeaRouteStage } from '../../types/data'; // Corrected path, added SeaRouteStage
+import styles from './SeaRouteDisplay.module.css';
 
 interface SeaRouteDisplayProps {
   route: SeaRoute | null;
-  mapFeatures: MapFeature[]; // To look up island names for stages
-  onStageClick?: (stageIsland: MapFeature | undefined) => void; // Optional: to pan map to stage
+  mapFeatures: MapFeature[];
+  onStageSelect: (stage: SeaRouteStage, islandFeature: MapFeature | undefined) => void; // Updated prop
 }
 
-const SeaRouteDisplay: React.FC<SeaRouteDisplayProps> = ({ route, mapFeatures, onStageClick }) => {
+const SeaRouteDisplay: React.FC<SeaRouteDisplayProps> = ({ route, mapFeatures, onStageSelect }) => {
   if (!route) {
     return <div className={styles.noRouteSelected}>Select a Sea Route to view details.</div>;
   }
@@ -29,8 +29,9 @@ const SeaRouteDisplay: React.FC<SeaRouteDisplayProps> = ({ route, mapFeatures, o
           return (
             <li key={stage.stageID} className={styles.stageItem}>
               <strong 
-                className={onStageClick && stageIsland ? styles.stageNameClickable : styles.stageName}
-                onClick={() => onStageClick && stageIsland && onStageClick(stageIsland)}
+                className={stageIsland ? styles.stageNameClickable : styles.stageName} // Apply clickable style if island exists
+                onClick={() => stageIsland && onStageSelect(stage, stageIsland)} // Call onStageSelect
+                title={stageIsland ? `Pan to ${stageIsland.name}` : 'Island data not found'}
               >
                 {stage.stageName}
               </strong> ({getFeatureName(stage.islandID)})
