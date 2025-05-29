@@ -14,7 +14,9 @@
     "description": "Islands for Reinforcement Learning from Human Feedback.",
     "mapCoordinates": "[[12,12],[12,15],[15,15],[15,12],[12,12]]",
     "parentRegionID": "continent_cognition",
-    "relatedConceptsIDs": ["paper_instructgpt"]
+    "relatedConceptsIDs": [
+      "paper_instructgpt"
+    ]
   },
   {
     "id": "paper_attention",
@@ -25,7 +27,10 @@
     "mapCoordinates": "[13,13]",
     "parentRegionID": "continent_cognition",
     "iconType": "lighthouse",
-    "tags": ["transformer", "attention"],
+    "tags": [
+      "transformer",
+      "attention"
+    ],
     "organizationID": "org_google"
   },
   {
@@ -33,7 +38,7 @@
     "name": "SFT Atoll",
     "type": "island",
     "description": "Focuses on Supervised Fine-Tuning techniques.",
-    "mapCoordinates": "[14,14]",
+    "mapCoordinates": "[[9.0,9.0],[19.0,9.0],[19.0,19.0],[9.0,19.0]]",
     "parentRegionID": "island_rlhf"
   },
   {
@@ -41,7 +46,7 @@
     "name": "Reward Modeling Cay",
     "type": "island",
     "description": "Dedicated to training reward models for preference alignment.",
-    "mapCoordinates": "[14.5,14.5]",
+    "mapCoordinates": "[[9.5,9.5],[19.5,9.5],[19.5,19.5],[9.5,19.5]]",
     "parentRegionID": "island_rlhf"
   },
   {
@@ -49,7 +54,7 @@
     "name": "Isle of Advanced Dialogue",
     "type": "island",
     "description": "Represents capabilities in sophisticated conversational AI.",
-    "mapCoordinates": "[16,16]",
+    "mapCoordinates": "[[11.0,11.0],[21.0,11.0],[21.0,21.0],[11.0,21.0]]",
     "parentRegionID": "continent_cognition"
   }
 ]

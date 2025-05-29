@@ -9,7 +9,7 @@ import { MapFeature, SeaRoute, SeaRouteStage, TimelineEvent } from '../../types/
 import InfoPanel from '../../ui/InfoPanel';
 import SeaRouteDisplay from '../../routes/SeaRouteDisplay';
 import MapEffectController from './MapEffectController';
-import Legend from '../ui/Legend'; // Import Legend
+import Legend from '../ui/Legend';
 
 // Define props for MapViewer
 interface MapViewerProps {
@@ -40,26 +40,58 @@ const shipIcon = L.icon({
   popupAnchor: [0, -16]
 });
 
-// Helper to parse string coordinates
-const parseCoordinates = (coordsInput: string | number[] | number[][]): L.LatLngExpression[] | L.LatLngExpression => {
+// Updated parseCoordinates function
+const parseCoordinates = (
+  coordsInput: string | number[][] | number[],
+  expectedType: 'polygon' | 'point',
+  featureId?: string // Optional: for more informative logging
+): L.LatLngExpression[] | L.LatLngExpression | null => {
+  let parsed: any;
+
   if (typeof coordsInput === 'string') {
     try {
-      const parsed = JSON.parse(coordsInput);
-      return parseCoordinates(parsed);
+      parsed = JSON.parse(coordsInput);
     } catch (e) {
-      console.error("Failed to parse coordinate string", e, "Original string:", coordsInput);
-      return [];
+      console.warn(`[${featureId || 'Unknown Feature'}] Failed to parse mapCoordinates string: ${coordsInput}`, e);
+      return null;
     }
-  } else if (Array.isArray(coordsInput)) {
-    if (coordsInput.length === 0) return [];
-    if (Array.isArray(coordsInput[0]) && typeof coordsInput[0][0] === 'number') {
-      return coordsInput as L.LatLngExpression[];
-    } else if (typeof coordsInput[0] === 'number' && coordsInput.length === 2) {
-      return [coordsInput[0], coordsInput[1]] as L.LatLngExpression;
+  } else {
+    parsed = coordsInput; // Already an array or potentially malformed
+  }
+
+  if (expectedType === 'polygon') {
+    if (
+      Array.isArray(parsed) &&
+      parsed.length >= 3 && // A polygon needs at least 3 points
+      parsed.every(p => Array.isArray(p) && p.length === 2 && typeof p[0] === 'number' && typeof p[1] === 'number')
+    ) {
+      return parsed as L.LatLngExpression[];
+    } else {
+      console.warn(
+        `[${featureId || 'Unknown Feature'}] Invalid polygon coordinates. Expected array of at least 3 points (e.g., [[lng,lat],[lng,lat],...]), got:`,
+        JSON.stringify(parsed) // Stringify for clear logging of the actual structure
+      );
+      return null;
+    }
+  } else if (expectedType === 'point') {
+    if (
+      Array.isArray(parsed) &&
+      parsed.length === 2 &&
+      typeof parsed[0] === 'number' &&
+      typeof parsed[1] === 'number'
+    ) {
+      return parsed as L.LatLngExpression;
+    } else {
+      console.warn(
+        `[${featureId || 'Unknown Feature'}] Invalid point coordinates. Expected array of 2 numbers (e.g., [lng,lat]), got:`,
+        JSON.stringify(parsed)
+      );
+      return null;
     }
   }
-  console.warn("Coordinates in unexpected format:", coordsInput);
-  return [];
+  // Should not be reached if expectedType is always 'polygon' or 'point', but as a fallback:
+  console.warn(`[${featureId || 'Unknown Feature'}] Unexpected expectedType or malformed coordinate structure:`, JSON.stringify(parsed));
+  return null;
 };
 
 
@@ -100,8 +132,9 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
     if (timelineEventToFocus) {
       let targetSet = false;
       if (timelineEventToFocus.mapCoordinates) {
-        const eventCoords = parseCoordinates(timelineEventToFocus.mapCoordinates);
-        if (Array.isArray(eventCoords) && eventCoords.length === 2 && typeof eventCoords[0] === 'number' && typeof eventCoords[1] === 'number') { 
+        // Timeline events mapCoordinates are expected to be points if they exist
+        const eventCoords = parseCoordinates(timelineEventToFocus.mapCoordinates, 'point', `TimelineEvent: ${timelineEventToFocus.id}`);
+        if (eventCoords) { 
           setMapViewTarget({ center: eventCoords as L.LatLngExpression, zoom: 4 }); 
           targetSet = true;
         }
@@ -116,12 +149,17 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
       if (!targetSet && idsToHighlight.length > 0) {
         const firstFeatureToHighlight = mapFeaturesData.find(f => f.id === idsToHighlight[0]);
         if (firstFeatureToHighlight) {
-            const featureCoords = parseCoordinates(firstFeatureToHighlight.mapCoordinates);
+            // Determine if the first associated feature is a point or polygon for parsing
+            const featureExpectedType = (firstFeatureToHighlight.type === "capability" || firstFeatureToHighlight.type === "continent" || firstFeatureToHighlight.type === "archipelago" || firstFeatureToHighlight.type === "island" || firstFeatureToHighlight.type === "strait" || firstFeatureToHighlight.type === "harbor") ? 'polygon' : 'point';
+            const featureCoords = parseCoordinates(firstFeatureToHighlight.mapCoordinates, featureExpectedType, firstFeatureToHighlight.id);
+            
             let centerPoint: L.LatLngExpression | undefined;
-            if (Array.isArray(featureCoords) && Array.isArray(featureCoords[0])) {
-                centerPoint = featureCoords[0] as L.LatLngExpression; 
-            } else if (Array.isArray(featureCoords) && typeof featureCoords[0] === 'number') {
-                centerPoint = featureCoords as L.LatLngExpression;
+            if (featureCoords) {
+              if (featureExpectedType === 'polygon') {
+                  centerPoint = (featureCoords as L.LatLngExpression[])[0]; // Use first point of polygon
+              } else {
+                  centerPoint = featureCoords as L.LatLngExpression; // It's a point
+              }
             }
             if (centerPoint) {
               setMapViewTarget({ center: centerPoint, zoom: 3 });
@@ -145,11 +183,15 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
         .map(stage => {
           const feature = mapFeaturesData.find(f => f.id === stage.islandID);
           if (feature) {
-            const coords = parseCoordinates(feature.mapCoordinates);
-            if (Array.isArray(coords) && Array.isArray(coords[0])) { 
-              return coords[0] as L.LatLngExpression; 
+            // Island features in stages are typically polygons or points representing areas/locations
+            const featureExpectedType = (feature.type === "capability" || feature.type === "continent" || feature.type === "archipelago" || feature.type === "island" || feature.type === "strait" || feature.type === "harbor") ? 'polygon' : 'point';
+            const coords = parseCoordinates(feature.mapCoordinates, featureExpectedType, feature.id);
+            if (coords) {
+              if (featureExpectedType === 'polygon') { 
+                return (coords as L.LatLngExpression[])[0]; // Use first point of polygon for polyline
+              }
+              return coords as L.LatLngExpression; // Assumes it's a point
             }
-            return coords as L.LatLngExpression; 
           }
           return null;
         })
@@ -173,16 +215,26 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
   const handleStageSelect = (stage: SeaRouteStage, islandFeature?: MapFeature) => {
     onClearTimelineEventFocus?.();
     if (islandFeature) {
-      const coords = parseCoordinates(islandFeature.mapCoordinates);
-      let targetCoords: L.LatLngExpression;
-      if (Array.isArray(coords) && Array.isArray(coords[0])) { 
-        targetCoords = coords[0] as L.LatLngExpression; 
-      } else { 
-        targetCoords = coords as L.LatLngExpression;
+      const featureExpectedType = (islandFeature.type === "capability" || islandFeature.type === "continent" || islandFeature.type === "archipelago" || islandFeature.type === "island" || islandFeature.type === "strait" || islandFeature.type === "harbor") ? 'polygon' : 'point';
+      const coords = parseCoordinates(islandFeature.mapCoordinates, featureExpectedType, islandFeature.id);
+      
+      let targetCoords: L.LatLngExpression | undefined;
+      if (coords) {
+        if (featureExpectedType === 'polygon') { 
+          targetCoords = (coords as L.LatLngExpression[])[0]; // Use first point of polygon
+        } else { 
+          targetCoords = coords as L.LatLngExpression;
+        }
       }
-      setMapViewTarget({ center: targetCoords, zoom: 3 }); 
-      setSelectedFeature(islandFeature); 
-      console.log("Selected Stage:", stage.stageName, "Island:", islandFeature.name);
+
+      if (targetCoords) {
+        setMapViewTarget({ center: targetCoords, zoom: 3 }); 
+        setSelectedFeature(islandFeature); 
+        console.log("Selected Stage:", stage.stageName, "Island:", islandFeature.name);
+      } else {
+        console.warn(`Could not determine target coordinates for stage: ${stage.stageName}, island: ${islandFeature.name}`);
+        setSelectedFeature(islandFeature); // Still show info panel if island data exists
+      }
     }
   };
 
@@ -202,7 +254,7 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
-      <Legend /> {/* Add Legend here */}
+      <Legend />
       {allSeaRoutes.length > 0 && (
         <div style={{ position: 'absolute', top: 10, left: 60, zIndex: 1001, background: 'white', padding: '5px', borderRadius: '4px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
           <button onClick={() => handleSelectRoute(allSeaRoutes[0].id)} title={allSeaRoutes[0].description || allSeaRoutes[0].routeName}>
@@ -220,13 +272,17 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
 
         {mapFeaturesData.map((feature) => {
           const featureType = feature.type;
-          const coordinates = parseCoordinates(feature.mapCoordinates);
+          const isPolygonType = featureType === "capability" || featureType === "continent" || featureType === "archipelago" || featureType === "island" || featureType === "strait" || featureType === "harbor";
+          const expectedCoordType = isPolygonType ? 'polygon' : 'point';
+          const coordinates = parseCoordinates(feature.mapCoordinates, expectedCoordType, feature.id);
+
+          if (!coordinates) { // If parseCoordinates returns null, skip rendering this feature
+            return null; 
+          }
+
           const isHighlighted = highlightedFeatureIds.includes(feature.id);
 
-          if (featureType === "capability" || featureType === "continent" || featureType === "archipelago" || featureType === "island" || featureType === "strait" || featureType === "harbor") {
-            if (!Array.isArray(coordinates) || coordinates.length === 0 || !Array.isArray(coordinates[0]) || (Array.isArray(coordinates[0]) && coordinates[0].length === 0) ) {
-              return null;
-            }
+          if (isPolygonType) {
             return (
               <Polygon
                 key={feature.id}
@@ -246,10 +302,7 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
                 <Popup>{feature.name}</Popup>
               </Polygon>
             );
-          } else if (featureType === "landmark_paper" || featureType === "foundational_model" || featureType === "key_tool" || featureType === "benchmark_site") {
-            if (!Array.isArray(coordinates) || coordinates.length !== 2 || typeof coordinates[0] !== 'number' || typeof coordinates[1] !== 'number') {
-              return null;
-            }
+          } else { // Point types: "landmark_paper", "foundational_model", "key_tool", "benchmark_site"
             let currentIcon;
             if (feature.iconType === 'lighthouse') currentIcon = lighthouseIcon;
             else if (feature.iconType === 'ship_icon' || feature.type === 'foundational_model') currentIcon = shipIcon;
@@ -269,7 +322,6 @@ const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTime
               </Marker>
             );
           }
-          return null;
         })}
 
         {currentRoutePolyline && (
