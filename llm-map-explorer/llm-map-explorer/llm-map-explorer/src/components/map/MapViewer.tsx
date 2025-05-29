@@ -2,12 +2,20 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, ImageOverlay, Marker, Popup, Polygon, Polyline } from 'react-leaflet'; // Added Polyline
+import { MapContainer, ImageOverlay, Marker, Popup, Polygon, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { MapFeature, SeaRoute } from '../../../types/data'; // Added SeaRoute
+import { MapFeature, SeaRoute, SeaRouteStage, TimelineEvent } from '../../types/data';
 import InfoPanel from '../../ui/InfoPanel';
-import SeaRouteDisplay from '../../routes/SeaRouteDisplay'; // Import SeaRouteDisplay
+import SeaRouteDisplay from '../../routes/SeaRouteDisplay';
+import MapEffectController from './MapEffectController';
+import Legend from '../ui/Legend'; // Import Legend
+
+// Define props for MapViewer
+interface MapViewerProps {
+  timelineEventToFocus?: TimelineEvent | null;
+  onClearTimelineEventFocus?: () => void;
+}
 
 // Fix for default marker icon issue with Webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -33,33 +41,29 @@ const shipIcon = L.icon({
 });
 
 // Helper to parse string coordinates
-const parseCoordinates = (coordsString: string | number[][]): L.LatLngExpression[] | L.LatLngExpression => {
-  if (typeof coordsString === 'string') {
+const parseCoordinates = (coordsInput: string | number[] | number[][]): L.LatLngExpression[] | L.LatLngExpression => {
+  if (typeof coordsInput === 'string') {
     try {
-      const parsed = JSON.parse(coordsString);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        if (Array.isArray(parsed[0]) && typeof parsed[0][0] === 'number') {
-          return parsed as L.LatLngExpression[]; // Polygon
-        } else if (typeof parsed[0] === 'number' && parsed.length === 2) {
-          return [parsed[0], parsed[1]] as L.LatLngExpression; // Marker
-        }
-      }
+      const parsed = JSON.parse(coordsInput);
+      return parseCoordinates(parsed);
     } catch (e) {
-      console.error("Failed to parse coordinates", e, "Original string:", coordsString);
+      console.error("Failed to parse coordinate string", e, "Original string:", coordsInput);
       return [];
     }
-  } else if (Array.isArray(coordsString)) {
-      if (coordsString.length > 0 && Array.isArray(coordsString[0])) {
-          return coordsString as L.LatLngExpression[]; // Polygon
-      } else if (coordsString.length === 2 && typeof coordsString[0] === 'number' && typeof coordsString[1] === 'number') {
-          return coordsString as L.LatLngExpression; // Marker
-      }
+  } else if (Array.isArray(coordsInput)) {
+    if (coordsInput.length === 0) return [];
+    if (Array.isArray(coordsInput[0]) && typeof coordsInput[0][0] === 'number') {
+      return coordsInput as L.LatLngExpression[];
+    } else if (typeof coordsInput[0] === 'number' && coordsInput.length === 2) {
+      return [coordsInput[0], coordsInput[1]] as L.LatLngExpression;
+    }
   }
-  console.warn("Coordinates in unexpected format:", coordsString);
+  console.warn("Coordinates in unexpected format:", coordsInput);
   return [];
 };
 
-const MapViewer: React.FC = () => {
+
+const MapViewer: React.FC<MapViewerProps> = ({ timelineEventToFocus, onClearTimelineEventFocus }) => {
   const [isClient, setIsClient] = useState(false);
   const [mapFeaturesData, setMapFeaturesData] = useState<MapFeature[]>([]);
   const [hoveredPolygon, setHoveredPolygon] = useState<string | null>(null);
@@ -68,6 +72,8 @@ const MapViewer: React.FC = () => {
   const [allSeaRoutes, setAllSeaRoutes] = useState<SeaRoute[]>([]);
   const [selectedSeaRoute, setSelectedSeaRoute] = useState<SeaRoute | null>(null);
   const [currentRoutePolyline, setCurrentRoutePolyline] = useState<L.LatLngExpression[] | null>(null);
+  const [mapViewTarget, setMapViewTarget] = useState<{ center: L.LatLngExpression, zoom?: number } | null>(null);
+  const [highlightedFeatureIds, setHighlightedFeatureIds] = useState<string[]>([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -90,21 +96,60 @@ const MapViewer: React.FC = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (timelineEventToFocus) {
+      let targetSet = false;
+      if (timelineEventToFocus.mapCoordinates) {
+        const eventCoords = parseCoordinates(timelineEventToFocus.mapCoordinates);
+        if (Array.isArray(eventCoords) && eventCoords.length === 2 && typeof eventCoords[0] === 'number' && typeof eventCoords[1] === 'number') { 
+          setMapViewTarget({ center: eventCoords as L.LatLngExpression, zoom: 4 }); 
+          targetSet = true;
+        }
+      }
+      
+      const idsToHighlight: string[] = [
+        ...(timelineEventToFocus.associatedIslandIDs || []),
+        ...(timelineEventToFocus.associatedLandmarkIDs || []),
+      ];
+      setHighlightedFeatureIds(idsToHighlight);
+
+      if (!targetSet && idsToHighlight.length > 0) {
+        const firstFeatureToHighlight = mapFeaturesData.find(f => f.id === idsToHighlight[0]);
+        if (firstFeatureToHighlight) {
+            const featureCoords = parseCoordinates(firstFeatureToHighlight.mapCoordinates);
+            let centerPoint: L.LatLngExpression | undefined;
+            if (Array.isArray(featureCoords) && Array.isArray(featureCoords[0])) {
+                centerPoint = featureCoords[0] as L.LatLngExpression; 
+            } else if (Array.isArray(featureCoords) && typeof featureCoords[0] === 'number') {
+                centerPoint = featureCoords as L.LatLngExpression;
+            }
+            if (centerPoint) {
+              setMapViewTarget({ center: centerPoint, zoom: 3 });
+            }
+        }
+      }
+    } else {
+      setHighlightedFeatureIds([]);
+    }
+  }, [timelineEventToFocus, mapFeaturesData]);
+
   const handleSelectRoute = (routeId: string) => {
+    onClearTimelineEventFocus?.();
     const route = allSeaRoutes.find(r => r.id === routeId);
     if (route && mapFeaturesData.length > 0) {
-      setSelectedFeature(null); // Clear selected feature
+      setSelectedFeature(null); 
       setSelectedSeaRoute(route);
+      setMapViewTarget(null); 
       const polylineCoords: L.LatLngExpression[] = route.stages
         .sort((a, b) => a.order - b.order)
         .map(stage => {
           const feature = mapFeaturesData.find(f => f.id === stage.islandID);
           if (feature) {
             const coords = parseCoordinates(feature.mapCoordinates);
-            if (Array.isArray(coords) && Array.isArray(coords[0]) && typeof coords[0][0] === 'number') { // Polygon
-              return coords[0] as L.LatLngExpression; // Use first point of polygon
+            if (Array.isArray(coords) && Array.isArray(coords[0])) { 
+              return coords[0] as L.LatLngExpression; 
             }
-            return coords as L.LatLngExpression; // Assumes it's a point
+            return coords as L.LatLngExpression; 
           }
           return null;
         })
@@ -114,13 +159,31 @@ const MapViewer: React.FC = () => {
   };
   
   const handleFeatureClick = (feature: MapFeature) => {
+    onClearTimelineEventFocus?.();
     setSelectedFeature(feature);
     setCurrentRoutePolyline(null);
     setSelectedSeaRoute(null);
+    setMapViewTarget(null); 
   };
 
   const handleCloseInfoPanel = () => {
     setSelectedFeature(null);
+  };
+
+  const handleStageSelect = (stage: SeaRouteStage, islandFeature?: MapFeature) => {
+    onClearTimelineEventFocus?.();
+    if (islandFeature) {
+      const coords = parseCoordinates(islandFeature.mapCoordinates);
+      let targetCoords: L.LatLngExpression;
+      if (Array.isArray(coords) && Array.isArray(coords[0])) { 
+        targetCoords = coords[0] as L.LatLngExpression; 
+      } else { 
+        targetCoords = coords as L.LatLngExpression;
+      }
+      setMapViewTarget({ center: targetCoords, zoom: 3 }); 
+      setSelectedFeature(islandFeature); 
+      console.log("Selected Stage:", stage.stageName, "Island:", islandFeature.name);
+    }
   };
 
   if (!isClient) {
@@ -139,16 +202,17 @@ const MapViewer: React.FC = () => {
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+      <Legend /> {/* Add Legend here */}
       {allSeaRoutes.length > 0 && (
         <div style={{ position: 'absolute', top: 10, left: 60, zIndex: 1001, background: 'white', padding: '5px', borderRadius: '4px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>
           <button onClick={() => handleSelectRoute(allSeaRoutes[0].id)} title={allSeaRoutes[0].description || allSeaRoutes[0].routeName}>
             Load Route: {allSeaRoutes[0].routeName}
           </button>
-          {/* Later, map allSeaRoutes to buttons or a <select> */}
         </div>
       )}
 
       <MapContainer {...mapContainerProps}>
+        <MapEffectController target={mapViewTarget} />
         <ImageOverlay
           url="/images/base_map_parchment_placeholder.png"
           bounds={bounds}
@@ -157,6 +221,7 @@ const MapViewer: React.FC = () => {
         {mapFeaturesData.map((feature) => {
           const featureType = feature.type;
           const coordinates = parseCoordinates(feature.mapCoordinates);
+          const isHighlighted = highlightedFeatureIds.includes(feature.id);
 
           if (featureType === "capability" || featureType === "continent" || featureType === "archipelago" || featureType === "island" || featureType === "strait" || featureType === "harbor") {
             if (!Array.isArray(coordinates) || coordinates.length === 0 || !Array.isArray(coordinates[0]) || (Array.isArray(coordinates[0]) && coordinates[0].length === 0) ) {
@@ -167,9 +232,10 @@ const MapViewer: React.FC = () => {
                 key={feature.id}
                 positions={coordinates as L.LatLngExpression[]}
                 pathOptions={{ 
-                  color: 'blue', 
+                  color: isHighlighted ? 'red' : 'blue',
+                  weight: isHighlighted ? 4 : 3,
                   fillColor: 'lightblue', 
-                  fillOpacity: hoveredPolygon === feature.id ? 0.7 : 0.4 
+                  fillOpacity: isHighlighted ? 0.7 : (hoveredPolygon === feature.id ? 0.6 : 0.4) 
                 }}
                 eventHandlers={{
                   mouseover: () => setHoveredPolygon(feature.id),
@@ -188,6 +254,10 @@ const MapViewer: React.FC = () => {
             if (feature.iconType === 'lighthouse') currentIcon = lighthouseIcon;
             else if (feature.iconType === 'ship_icon' || feature.type === 'foundational_model') currentIcon = shipIcon;
             
+            if (isHighlighted) {
+              console.log("Highlighted Marker:", feature.name);
+            }
+
             return (
               <Marker 
                 key={feature.id} 
@@ -211,8 +281,11 @@ const MapViewer: React.FC = () => {
 
       {selectedSeaRoute && (
         <div style={{ position: 'absolute', bottom: 20, left: 20, right: 20, zIndex: 1000 }}> 
-          <SeaRouteDisplay route={selectedSeaRoute} mapFeatures={mapFeaturesData} />
-          {/* onStageClick could be added later: onStageClick={handleStageClick} */}
+          <SeaRouteDisplay 
+            route={selectedSeaRoute} 
+            mapFeatures={mapFeaturesData} 
+            onStageSelect={handleStageSelect}
+          />
         </div>
       )}
     </div>

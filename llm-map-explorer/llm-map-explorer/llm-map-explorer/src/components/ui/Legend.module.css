@@ -1,0 +1,88 @@
+/* src/components/ui/Legend.module.css */
+.legendContainer {
+  position: absolute;
+  top: 70px; /* Below route selection button */
+  left: 20px;
+  background-color: #FDF5E6; /* Parchment */
+  border: 1px solid #D2B48C; /* Tan border */
+  border-radius: 8px;
+  padding: 15px;
+  z-index: 1000; 
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #5D4037;
+  max-width: 250px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.legendToggle {
+  font-family: inherit;
+  background-color: #A1887F;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block; 
+  margin-bottom: 10px; 
+}
+
+.legendToggle.legendClosed {
+    position: absolute;
+    top: 70px; /* Match open position */
+    left: 20px; /* Match open position */
+    z-index: 1000;
+    margin-bottom: 0; 
+}
+
+.legendToggle:hover {
+  background-color: #795548;
+}
+
+.legendTitle {
+  font-family: 'Cinzel', serif;
+  color: #3E2723;
+  font-size: 1.2em;
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.legendList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.legendIcon {
+  width: 20px; 
+  height: 20px; 
+  margin-right: 8px;
+  object-fit: contain;
+}
+
+.legendColorBox {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+/* Updated color definition based on MapViewer.tsx */
+.defaultPolygonColor {
+  background-color: lightblue; 
+  border: 1px solid blue; /* Based on MapViewer's default Polygon pathOptions */
+  opacity: 0.4; /* Based on MapViewer's default fillOpacity */
+}
+
+.highlightColor {
+    background-color: lightblue; /* Base fill as per MapViewer */
+    border: 2px solid red; /* Highlight border based on MapViewer's isHighlighted style */
+    opacity: 0.7; /* Highlight opacity based on MapViewer's isHighlighted style */
+}
