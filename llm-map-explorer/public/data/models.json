@@ -1,0 +1,46 @@
+[
+  {
+    "id": "model_gpt3",
+    "name": "GPT-3 Galleon",
+    "organizationID": "org_openai",
+    "description": "A foundational large language model with 175B parameters, known for its emergent in-context learning abilities.",
+    "releaseDate": "2020-06",
+    "modelCardURL": "https://arxiv.org/abs/2005.14165",
+    "capabilitiesIDs": ["continent_pretraining", "island_icl_rudimentary"],
+    "trainingPipelineID": null,
+    "iconStyle": "galleon"
+  },
+  {
+    "id": "model_llama2_70b",
+    "name": "LLaMA 2 Frigate (70B)",
+    "organizationID": "org_meta_ai",
+    "description": "A family of open-source LLMs, with the 70B version being a strong performer.",
+    "releaseDate": "2023-07",
+    "modelCardURL": "https://ai.meta.com/llama/",
+    "capabilitiesIDs": ["continent_pretraining", "island_sft", "island_rlhf_basic"],
+    "trainingPipelineID": "route_aligned_chatbot_llama_style",
+    "iconStyle": "frigate"
+  },
+  {
+    "id": "model_claude3_opus",
+    "name": "Claude 3 Opus Clipper",
+    "organizationID": "org_anthropic",
+    "description": "Anthropic's most capable model, excelling at complex reasoning, analysis, and creative tasks.",
+    "releaseDate": "2024-03",
+    "modelCardURL": "https://www.anthropic.com/news/claude-3-family",
+    "capabilitiesIDs": ["continent_reasoning", "continent_alignment", "island_long_context_seas"],
+    "trainingPipelineID": null,
+    "iconStyle": "clipper_ship"
+  },
+  {
+    "id": "model_deepseek_r1",
+    "name": "DeepSeek-R1 Research Vessel",
+    "organizationID": "org_deepseek_ai",
+    "description": "An open-source model highly specialized in reasoning, developed using innovative RL techniques.",
+    "releaseDate": "2025-01",
+    "modelCardURL": "[Link to DeepSeek-R1 technical report/announcement]",
+    "capabilitiesIDs": ["continent_reasoning", "island_cot", "island_rl_for_reasoning"],
+    "trainingPipelineID": "route_reasoning_model_deepseek_style",
+    "iconStyle": "research_vessel"
+  }
+]
