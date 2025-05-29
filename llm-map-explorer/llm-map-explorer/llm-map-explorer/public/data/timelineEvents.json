@@ -1,0 +1,32 @@
+[
+  {
+    "id": "event_gpt3_launch",
+    "eventName": "Launch of GPT-3",
+    "date": "2020-06-11",
+    "description": "GPT-3 by OpenAI, with its 175 billion parameters, demonstrated remarkable few-shot learning capabilities, significantly advancing the field.",
+    "type": "model_launch",
+    "associatedModelIDs": ["model_gpt3_placeholder"],
+    "associatedOrganizationIDs": ["org_openai"],
+    "mapCoordinates": "[16,16]"
+  },
+  {
+    "id": "event_transformer_paper",
+    "eventName": "'Attention Is All You Need' Published",
+    "date": "2017-06-12",
+    "description": "The paper by Google researchers introduced the Transformer architecture, which became the foundation for most modern LLMs.",
+    "type": "technique_paper",
+    "associatedLandmarkIDs": ["paper_attention"],
+    "associatedOrganizationIDs": ["org_google"],
+    "mapCoordinates": "[13,13]"
+  },
+  {
+    "id": "event_instructgpt",
+    "eventName": "InstructGPT Paper Published",
+    "date": "2022-03-04",
+    "description": "OpenAI's paper on InstructGPT detailed methods for aligning language models with user intent via reinforcement learning from human feedback.",
+    "type": "technique_paper",
+    "associatedLandmarkIDs": ["paper_instructgpt"],
+    "associatedOrganizationIDs": ["org_openai"],
+    "associatedIslandIDs": ["island_rlhf"]
+  }
+]

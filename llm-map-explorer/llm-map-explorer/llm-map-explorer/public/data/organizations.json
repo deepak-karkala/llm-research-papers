@@ -1,0 +1,27 @@
+[
+  {
+    "id": "org_openai",
+    "name": "OpenAI",
+    "description": "An AI research and deployment company.",
+    "websiteURL": "https://openai.com",
+    "logoURL": "/logos/org_openai.png",
+    "associatedModelIDs": ["model_gpt4", "model_gpt3_placeholder"],
+    "associatedPaperIDs": ["paper_instructgpt"]
+  },
+  {
+    "id": "org_google",
+    "name": "Google DeepMind",
+    "description": "Leading AI research lab, formed by the merger of Google Brain and DeepMind.",
+    "websiteURL": "https://deepmind.google",
+    "logoURL": "/logos/org_google.png",
+    "associatedPaperIDs": ["paper_attention"]
+  },
+  {
+    "id": "org_meta",
+    "name": "Meta AI",
+    "description": "AI research lab at Meta Platforms.",
+    "websiteURL": "https://ai.meta.com",
+    "logoURL": "/logos/org_meta.png",
+    "associatedModelIDs": ["model_llama3"]
+  }
+]

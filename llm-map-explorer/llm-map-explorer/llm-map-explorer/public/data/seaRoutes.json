@@ -1,0 +1,37 @@
+[
+  {
+    "id": "route_chatbot_dev",
+    "routeName": "Path to a Helpful Chatbot",
+    "description": "A common pipeline for developing a general-purpose conversational AI.",
+    "startPointDescription": "Begins with a foundational model, often pre-trained on vast text corpora.",
+    "endPointCapabilityID": "island_advanced_dialogue",
+    "stages": [
+      {
+        "stageID": "sft_stage",
+        "stageName": "Supervised Fine-Tuning (SFT)",
+        "description": "Fine-tune the base model on a dataset of high-quality instruction-response pairs to teach it instruction following.",
+        "islandID": "island_sft",
+        "shipTransformationDescription": "The model's sails are now emblazoned with 'Instruction Following'.",
+        "shipTransformationIconChange": "instruction_sails_icon",
+        "order": 1
+      },
+      {
+        "stageID": "rm_stage",
+        "stageName": "Reward Modeling (RM)",
+        "description": "Train a separate model (the reward model) to score model responses based on human preferences. Humans rank different model outputs.",
+        "islandID": "island_reward_model",
+        "shipTransformationDescription": "The ship is equipped with a 'Preference Compass'.",
+        "order": 2
+      },
+      {
+        "stageID": "ppo_stage",
+        "stageName": "Proximal Policy Optimization (PPO)",
+        "description": "Further fine-tune the SFT model using reinforcement learning (PPO algorithm) against the reward model to improve helpfulness and harmlessness.",
+        "islandID": "island_rlhf",
+        "shipTransformationDescription": "The ship now flies the 'RLHF Aligned' flag.",
+        "keyLandmarkIDs": ["paper_instructgpt"],
+        "order": 3
+      }
+    ]
+  }
+]
