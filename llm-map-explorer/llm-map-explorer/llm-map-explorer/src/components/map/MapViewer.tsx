@@ -6,8 +6,8 @@ import { MapContainer, ImageOverlay, Marker, Popup, Polygon, Polyline } from 're
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapFeature, SeaRoute, SeaRouteStage, TimelineEvent } from '../../types/data';
-import InfoPanel from '../../ui/InfoPanel';
-import SeaRouteDisplay from '../../routes/SeaRouteDisplay';
+import InfoPanel from '../ui/InfoPanel';
+import SeaRouteDisplay from '../routes/SeaRouteDisplay';
 import MapEffectController from './MapEffectController';
 import Legend from '../ui/Legend';
 
@@ -27,14 +27,14 @@ L.Icon.Default.mergeOptions({
 
 // Define custom icons
 const lighthouseIcon = L.icon({
-  iconUrl: '/icons/lighthouse.svg',
+  iconUrl: '/icons/lighthouse.png',
   iconSize: [32, 32],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32]
 });
 
 const shipIcon = L.icon({
-  iconUrl: '/icons/ship_icon.svg',
+  iconUrl: '/icons/ship_icon.png',
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16]

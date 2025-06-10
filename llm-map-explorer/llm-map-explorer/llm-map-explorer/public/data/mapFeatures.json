@@ -12,7 +12,7 @@
     "name": "RLHF Archipelago",
     "type": "archipelago",
     "description": "Islands for Reinforcement Learning from Human Feedback.",
-    "mapCoordinates": "[[12,12],[12,15],[15,15],[15,12],[12,12]]",
+    "mapCoordinates": "[[120,120],[120,150],[150,150],[150,120],[120,120]]",
     "parentRegionID": "continent_cognition",
     "relatedConceptsIDs": [
       "paper_instructgpt"
@@ -46,7 +46,7 @@
     "name": "Reward Modeling Cay",
     "type": "island",
     "description": "Dedicated to training reward models for preference alignment.",
-    "mapCoordinates": "[[9.5,9.5],[19.5,9.5],[19.5,19.5],[9.5,19.5]]",
+    "mapCoordinates": "[[30,30],[50,30],[50,50],[30,50]]",
     "parentRegionID": "island_rlhf"
   },
   {

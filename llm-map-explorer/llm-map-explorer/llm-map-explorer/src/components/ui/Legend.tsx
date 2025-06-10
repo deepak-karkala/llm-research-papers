@@ -31,11 +31,11 @@ const Legend: React.FC = () => {
       <h4 className={styles.legendTitle}>Map Legend</h4>
       <ul className={styles.legendList}>
         <li className={styles.legendItem}>
-          <img src="/icons/lighthouse.svg" alt="Lighthouse Icon" className={styles.legendIcon} onError={(e) => (e.currentTarget.style.display = 'none')} /> 
+          <img src="/icons/lighthouse.png" alt="Lighthouse Icon" className={styles.legendIcon} onError={(e) => (e.currentTarget.style.display = 'none')} /> 
           Seminal Paper / Key Concept
         </li>
         <li className={styles.legendItem}>
-          <img src="/icons/ship_icon.svg" alt="Ship Icon" className={styles.legendIcon} onError={(e) => (e.currentTarget.style.display = 'none')} /> 
+          <img src="/icons/ship_icon.png" alt="Ship Icon" className={styles.legendIcon} onError={(e) => (e.currentTarget.style.display = 'none')} /> 
           Foundational Model / Technology
         </li>
         <li className={styles.legendItem}>
