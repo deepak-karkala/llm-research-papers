@@ -1,0 +1,8 @@
+.DS_Store
+.next/
+node_modules/
+# BMAD (local only)
+# BMAD (local only)
+# BMAD (local only)
+.bmad-core/
+.bmad-*/
