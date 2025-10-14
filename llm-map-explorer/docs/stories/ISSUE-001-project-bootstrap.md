@@ -4,7 +4,7 @@
 **Story Points:** 3
 **Priority:** P0 (Critical Path)
 **Assignee:** Dev 1 (Senior Full-Stack Developer)
-**Status:** 📋 Ready for Development
+**Status:** ✅ Ready for Review
 
 ---
 
@@ -480,3 +480,45 @@ Once this issue is complete and verified:
 - **Milestone:** Milestone 1 - Core Map Foundation
 - **Labels:** `P0`, `setup`, `infrastructure`, `sprint-1`
 - **Story Points:** 3
+
+---
+
+## Tasks
+- [x] Bootstrap Next.js 14 project with App Router and TypeScript
+- [x] Configure linting, formatting, and project tooling
+- [x] Run quality checks (lint, type-check, build) and document results
+
+## Dev Agent Record
+
+### Agent Model Used
+- GPT-5 Codex (CLI)
+
+### Debug Log References
+- No additional debug log entries beyond automated command outputs.
+
+### Completion Notes
+- Established Next.js 14.2.33 + TypeScript scaffold with App Router and `src/` layout.
+- Added TailwindCSS 3.x toolchain, Prettier (per project standards), and Next.js ESLint config extending Prettier.
+- Verified `npm run lint`, `npm run type-check`, `npm run format:check`, and `npm run build` locally. Development server start was validated by the user screenshot due to sandbox port restrictions.
+- Reviewed `docs/dev-quickstart.md`; deferred optional dependency installs (Leaflet, Zustand, etc.) as they belong to follow-on issues per sprint plan.
+
+### File List
+- llm-map-explorer/.eslintrc.json
+- llm-map-explorer/.gitignore
+- llm-map-explorer/.prettierignore
+- llm-map-explorer/.prettierrc
+- llm-map-explorer/README.md
+- llm-map-explorer/next.config.js
+- llm-map-explorer/package-lock.json
+- llm-map-explorer/package.json
+- llm-map-explorer/postcss.config.js
+- llm-map-explorer/public/
+- llm-map-explorer/src/app/globals.css
+- llm-map-explorer/src/app/layout.tsx
+- llm-map-explorer/src/app/page.tsx
+- llm-map-explorer/tailwind.config.ts
+- llm-map-explorer/tests/.gitkeep
+- llm-map-explorer/tsconfig.json
+
+### Change Log
+- Bootstrap codebase from scratch with Next.js 14 + TypeScript scaffold, tooling, and documentation updates to satisfy ISSUE-001 acceptance criteria.
