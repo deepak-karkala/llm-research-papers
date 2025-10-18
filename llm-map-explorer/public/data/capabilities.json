@@ -1,0 +1,365 @@
+[
+  {
+    "id": "attention-architecture",
+    "name": "Attention & Architecture",
+    "description": "Foundational transformer architectures and attention mechanisms that power modern LLMs. Includes self-attention, multi-head attention, and architectural innovations like sparse attention and efficient transformers. These techniques form the backbone of nearly all state-of-the-art language models.",
+    "shortDescription": "Transformer foundations and attention mechanisms",
+    "level": "continent",
+    "polygonCoordinates": [
+      {"lat": 600, "lng": 800},
+      {"lat": 600, "lng": 1600},
+      {"lat": 1400, "lng": 1600},
+      {"lat": 1400, "lng": 800}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#1976d2",
+      "fillOpacity": 0.45,
+      "strokeColor": "#1565c0",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "zoomThreshold": -1
+  },
+  {
+    "id": "alignment-safety",
+    "name": "Alignment & Safety",
+    "description": "Research focused on aligning language models with human values and ensuring safe AI behavior. Encompasses RLHF, constitutional AI, value learning, and safety frameworks. Critical for developing AI systems that are helpful, harmless, and honest.",
+    "shortDescription": "Model alignment and safety research",
+    "level": "continent",
+    "polygonCoordinates": [
+      {"lat": 600, "lng": 1800},
+      {"lat": 600, "lng": 2600},
+      {"lat": 1400, "lng": 2600},
+      {"lat": 1400, "lng": 1800}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#4caf50",
+      "fillOpacity": 0.45,
+      "strokeColor": "#388e3c",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "zoomThreshold": -1
+  },
+  {
+    "id": "reasoning-planning",
+    "name": "Reasoning & Planning",
+    "description": "Advanced reasoning techniques enabling LLMs to decompose complex problems and plan solutions. Includes chain-of-thought prompting, tree-of-thought search, tool use, and agent frameworks. Essential for tackling multi-step reasoning tasks and complex decision-making.",
+    "shortDescription": "Complex reasoning and multi-step planning",
+    "level": "continent",
+    "polygonCoordinates": [
+      {"lat": 600, "lng": 2800},
+      {"lat": 600, "lng": 3600},
+      {"lat": 1400, "lng": 3600},
+      {"lat": 1400, "lng": 2800}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#2196f3",
+      "fillOpacity": 0.45,
+      "strokeColor": "#1976d2",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "zoomThreshold": -1
+  },
+  {
+    "id": "multimodal-capabilities",
+    "name": "Multimodal Capabilities",
+    "description": "Techniques for processing and generating multiple modalities including vision, audio, video, and text. Covers vision-language models, audio processing, multimodal fusion, and cross-modal learning. Enabling AI systems to understand and interact with diverse data types.",
+    "shortDescription": "Vision, audio, and cross-modal learning",
+    "level": "continent",
+    "polygonCoordinates": [
+      {"lat": 600, "lng": 3800},
+      {"lat": 600, "lng": 4096},
+      {"lat": 1400, "lng": 4096},
+      {"lat": 1400, "lng": 3800}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#9c27b0",
+      "fillOpacity": 0.45,
+      "strokeColor": "#7b1fa2",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "zoomThreshold": -1
+  },
+  {
+    "id": "training-optimization",
+    "name": "Training & Optimization",
+    "description": "Methods for efficiently training, fine-tuning, and optimizing language models. Includes pre-training strategies, parameter-efficient fine-tuning, quantization, pruning, and distillation. Focused on reducing computational costs while maintaining or improving model performance.",
+    "shortDescription": "Efficient training and model optimization",
+    "level": "continent",
+    "polygonCoordinates": [
+      {"lat": 1600, "lng": 800},
+      {"lat": 1600, "lng": 2200},
+      {"lat": 2400, "lng": 2200},
+      {"lat": 2400, "lng": 800}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#ff9800",
+      "fillOpacity": 0.45,
+      "strokeColor": "#f57c00",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "zoomThreshold": -1
+  },
+  {
+    "id": "rlhf-archipelago",
+    "name": "RLHF Archipelago",
+    "description": "Reinforcement Learning from Human Feedback techniques for aligning language models with human preferences. Includes reward modeling, preference learning, policy optimization, and direct preference optimization. Core methodology for creating helpful and aligned AI systems.",
+    "shortDescription": "Human feedback alignment techniques",
+    "level": "archipelago",
+    "polygonCoordinates": [
+      {"lat": 1600, "lng": 1900},
+      {"lat": 1600, "lng": 2300},
+      {"lat": 1900, "lng": 2300},
+      {"lat": 1900, "lng": 1900}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#4caf50",
+      "fillOpacity": 0.55,
+      "strokeColor": "#388e3c",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "alignment-safety",
+    "zoomThreshold": 0
+  },
+  {
+    "id": "constitutional-ai",
+    "name": "Constitutional AI Island",
+    "description": "Self-supervised alignment technique where models critique and revise their own responses based on constitutional principles. Developed by Anthropic, this approach enables AI systems to align themselves with human values through iterative self-improvement and principle-based reasoning.",
+    "shortDescription": "Self-supervised alignment via principles",
+    "level": "island",
+    "polygonCoordinates": [
+      {"lat": 1650, "lng": 1950},
+      {"lat": 1650, "lng": 2050},
+      {"lat": 1750, "lng": 2050},
+      {"lat": 1750, "lng": 1950}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#4caf50",
+      "fillOpacity": 0.65,
+      "strokeColor": "#2e7d32",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "rlhf-archipelago",
+    "zoomThreshold": 1
+  },
+  {
+    "id": "quantization-techniques",
+    "name": "Quantization Techniques",
+    "description": "Methods for reducing model size and computational requirements through weight quantization and mixed-precision training. Includes post-training quantization, quantization-aware training, and low-bit representations. Enables deployment of large models on resource-constrained devices.",
+    "shortDescription": "Model compression via quantization",
+    "level": "archipelago",
+    "polygonCoordinates": [
+      {"lat": 1600, "lng": 800},
+      {"lat": 1600, "lng": 1200},
+      {"lat": 1900, "lng": 1200},
+      {"lat": 1900, "lng": 800}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#ff9800",
+      "fillOpacity": 0.55,
+      "strokeColor": "#f57c00",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "training-optimization",
+    "zoomThreshold": 0
+  },
+  {
+    "id": "lora-peft",
+    "name": "LoRA & PEFT Methods",
+    "description": "Parameter-efficient fine-tuning techniques that adapt large models with minimal additional parameters. LoRA (Low-Rank Adaptation) and other PEFT methods enable fast adaptation to new tasks without full model retraining. Critical for practical deployment and customization of large language models.",
+    "shortDescription": "Parameter-efficient fine-tuning",
+    "level": "archipelago",
+    "polygonCoordinates": [
+      {"lat": 1600, "lng": 1400},
+      {"lat": 1600, "lng": 1800},
+      {"lat": 1900, "lng": 1800},
+      {"lat": 1900, "lng": 1400}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#ff9800",
+      "fillOpacity": 0.55,
+      "strokeColor": "#f57c00",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "training-optimization",
+    "zoomThreshold": 0
+  },
+  {
+    "id": "chain-of-thought",
+    "name": "Chain-of-Thought Prompting",
+    "description": "Technique for improving LLM reasoning by encouraging step-by-step problem decomposition and explicit reasoning chains. Demonstrates how models can break down complex problems into manageable steps, leading to more accurate solutions. Foundational for advanced reasoning capabilities.",
+    "shortDescription": "Step-by-step reasoning prompting",
+    "level": "archipelago",
+    "polygonCoordinates": [
+      {"lat": 1600, "lng": 2800},
+      {"lat": 1600, "lng": 3200},
+      {"lat": 1900, "lng": 3200},
+      {"lat": 1900, "lng": 2800}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#2196f3",
+      "fillOpacity": 0.55,
+      "strokeColor": "#1976d2",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "reasoning-planning",
+    "zoomThreshold": 0
+  },
+  {
+    "id": "tool-use-agents",
+    "name": "Tool Use & Agents",
+    "description": "Frameworks enabling language models to interact with external tools, APIs, and environments. Includes function calling, action spaces, and multi-step agent loops. Extends LLM capabilities beyond text generation to real-world problem-solving and autonomous task execution.",
+    "shortDescription": "External tool integration and agents",
+    "level": "archipelago",
+    "polygonCoordinates": [
+      {"lat": 1600, "lng": 3400},
+      {"lat": 1600, "lng": 3800},
+      {"lat": 1900, "lng": 3800},
+      {"lat": 1900, "lng": 3400}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#2196f3",
+      "fillOpacity": 0.55,
+      "strokeColor": "#1976d2",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "reasoning-planning",
+    "zoomThreshold": 0
+  },
+  {
+    "id": "vision-language",
+    "name": "Vision-Language Models",
+    "description": "Models that jointly process visual and textual information for tasks like image captioning, visual question answering, and scene understanding. Integrates computer vision with language understanding to create systems that can reason about images in natural language.",
+    "shortDescription": "Image understanding and captioning",
+    "level": "archipelago",
+    "polygonCoordinates": [
+      {"lat": 1600, "lng": 3900},
+      {"lat": 1600, "lng": 4096},
+      {"lat": 1900, "lng": 4096},
+      {"lat": 1900, "lng": 3900}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#9c27b0",
+      "fillOpacity": 0.55,
+      "strokeColor": "#7b1fa2",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "multimodal-capabilities",
+    "zoomThreshold": 0
+  },
+  {
+    "id": "in-context-learning",
+    "name": "In-Context Learning",
+    "description": "Ability of language models to learn from examples provided in the prompt without parameter updates. Includes few-shot prompting, prompt engineering, and meta-learning. Demonstrates emergent learning capabilities enabling rapid adaptation to new tasks.",
+    "shortDescription": "Few-shot and prompt-based learning",
+    "level": "island",
+    "polygonCoordinates": [
+      {"lat": 1650, "lng": 3450},
+      {"lat": 1650, "lng": 3550},
+      {"lat": 1750, "lng": 3550},
+      {"lat": 1750, "lng": 3450}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#2196f3",
+      "fillOpacity": 0.65,
+      "strokeColor": "#1565c0",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "reasoning-planning",
+    "zoomThreshold": 1
+  },
+  {
+    "id": "model-compression",
+    "name": "Model Compression Bay",
+    "description": "Techniques combining pruning, distillation, and quantization for aggressive model size reduction. Creates efficient student models that maintain performance of larger teacher models through knowledge transfer and architectural optimization.",
+    "shortDescription": "Knowledge distillation and pruning",
+    "level": "island",
+    "polygonCoordinates": [
+      {"lat": 1650, "lng": 900},
+      {"lat": 1650, "lng": 1000},
+      {"lat": 1750, "lng": 1000},
+      {"lat": 1750, "lng": 900}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#ff9800",
+      "fillOpacity": 0.65,
+      "strokeColor": "#e65100",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "quantization-techniques",
+    "zoomThreshold": 1
+  },
+  {
+    "id": "retrieval-augmented",
+    "name": "Retrieval-Augmented Generation",
+    "description": "Technique combining information retrieval with language generation for improved factuality and knowledge-aware responses. Retrieves relevant documents or knowledge bases before generation, reducing hallucinations and enabling incorporation of external knowledge sources.",
+    "shortDescription": "Knowledge-augmented text generation",
+    "level": "island",
+    "polygonCoordinates": [
+      {"lat": 1650, "lng": 1450},
+      {"lat": 1650, "lng": 1550},
+      {"lat": 1750, "lng": 1550},
+      {"lat": 1750, "lng": 1450}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#ff9800",
+      "fillOpacity": 0.65,
+      "strokeColor": "#e65100",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "lora-peft",
+    "zoomThreshold": 1
+  },
+  {
+    "id": "evaluation-benchmarks",
+    "name": "Evaluation & Benchmarks",
+    "description": "Frameworks and datasets for systematically evaluating language model capabilities across diverse dimensions. Includes standardized benchmarks, human evaluation protocols, and automated metrics for assessing reasoning, safety, knowledge, and other LLM properties.",
+    "shortDescription": "Performance evaluation and benchmarking",
+    "level": "island",
+    "polygonCoordinates": [
+      {"lat": 2200, "lng": 2000},
+      {"lat": 2200, "lng": 2100},
+      {"lat": 2300, "lng": 2100},
+      {"lat": 2300, "lng": 2000}
+    ],
+    "visualStyleHints": {
+      "fillColor": "#00bcd4",
+      "fillOpacity": 0.65,
+      "strokeColor": "#0097a7",
+      "strokeWeight": 2,
+      "pattern": "solid"
+    },
+    "relatedLandmarks": [],
+    "parentCapabilityId": "training-optimization",
+    "zoomThreshold": 1
+  }
+]
