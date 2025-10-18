@@ -1,0 +1,75 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import type { LatLngBoundsExpression } from 'leaflet';
+import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
+
+type LeafletModule = typeof import('leaflet');
+type ReactLeafletModule = typeof import('react-leaflet');
+
+const MAP_WIDTH = 4096;
+const MAP_HEIGHT = 3072;
+const MAP_BOUNDS: LatLngBoundsExpression = [
+  [0, 0],
+  [MAP_HEIGHT, MAP_WIDTH],
+];
+
+interface MapContainerProps {
+  children?: ReactNode;
+  className?: string;
+}
+
+export function MapContainer({ children, className }: MapContainerProps) {
+  const [leaflet, setLeaflet] = useState<LeafletModule | null>(null);
+  const [leafletComponents, setLeafletComponents] = useState<{
+    MapContainer: ReactLeafletModule['MapContainer'];
+    ImageOverlay: ReactLeafletModule['ImageOverlay'];
+  } | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    void Promise.all([import('leaflet'), import('react-leaflet')]).then(([leafletModule, reactLeafletModule]) => {
+      if (!isMounted) {
+        return;
+      }
+
+      setLeaflet(leafletModule);
+      setLeafletComponents({
+        MapContainer: reactLeafletModule.MapContainer,
+        ImageOverlay: reactLeafletModule.ImageOverlay,
+      });
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const center = useMemo(() => [MAP_HEIGHT / 2, MAP_WIDTH / 2] as [number, number], []);
+
+  if (!leaflet || !leafletComponents) {
+    return <div className={cn('h-screen w-full', className)} data-testid="map-container-loading" />;
+  }
+
+  const { MapContainer: LeafletMap, ImageOverlay } = leafletComponents;
+
+  return (
+    <div className={cn('h-screen w-full', className)}>
+      <LeafletMap
+        crs={leaflet.CRS.Simple}
+        bounds={MAP_BOUNDS}
+        maxBounds={MAP_BOUNDS}
+        minZoom={-1}
+        maxZoom={2}
+        zoom={-1}
+        center={center}
+        style={{ height: '100%', width: '100%' }}
+      >
+        <ImageOverlay url="/images/map-base.png" bounds={MAP_BOUNDS} />
+        {children}
+      </LeafletMap>
+    </div>
+  );
+}
