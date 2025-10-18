@@ -56,7 +56,17 @@ export function MapContainer({ children, className }: MapContainerProps) {
   const { MapContainer: LeafletMap, ImageOverlay } = leafletComponents;
 
   return (
-    <div className={cn('h-screen w-full', className)}>
+    <div
+      className={cn('h-screen w-full', className)}
+      role="application"
+      aria-label="Interactive LLM Research Map"
+      aria-describedby="map-instructions"
+      tabIndex={0}
+    >
+      <div id="map-instructions" className="sr-only">
+        Navigate the map using arrow keys to pan, plus and minus keys to zoom.
+        Press Tab to focus on landmarks, Enter to view details.
+      </div>
       <LeafletMap
         crs={leaflet.CRS.Simple}
         bounds={MAP_BOUNDS}
@@ -66,6 +76,15 @@ export function MapContainer({ children, className }: MapContainerProps) {
         zoom={-1}
         center={center}
         style={{ height: '100%', width: '100%' }}
+        zoomControl={true}
+        dragging={true}
+        touchZoom={true}
+        scrollWheelZoom={true}
+        doubleClickZoom={true}
+        keyboard={true}
+        tap={true}
+        tapTolerance={15}
+        bounceAtZoomLimits={true}
       >
         <ImageOverlay url="/images/map-base.png" bounds={MAP_BOUNDS} />
         {children}
