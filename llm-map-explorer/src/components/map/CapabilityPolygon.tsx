@@ -81,6 +81,7 @@ export const CapabilityPolygon = React.memo(({
       positions={positions}
       pathOptions={pathOptions}
       eventHandlers={eventHandlers}
+      className="transition-opacity duration-300 ease-in-out"
     />
   );
 });

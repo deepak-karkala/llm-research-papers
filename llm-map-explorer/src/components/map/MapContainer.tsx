@@ -5,7 +5,9 @@ import type { LatLngBoundsExpression } from 'leaflet';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { CapabilityPolygonsLayer } from './CapabilityPolygonsLayer';
-import type { Capability } from '@/types/data';
+import { useInitializeMapData } from '@/hooks/useInitializeMapData';
+import { useProgressiveDisclosure } from '@/hooks/useProgressiveDisclosure';
+import { useMapStore } from '@/lib/store';
 
 type LeafletModule = typeof import('leaflet');
 type ReactLeafletModule = typeof import('react-leaflet');
@@ -22,51 +24,56 @@ interface MapContainerProps {
   className?: string;
 }
 
+function MapEvents() {
+  const { useMapEvents } = require('react-leaflet');
+  const setCurrentZoom = useMapStore((state) => state.setCurrentZoom);
+
+  const map = useMapEvents({
+    zoomend: () => {
+      setCurrentZoom(map.getZoom());
+    },
+  });
+
+  useEffect(() => {
+    setCurrentZoom(map.getZoom());
+  }, [map, setCurrentZoom]);
+
+  return null;
+}
+
 export function MapContainer({ children, className }: MapContainerProps) {
   const [leaflet, setLeaflet] = useState<LeafletModule | null>(null);
   const [leafletComponents, setLeafletComponents] = useState<{
     MapContainer: ReactLeafletModule['MapContainer'];
     ImageOverlay: ReactLeafletModule['ImageOverlay'];
   } | null>(null);
-  const [capabilities, setCapabilities] = useState<Capability[]>([]);
+
+  useInitializeMapData();
+  const visibleCapabilities = useProgressiveDisclosure();
 
   useEffect(() => {
     let isMounted = true;
 
-    const loadData = async () => {
-      try {
-        // Only proceed if window is available (client-side)
-        if (typeof window === 'undefined') {
-          return;
-        }
+    const loadLeaflet = async () => {
+      if (typeof window === 'undefined') {
+        return;
+      }
 
-        const [leafletModule, reactLeafletModule, capabilitiesRes] = await Promise.all([
-          import('leaflet'),
-          import('react-leaflet'),
-          fetch('/data/capabilities.json'),
-        ]);
+      const [leafletModule, reactLeafletModule] = await Promise.all([
+        import('leaflet'),
+        import('react-leaflet'),
+      ]);
 
-        if (!isMounted) {
-          return;
-        }
-
-        const capabilitiesData = await capabilitiesRes.json();
-
+      if (isMounted) {
         setLeaflet(leafletModule);
         setLeafletComponents({
           MapContainer: reactLeafletModule.MapContainer,
           ImageOverlay: reactLeafletModule.ImageOverlay,
         });
-        setCapabilities(capabilitiesData as Capability[]);
-      } catch {
-        // Silently fail in tests - mocks will provide data
-        if (isMounted) {
-          setCapabilities([]);
-        }
       }
     };
 
-    void loadData();
+    void loadLeaflet();
 
     return () => {
       isMounted = false;
@@ -110,7 +117,8 @@ export function MapContainer({ children, className }: MapContainerProps) {
         keyboard={true}
       >
         <ImageOverlay url="/images/map-base.png" bounds={MAP_BOUNDS} />
-        <CapabilityPolygonsLayer capabilities={capabilities} />
+        <CapabilityPolygonsLayer capabilities={visibleCapabilities} />
+        <MapEvents />
         {children}
       </LeafletMap>
     </div>
