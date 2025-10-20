@@ -65,6 +65,8 @@ export const landmarkSchema = z.object({
   tags: z.array(z.string()),
   icon: z.string().optional(),
   metadata: z.record(z.any()).optional(),
+  /** Zoom threshold for progressive disclosure: -1 (show from Z0), 0 (show from Z1), 1 (show from Z2) */
+  zoomThreshold: z.number().default(1),
 }).superRefine((data, ctx) => {
   if (data.type === 'model') {
     const result = modelMetadataSchema.safeParse(data.metadata);

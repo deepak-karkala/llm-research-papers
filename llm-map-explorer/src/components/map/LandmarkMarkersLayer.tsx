@@ -3,28 +3,36 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { LandmarkMarker } from './LandmarkMarker';
+import { useProgressiveLandmarkDisclosure } from '@/hooks/useProgressiveLandmarkDisclosure';
 import type { Landmark } from '@/types/data';
 
 /**
  * LandmarkMarkersLayer Component
  *
- * Renders all landmark markers on the map and manages selection state.
+ * Renders landmark markers on the map with progressive disclosure based on zoom level.
  * Fetches landmark data from landmarks.json and manages local selection/hover state.
- * When a landmark is selected, it triggers a callback to parent component which
- * can update global state for info panel display.
+ * Uses zoom-based filtering to prevent map clutter at low zoom levels.
+ *
+ * Visible landmarks by zoom:
+ * - Z0 (continental): 5 seminal papers
+ * - Z1 (archipelago): 12 important papers + models
+ * - Z2 (island): all 26 landmarks
  */
 export function LandmarkMarkersLayer() {
-  const [landmarks, setLandmarks] = useState<Landmark[]>([]);
+  const [allLandmarks, setAllLandmarks] = useState<Landmark[]>([]);
   const [selectedLandmarkId, setSelectedLandmarkId] = useState<string | null>(null);
   const [hoveredLandmarkId, setHoveredLandmarkId] = useState<string | null>(null);
 
-  // Fetch landmarks data on mount
+  // Get filtered landmarks based on zoom level
+  const visibleLandmarks = useProgressiveLandmarkDisclosure(allLandmarks);
+
+  // Fetch all landmarks data on mount
   useEffect(() => {
     const fetchLandmarks = async () => {
       try {
         const res = await fetch('/data/landmarks.json');
         const data = await res.json();
-        setLandmarks(data);
+        setAllLandmarks(data);
       } catch (error) {
         console.error('Failed to fetch landmarks:', error);
       }
@@ -46,7 +54,7 @@ export function LandmarkMarkersLayer() {
 
   return (
     <>
-      {landmarks.map((landmark) => (
+      {visibleLandmarks.map((landmark) => (
         <LandmarkMarker
           key={landmark.id}
           landmark={landmark}

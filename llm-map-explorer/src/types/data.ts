@@ -114,6 +114,8 @@ export interface Landmark {
   /** Additional type-specific metadata (use specific interfaces like ModelMetadata when possible) */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata?: Record<string, any>;
+  /** Minimum zoom level to display this landmark (progressive disclosure) */
+  zoomThreshold: number;
 }
 
 /**
