@@ -9,10 +9,18 @@ const MapContainer = dynamicImport(
   { ssr: false }
 );
 
+// Dynamically import LandmarkMarkersLayer to avoid SSR issues
+const LandmarkMarkersLayer = dynamicImport(
+  () => import('@/components/map/LandmarkMarkersLayer').then((mod) => mod.LandmarkMarkersLayer),
+  { ssr: false }
+);
+
 export default function Home() {
   return (
     <main className="h-screen w-screen">
-      <MapContainer />
+      <MapContainer>
+        <LandmarkMarkersLayer />
+      </MapContainer>
     </main>
   );
 }
