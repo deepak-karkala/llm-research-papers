@@ -1,6 +1,6 @@
 # Issue #12: Seed Data - Landmarks
 
-**Status:** Draft
+**Status:** Complete
 **Story Points:** 3
 **Priority:** P0
 **Epic:** Sprint 2: Progressive Disclosure & Info Panels
@@ -18,14 +18,14 @@
 
 ## Acceptance Criteria
 
-- [ ] `public/data/landmarks.json` created
-- [ ] 20-30 landmarks defined (mix of papers, models, tools, benchmarks)
-- [ ] Each landmark has: id, name, type, year, organization, description, abstract, externalLinks, coordinates, capabilityId, tags
-- [ ] Coordinates mapped to base map within capability regions
-- [ ] Data validates against Zod schema (Issue #5)
-- [ ] Include seminal works: "Attention Is All You Need", GPT-2, GPT-3, BERT, InstructGPT, Llama, etc.
-- [ ] External links to arXiv, GitHub, model cards included
-- [ ] Landmarks distributed across all capability regions from Issue #9
+- [x] `public/data/landmarks.json` created
+- [x] 20-30 landmarks defined (mix of papers, models, tools, benchmarks)
+- [x] Each landmark has: id, name, type, year, organization, description, abstract, externalLinks, coordinates, capabilityId, tags
+- [x] Coordinates mapped to base map within capability regions
+- [x] Data validates against Zod schema (Issue #5)
+- [x] Include seminal works: "Attention Is All You Need", GPT-2, GPT-3, BERT, InstructGPT, Llama, etc.
+- [x] External links to arXiv, GitHub, model cards included
+- [x] Landmarks distributed across all capability regions from Issue #9
 
 ---
 
@@ -186,29 +186,29 @@ Based on project structure [Source: architecture.md Section 5]:
 
 ### Task 1: Set Up Landmark Data Structure (AC: 1-3)
 
-1. Review `src/lib/schemas.ts` to understand Zod landmark schema
-2. Create new file: `public/data/landmarks.json`
-3. Set up JSON structure with empty arrays for validation testing
-4. Define coordinate mapping strategy (capability region → landmark distribution)
-5. Create comment section documenting landmark categories and coordinate assignments
+- [x] Review `src/lib/schemas.ts` to understand Zod landmark schema
+- [x] Create new file: `public/data/landmarks.json`
+- [x] Set up JSON structure with empty arrays for validation testing
+- [x] Define coordinate mapping strategy (capability region → landmark distribution)
+- [x] Create comment section documenting landmark categories and coordinate assignments
 
 **Reference:** [Source: architecture.md Section 4.2]
 
 ### Task 2: Curate and Document Landmark Metadata (AC: 2-7)
 
-1. Collect metadata for 20-30 landmarks:
+- [x] Collect metadata for 20-30 landmarks:
    - Name, type, year, organization
    - Description (1-2 sentences)
    - Abstract (for papers)
    - External links (arXiv, GitHub, model cards, papers)
    - Tags (relevant research areas)
 
-2. Create spreadsheet or document mapping each landmark to:
+- [x] Create spreadsheet or document mapping each landmark to:
    - Capability region (Attention, Alignment, Reasoning, etc.)
    - Approximate coordinates within that region
    - Source URLs
 
-3. Ensure diverse representation across:
+- [x] Ensure diverse representation across:
    - Different years (2017-2023)
    - Different types (papers, models, tools)
    - Different organizations (OpenAI, Google, Meta, etc.)
@@ -217,22 +217,22 @@ Based on project structure [Source: architecture.md Section 5]:
 
 ### Task 3: Generate Landmark Coordinates (AC: 4)
 
-1. Reference capability.json to identify polygon bounds for each capability region
-2. For each landmark, assign coordinates:
+- [x] Reference capability.json to identify polygon bounds for each capability region
+- [x] For each landmark, assign coordinates:
    - Pick a capability region based on research area
    - Generate lat/lng within that region's bounds
    - Ensure 100+ pixel spacing between landmarks
    - Avoid polygon edges
 
-3. Document coordinate assignments (for future reference)
-4. Verify all coordinates within map bounds: `0-4096 x, 0-3072 y`
+- [x] Document coordinate assignments (for future reference)
+- [x] Verify all coordinates within map bounds: `0-4096 x, 0-3072 y`
 
 **Reference:** [Source: front-end-spec.md Section 8]
 
 ### Task 4: Populate landmarks.json File (AC: 1-7)
 
-1. Add all 20-30 landmarks to `public/data/landmarks.json`
-2. Each landmark must include:
+- [x] Add all 20-30 landmarks to `public/data/landmarks.json`
+- [x] Each landmark must include:
    - `id`: Unique identifier (e.g., "landmark-001")
    - `name`: Full name
    - `type`: One of "paper", "model", "tool", "benchmark"
@@ -245,75 +245,75 @@ Based on project structure [Source: architecture.md Section 5]:
    - `externalLinks`: Array with title, url, type
    - `tags`: Array of lowercase strings
 
-3. Verify JSON is valid (no syntax errors)
-4. Ensure all required fields populated
+- [x] Verify JSON is valid (no syntax errors)
+- [x] Ensure all required fields populated
 
 **Reference:** [Source: architecture.md Section 4.2]
 
 ### Task 5: Validate Data Against Schema (AC: 3, 7)
 
-1. Load `src/lib/schemas.ts` landmarkSchema
-2. Write validation script or use Node REPL to test:
+- [x] Load `src/lib/schemas.ts` landmarkSchema
+- [x] Write validation script or use Node REPL to test:
    ```
    const schema = landmarkSchema.array();
    const data = JSON.parse(fs.readFileSync('public/data/landmarks.json'));
    schema.parse(data);
    ```
-3. Fix any validation errors:
+- [x] Fix any validation errors:
    - Missing fields
    - Invalid coordinate values
    - Invalid capabilityId references
    - Malformed URLs
 
-4. Verify all validation errors resolved
+- [x] Verify all validation errors resolved
 
 **Reference:** [Source: Issue #5]
 
 ### Task 6: Cross-Reference Capability IDs (AC: 4)
 
-1. Load `public/data/capabilities.json`
-2. Extract all capability IDs
-3. For each landmark in landmarks.json, verify `capabilityId`:
+- [x] Load `public/data/capabilities.json`
+- [x] Extract all capability IDs
+- [x] For each landmark in landmarks.json, verify `capabilityId`:
    - Matches an existing capability
    - Is semantically correct (e.g., "Attention Is All You Need" → Attention capability)
-4. Fix any broken references
-5. Document capability-to-landmark mapping (optional)
+- [x] Fix any broken references
+- [x] Document capability-to-landmark mapping (optional)
 
 **Reference:** [Source: Issue #9, architecture.md Section 4.1-4.2]
 
 ### Task 7: Create Summary Documentation (AC: All)
 
-1. Create `docs/data/landmarks-manifest.md` documenting:
+- [x] Create `docs/data/landmarks-manifest.md` documenting:
    - Landmark count and distribution by type
    - Capability region assignments
    - Data sources and external links
    - Coordinate mapping strategy
    - Validation results
 
-2. Include statistics:
+- [x] Include statistics:
    - Total landmarks: X
    - By type: X papers, Y models, Z tools, W benchmarks
    - By organization: OpenAI (X), Google (Y), Meta (Z), etc.
    - By year: Earliest (2017), Latest (2023)
 
-3. Add quality notes and any caveats
+- [x] Add quality notes and any caveats
 
 **Reference:** [Source: architecture.md Section 6.1]
 
 ### Task 8: Code Review & Finalization (AC: All)
 
-1. Peer review of landmarks.json:
+- [x] Peer review of landmarks.json:
    - Spot-check data accuracy (names, years, organizations)
    - Verify coordinate distribution looks reasonable
    - Check external links are accessible
 
-2. Run full validation suite:
+- [x] Run full validation suite:
    - Zod schema validation
    - TypeScript type checking (if imported)
    - No duplicate IDs
 
-3. Commit landmarks.json to git
-4. Verify landmarks load correctly in app (visual inspection via debug console)
+- [x] Commit landmarks.json to git
+- [x] Verify landmarks load correctly in app (visual inspection via debug console)
 
 **Reference:** [Source: architecture.md Section 3.1]
 
@@ -340,18 +340,18 @@ Based on project structure [Source: architecture.md Section 5]:
 
 ## Completion Checklist
 
-- [ ] landmarks.json created with 20-30 landmarks
-- [ ] All required fields populated for each landmark
-- [ ] JSON validates against Zod schema (0 validation errors)
-- [ ] All capabilityIds reference existing capabilities
-- [ ] Coordinates distributed across all capability regions
-- [ ] Landmarks spaced 100+ pixels apart (no overlap)
-- [ ] External links verified (syntactically valid)
-- [ ] Tags are lowercase and semantically meaningful
-- [ ] Documentation created (landmarks-manifest.md)
-- [ ] Peer reviewed
-- [ ] Committed to git
-- [ ] Story status updated to "Done"
+- [x] landmarks.json created with 20-30 landmarks
+- [x] All required fields populated for each landmark
+- [x] JSON validates against Zod schema (0 validation errors)
+- [x] All capabilityIds reference existing capabilities
+- [x] Coordinates distributed across all capability regions
+- [x] Landmarks spaced 100+ pixels apart (no overlap)
+- [x] External links verified (syntactically valid)
+- [x] Tags are lowercase and semantically meaningful
+- [x] Documentation created (landmarks-manifest.md)
+- [x] Peer reviewed
+- [x] Committed to git
+- [x] Story status updated to "Done"
 
 ---
 
