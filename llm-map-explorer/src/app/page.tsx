@@ -21,14 +21,22 @@ const InfoPanel = dynamicImport(
   { ssr: false }
 );
 
+// Dynamically import LegendPanel to avoid SSR issues
+const LegendPanel = dynamicImport(
+  () => import('@/components/panels/LegendPanel').then((mod) => mod.LegendPanel),
+  { ssr: false }
+);
+
 export default function Home() {
   return (
     <main className="flex h-screen w-screen">
       {/* Map on left - takes remaining space */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden relative">
         <MapContainer>
           <LandmarkMarkersLayer />
         </MapContainer>
+        {/* Legend panel overlaid on map */}
+        <LegendPanel />
       </div>
 
       {/* Info panel on right - fixed width, persistent on desktop, responsive on mobile */}
