@@ -1,0 +1,5 @@
+id,name,description,website,landmarkIds,color,logo
+org-001,OpenAI,"AI research and deployment company focused on creating safe artificial general intelligence.","https://openai.com","lm-002,lm-005","#10A37F","https://openai.com/favicon.ico"
+org-002,Google DeepMind,"AI research division combining Google Brain and DeepMind research teams.","https://deepmind.google","lm-001,lm-003","#4285F4","https://www.google.com/favicon.ico"
+org-003,Google Research,"Google's research division advancing fundamental and applied research in computer science.","https://research.google","lm-003","#4285F4","https://www.google.com/favicon.ico"
+org-004,Anthropic,"AI safety company developing reliable and interpretable AI systems.","https://www.anthropic.com","lm-004","#8B5CF6","https://www.anthropic.com/favicon.ico"
