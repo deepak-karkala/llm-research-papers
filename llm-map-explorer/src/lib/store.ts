@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import type { Capability, Landmark } from '@/types/data';
+import type { Capability, Landmark, Organization } from '@/types/data';
 import type { Map as LeafletMap } from 'leaflet';
 
 /**
@@ -23,6 +23,10 @@ interface MapState {
    * An array of all landmark data points to be displayed on the map.
    */
   landmarks: Landmark[];
+  /**
+   * An array of all organization data points.
+   */
+  organizations: Organization[];
   /**
    * The current zoom level of the map.
    */
@@ -49,6 +53,11 @@ interface MapState {
    * @param landmarks - An array of landmark objects.
    */
   setLandmarks: (landmarks: Landmark[]) => void;
+  /**
+   * Sets the organizations data in the store.
+   * @param organizations - An array of organization objects.
+   */
+  setOrganizations: (organizations: Organization[]) => void;
   /**
    * Sets the current zoom level of the map.
    * @param zoom - The new zoom level.
@@ -87,12 +96,14 @@ interface MapState {
 export const useMapStore = create<MapState>((set, get) => ({
   capabilities: [],
   landmarks: [],
+  organizations: [],
   currentZoom: 0,
   selectedEntity: null,
   infoPanelOpen: false,
   mapRef: null,
   setCapabilities: (capabilities) => set({ capabilities }),
   setLandmarks: (landmarks) => set({ landmarks }),
+  setOrganizations: (organizations) => set({ organizations }),
   setCurrentZoom: (zoom) => set({ currentZoom: zoom }),
   selectEntity: (type, id) => set({ selectedEntity: { type, id }, infoPanelOpen: true }),
   clearSelection: () => set({ selectedEntity: null, infoPanelOpen: false }),
