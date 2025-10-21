@@ -14,14 +14,12 @@ import type { Capability } from '@/types/data';
  * @returns {Capability[]} An array of capabilities that are visible at the current zoom level.
  */
 export function useProgressiveDisclosure(): Capability[] {
-  // Subscribe to both capabilities and currentZoom to trigger re-evaluation
-  const capabilities = useMapStore((state) => state.capabilities);
-  const currentZoom = useMapStore((state) => state.currentZoom);
+  // Subscribe to getVisibleCapabilities which internally depends on capabilities and currentZoom
   const getVisibleCapabilities = useMapStore((state) => state.getVisibleCapabilities);
 
   const visibleCapabilities = useMemo(() => {
     return getVisibleCapabilities();
-  }, [capabilities, currentZoom, getVisibleCapabilities]);
+  }, [getVisibleCapabilities]);
 
   return visibleCapabilities;
 }

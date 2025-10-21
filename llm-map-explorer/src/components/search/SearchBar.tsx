@@ -10,6 +10,7 @@ import * as React from 'react';
 import { Search, FileText, Box, Building2, Map } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useMapStore } from '@/lib/store';
+import { useFocusEntity } from '@/hooks/useFocusEntity';
 import { initializeSearchIndex, search as performSearch } from '@/lib/search';
 import type { SearchResult } from '@/types/search';
 import type { Landmark } from '@/types/data';
@@ -134,7 +135,7 @@ export function SearchBar({ className, placeholder = 'Search papers, models, and
   // Get data from store
   const capabilities = useMapStore((state) => state.capabilities);
   const landmarks = useMapStore((state) => state.landmarks);
-  const selectEntity = useMapStore((state) => state.selectEntity);
+  const focusEntity = useFocusEntity();
 
   // Debounce the query
   const debouncedQuery = useDebounce(query, 300);
@@ -176,19 +177,15 @@ export function SearchBar({ className, placeholder = 'Search papers, models, and
         onResultSelect(result);
       }
 
-      // Update store to select the entity
-      if (result.entityType === 'capability') {
-        selectEntity('capability', result.item.id);
-      } else if (result.entityType === 'landmark') {
-        selectEntity('landmark', result.item.id);
-      }
+      // Focus on the entity with map navigation and InfoPanel opening
+      focusEntity(result);
 
       // Close dropdown and clear query
       setIsOpen(false);
       setQuery('');
       setResults([]);
     },
-    [selectEntity, onResultSelect]
+    [focusEntity, onResultSelect]
   );
 
   // Group results

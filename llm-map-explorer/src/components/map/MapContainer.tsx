@@ -31,6 +31,7 @@ interface MapContainerProps {
 function MapEvents() {
   const { useMapEvents } = require('react-leaflet');
   const setCurrentZoom = useMapStore((state) => state.setCurrentZoom);
+  const setMapRef = useMapStore((state) => state.setMapRef);
 
   const map = useMapEvents({
     zoomend: () => {
@@ -40,7 +41,8 @@ function MapEvents() {
 
   useEffect(() => {
     setCurrentZoom(map.getZoom());
-  }, [map, setCurrentZoom]);
+    setMapRef(map);
+  }, [map, setCurrentZoom, setMapRef]);
 
   return null;
 }

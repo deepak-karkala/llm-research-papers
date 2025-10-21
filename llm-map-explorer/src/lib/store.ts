@@ -1,6 +1,7 @@
 
 import { create } from 'zustand';
 import type { Capability, Landmark } from '@/types/data';
+import type L from 'leaflet';
 
 /**
  * Represents a selected entity on the map, which can be a capability or a landmark.
@@ -31,6 +32,14 @@ interface MapState {
    */
   selectedEntity: SelectedEntity | null;
   /**
+   * Whether the InfoPanel should be open and showing entity details.
+   */
+  infoPanelOpen: boolean;
+  /**
+   * Reference to the Leaflet map instance for programmatic control.
+   */
+  mapRef: L.Map | null;
+  /**
    * Sets the capabilities data in the store.
    * @param capabilities - An array of capability objects.
    */
@@ -56,6 +65,16 @@ interface MapState {
    */
   clearSelection: () => void;
   /**
+   * Sets whether the InfoPanel should be open.
+   * @param isOpen - Whether the panel should be open.
+   */
+  setInfoPanelOpen: (isOpen: boolean) => void;
+  /**
+   * Sets the map reference for programmatic control.
+   * @param mapRef - The Leaflet map instance or null.
+   */
+  setMapRef: (mapRef: L.Map | null) => void;
+  /**
    * Returns a filtered list of capabilities that should be visible at the current zoom level.
    * @returns An array of visible capabilities.
    */
@@ -70,11 +89,15 @@ export const useMapStore = create<MapState>((set, get) => ({
   landmarks: [],
   currentZoom: 0,
   selectedEntity: null,
+  infoPanelOpen: false,
+  mapRef: null,
   setCapabilities: (capabilities) => set({ capabilities }),
   setLandmarks: (landmarks) => set({ landmarks }),
   setCurrentZoom: (zoom) => set({ currentZoom: zoom }),
-  selectEntity: (type, id) => set({ selectedEntity: { type, id } }),
-  clearSelection: () => set({ selectedEntity: null }),
+  selectEntity: (type, id) => set({ selectedEntity: { type, id }, infoPanelOpen: true }),
+  clearSelection: () => set({ selectedEntity: null, infoPanelOpen: false }),
+  setInfoPanelOpen: (isOpen) => set({ infoPanelOpen: isOpen }),
+  setMapRef: (mapRef) => set({ mapRef }),
   getVisibleCapabilities: () => {
     const { capabilities, currentZoom } = get();
     // Z0 (Continental): 0 <= zoom < 1
