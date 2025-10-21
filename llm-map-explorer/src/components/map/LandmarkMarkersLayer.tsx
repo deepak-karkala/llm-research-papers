@@ -1,56 +1,26 @@
 
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
 import { LandmarkMarker } from './LandmarkMarker';
+import { useMapStore } from '@/lib/store';
 import { useProgressiveLandmarkDisclosure } from '@/hooks/useProgressiveLandmarkDisclosure';
-import type { Landmark } from '@/types/data';
 
 /**
  * LandmarkMarkersLayer Component
  *
  * Renders landmark markers on the map with progressive disclosure based on zoom level.
- * Fetches landmark data from landmarks.json and manages local selection/hover state.
- * Uses zoom-based filtering to prevent map clutter at low zoom levels.
- *
- * Visible landmarks by zoom:
- * - Z0 (continental): 5 seminal papers
- * - Z1 (archipelago): 12 important papers + models
- * - Z2 (island): all 26 landmarks
+ * Manages selection state and integrates with Zustand store.
  */
 export function LandmarkMarkersLayer() {
-  const [allLandmarks, setAllLandmarks] = useState<Landmark[]>([]);
-  const [selectedLandmarkId, setSelectedLandmarkId] = useState<string | null>(null);
-  const [hoveredLandmarkId, setHoveredLandmarkId] = useState<string | null>(null);
+  const { landmarks, selectEntity, selectedEntity } = useMapStore();
 
-  // Get filtered landmarks based on zoom level
-  const visibleLandmarks = useProgressiveLandmarkDisclosure(allLandmarks);
+  // Apply progressive disclosure filtering
+  const visibleLandmarks = useProgressiveLandmarkDisclosure(landmarks);
 
-  // Fetch all landmarks data on mount
-  useEffect(() => {
-    const fetchLandmarks = async () => {
-      try {
-        const res = await fetch('/data/landmarks.json');
-        const data = await res.json();
-        setAllLandmarks(data);
-      } catch (error) {
-        console.error('Failed to fetch landmarks:', error);
-      }
-    };
-    fetchLandmarks();
-  }, []);
-
-  // Handle landmark selection
-  const handleSelectLandmark = useCallback((id: string) => {
-    setSelectedLandmarkId(id);
-    // TODO: Integrate with global store when selectEntity is available
-    // This will trigger info panel display in parent components
-  }, []);
-
-  // Handle landmark hover
-  const handleHoverLandmark = useCallback((id: string | null) => {
-    setHoveredLandmarkId(id);
-  }, []);
+  const handleSelectLandmark = (id: string) => {
+    console.log('[LandmarkMarkersLayer] Selecting landmark:', id);
+    selectEntity('landmark', id);
+  };
 
   return (
     <>
@@ -58,10 +28,8 @@ export function LandmarkMarkersLayer() {
         <LandmarkMarker
           key={landmark.id}
           landmark={landmark}
-          isSelected={selectedLandmarkId === landmark.id}
-          isDimmed={hoveredLandmarkId !== null && hoveredLandmarkId !== landmark.id}
+          isSelected={selectedEntity?.id === landmark.id}
           onSelect={handleSelectLandmark}
-          onHover={handleHoverLandmark}
         />
       ))}
     </>

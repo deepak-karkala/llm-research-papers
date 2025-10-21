@@ -1,10 +1,13 @@
 
 import { useEffect } from 'react';
 import { useMapStore } from '@/lib/store';
-import type { Capability } from '@/types/data';
+import type { Capability, Landmark } from '@/types/data';
 
 export function useInitializeMapData() {
-  const setCapabilities = useMapStore((state) => state.setCapabilities);
+  const { setCapabilities, setLandmarks } = useMapStore((state) => ({
+    setCapabilities: state.setCapabilities,
+    setLandmarks: state.setLandmarks,
+  }));
 
   useEffect(() => {
     let isMounted = true;
@@ -15,17 +18,25 @@ export function useInitializeMapData() {
           return;
         }
 
-        const capabilitiesRes = await fetch('/data/capabilities.json');
+        const [capabilitiesRes, landmarksRes] = await Promise.all([
+          fetch('/data/capabilities.json'),
+          fetch('/data/landmarks.json'),
+        ]);
+
         if (!isMounted) {
           return;
         }
 
         const capabilitiesData = (await capabilitiesRes.json()) as Capability[];
+        const landmarksData = (await landmarksRes.json()) as Landmark[];
+
         setCapabilities(capabilitiesData);
+        setLandmarks(landmarksData);
       } catch (error) {
         console.error('Failed to load map data:', error);
         if (isMounted) {
           setCapabilities([]);
+          setLandmarks([]);
         }
       }
     };
@@ -35,5 +46,5 @@ export function useInitializeMapData() {
     return () => {
       isMounted = false;
     };
-  }, [setCapabilities]);
+  }, [setCapabilities, setLandmarks]);
 }

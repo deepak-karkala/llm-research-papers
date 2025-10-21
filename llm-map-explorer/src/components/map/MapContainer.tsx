@@ -1,13 +1,17 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import type { LatLngBoundsExpression } from 'leaflet';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { CapabilityPolygonsLayer } from './CapabilityPolygonsLayer';
 import { useInitializeMapData } from '@/hooks/useInitializeMapData';
 import { useProgressiveDisclosure } from '@/hooks/useProgressiveDisclosure';
 import { useMapStore } from '@/lib/store';
+
+// Lazy load CapabilityPolygonsLayer to avoid SSR issues
+const CapabilityPolygonsLayer = lazy(() =>
+  import('./CapabilityPolygonsLayer').then(mod => ({ default: mod.CapabilityPolygonsLayer }))
+);
 
 type LeafletModule = typeof import('leaflet');
 type ReactLeafletModule = typeof import('react-leaflet');
@@ -117,7 +121,9 @@ export function MapContainer({ children, className }: MapContainerProps) {
         keyboard={true}
       >
         <ImageOverlay url="/images/map-base.png" bounds={MAP_BOUNDS} />
-        <CapabilityPolygonsLayer capabilities={visibleCapabilities} />
+        <Suspense fallback={null}>
+          <CapabilityPolygonsLayer capabilities={visibleCapabilities} />
+        </Suspense>
         <MapEvents />
         {children}
       </LeafletMap>

@@ -443,48 +443,51 @@ Major logical components across the application stack. Since this is a frontend-
 
 ### 5.2 InfoPanel
 
-**Responsibility:** Right-side drawer displaying detailed information for selected map entities (capabilities, landmarks, organizations).
+**Responsibility:** Persistent right panel (384px wide, always visible) displaying contextual information with three states: default welcome content, entity details, and tour interface.
 
 **Key Interfaces:**
-- `open(entityId, entityType)`: Shows panel with entity details
-- `close()`: Hides panel, clears selection
+- `renderWelcomeContent()`: Displays default "How to use" guide, features, and tours list
+- `renderEntityDetails(entityId, entityType)`: Shows entity information
+- `renderTourContent(tourState)`: Displays active tour stage
 - `navigateToRelated(targetId)`: Loads related entity
 - `renderCapabilityInfo(capability)`: Displays region details
 - `renderLandmarkInfo(landmark)`: Displays paper/model details
 - `renderOrganizationInfo(org)`: Displays institution details
 
 **Dependencies:**
-- Zustand store for UI state (panel open/closed, active entity)
+- Zustand store for UI state (panel state: 'default' | 'info' | 'tour', active entity)
 - Data fetching from static JSON
-- shadcn/ui components (Sheet, ScrollArea, Tabs)
+- shadcn/ui components (ScrollArea, Tabs, Card)
 
 **Technology Stack:**
 - React 18 with TypeScript
-- shadcn/ui Sheet component for slide-in panel
-- Framer Motion for animations (300ms slide-in)
-- Tailwind CSS for styling
+- Fixed layout panel (not modal/sheet on desktop)
+- Bottom sheet (shadcn/ui Sheet) for mobile responsive behavior
+- Tailwind CSS for styling (w-96 = 384px width)
 
 ---
 
 ### 5.3 TourPanel
 
-**Responsibility:** Guided tour interface with stage navigation, progress tracking, and map synchronization.
+**Responsibility:** Tour mode within the persistent InfoPanel, providing guided tour interface with stage navigation, progress tracking, and map synchronization.
 
 **Key Interfaces:**
-- `startTour(tourId)`: Initializes tour, loads first stage
+- `startTour(tourId)`: Initializes tour, switches panel to tour mode
 - `nextStage()`: Advances to next stage, pans map
 - `previousStage()`: Goes back one stage
-- `pauseTour(landmarkId)`: Pauses tour, shows clicked landmark
+- `pauseTour(landmarkId)`: Shows clicked landmark while maintaining tour context
 - `resumeTour()`: Returns to active tour stage
-- `exitTour()`: Closes tour, clears tour state
+- `exitTour()`: Closes tour, returns panel to default/welcome state
 
 **Dependencies:**
 - Zustand store for tour state (active tour, current stage, paused)
+- InfoPanel container (renders tour content)
 - MapContainer for pan/zoom control
 - Tours JSON data
 
 **Technology Stack:**
 - React 18 functional components
+- Rendered within InfoPanel (not separate component)
 - shadcn/ui Progress component
 - Custom keyboard shortcuts ([ and ] for navigation)
 - Smooth map transitions via Leaflet.flyTo()
@@ -733,10 +736,7 @@ Since this is a frontend-only application, this section covers the complete appl
 src/
 ├── app/                          # Next.js 14 App Router
 │   ├── layout.tsx                # Root layout with providers
-│   ├── page.tsx                  # Homepage (map view)
-│   ├── tour/
-│   │   └── [tourId]/
-│   │       └── page.tsx          # Tour detail page
+│   ├── page.tsx                  # Homepage (flex layout: map + info panel)
 │   └── globals.css               # Global Tailwind imports
 ├── components/
 │   ├── map/
@@ -745,9 +745,11 @@ src/
 │   │   ├── LandmarkMarker.tsx    # Paper/model markers
 │   │   └── MapEffectController.tsx # Zoom/pan side effects
 │   ├── panels/
-│   │   ├── InfoPanel.tsx         # Right drawer for entity details
-│   │   ├── TourPanel.tsx         # Guided tour interface
-│   │   └── LegendPanel.tsx       # Map legend (always visible)
+│   │   ├── InfoPanel.tsx         # Persistent right panel (384px, handles all states)
+│   │   ├── WelcomeContent.tsx    # Default welcome/how-to-use content
+│   │   ├── EntityDetails.tsx     # Entity info display (capabilities/landmarks)
+│   │   ├── TourContent.tsx       # Tour stepper UI within InfoPanel
+│   │   └── LegendPanel.tsx       # Map legend (bottom-right overlay)
 │   ├── search/
 │   │   ├── SearchBar.tsx         # Search input with combobox
 │   │   └── SearchResults.tsx     # Results dropdown
@@ -790,8 +792,7 @@ interface AppState {
     highlightedEntities: string[];
   };
   uiState: {
-    rightPanelOpen: boolean;
-    rightPanelMode: 'info' | 'tour' | null;
+    infoPanelState: 'default' | 'info' | 'tour';  // Panel always visible, just changes content
   };
   tourState: {
     activeTour: Tour | null;
@@ -799,7 +800,9 @@ interface AppState {
     isPaused: boolean;
   };
   selectEntity: (id: string, type: string) => void;
+  clearSelection: () => void;  // Returns panel to default state
   startTour: (tourId: string) => void;
+  exitTour: () => void;  // Returns panel to default state
 }
 ```
 

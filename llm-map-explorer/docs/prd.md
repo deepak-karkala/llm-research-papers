@@ -193,27 +193,34 @@ An interactive fantasy world map where:
 
 #### 6.4 Information Panels (P0)
 
-**Description:** Right-side drawer displaying detailed information on selected entities (also serves as tour interface)
+**Description:** Persistent right panel (always visible, 384px wide) displaying contextual information for selected entities, default content, and tour interface
 
 **Requirements:**
-- Slide-in panel triggered by clicking map elements
-- Dual mode: 'info' mode (default) and 'tour' mode (when tour active)
+- Fixed right panel (not a slide-in drawer), always visible on desktop
+- Three states:
+  - **Default/Welcome State:** Shows "How to use" guide, feature overview, and guided tours list when nothing is selected
+  - **Info Mode:** Displays entity details when user clicks on capabilities/landmarks
+  - **Tour Mode:** Shows tour stepper UI when user activates a guided tour
+- Layout: Flex layout with map taking remaining space (flex-1) and panel fixed at w-96 (384px)
+- Mobile responsive: Panel hidden by default, shows as bottom sheet when entity selected
 - Sections: Title, Type, Description, Details, Related Links, Associated Entities
 - Deep links to organizations, models, related papers
-- Close via X button or Esc key
 - Accessible: focus management, ARIA labels, keyboard navigation
 
 **User Stories:**
-- As a user, I see detailed information when I click any map element
+- As a user, I see helpful welcome content and guided tours in the right panel when I first visit
+- As a user, I see detailed information in the right panel when I click any map element
 - As a user, I can navigate to related entities from the info panel
 - As a user, the same panel transforms into a tour interface when I start a guided tour
+- As a mobile user, I see entity details in a bottom sheet overlay when I tap on map elements
 
-**Panel Types:**
-- Capability panel: description, landmarks within region
-- Landmark panel: paper abstract, authors, publication date, links
-- Organization panel: overview, models, papers, highlight button
-- Model panel: parameters, release date, capabilities, training route
-- Tour panel: stage title, narration, progress indicator, Next/Previous buttons
+**Panel States:**
+- **Default/Welcome State:** Welcome message, how-to-use guide, features overview, guided tours list
+- **Capability panel:** Description, landmarks within region
+- **Landmark panel:** Paper abstract, authors, publication date, links
+- **Organization panel:** Overview, models, papers, highlight button
+- **Model panel:** Parameters, release date, capabilities, training route
+- **Tour panel:** Stage title, narration, progress indicator, Next/Previous buttons
 
 ---
 
@@ -303,20 +310,21 @@ An interactive fantasy world map where:
 
 #### 6.9 Guided Tours / Sea Routes (P1)
 
-**Description:** Step-by-step walkthroughs of LLM training pipelines
+**Description:** Step-by-step walkthroughs of LLM training pipelines shown in the persistent right panel
 
 **Requirements:**
 - Right panel switches to tour mode with stepper UI (Next/Previous buttons)
+- Tours accessible from welcome state (default panel content)
 - Each stage: centers map on relevant island, highlights landmarks, displays stage info in panel
 - Keyboard shortcuts: `[` previous, `]` next
 - Progress indicator showing current stage
-- List of available tours accessible from main interface
-- Clicking non-tour landmark pauses tour, collapses panel to compact banner with "Resume Tour" button
-- Resuming tour returns to active stage
+- Clicking non-tour landmark pauses tour, shows landmark details while maintaining tour context
+- Resume tour button returns to active stage
 
 **User Stories:**
+- As a user, I can discover and start guided tours from the default panel state
 - As a user, I can follow a guided tour showing how to build a reasoning model
-- As a user, I see each training stage highlighted on the map with explanatory text
+- As a user, I see each training stage highlighted on the map with explanatory text in the right panel
 - As a user, I can pause a tour to explore other landmarks and resume where I left off
 
 **Data Fields:**
@@ -329,8 +337,8 @@ An interactive fantasy world map where:
 - "PEFT Fine-Tuning Pathway"
 
 **Technical Notes:**
-- No separate `/tour/[routeId]` route needed - tours run in right panel
-- Panel mode switches between 'info' (default) and 'tour' (active tour)
+- No separate `/tour/[routeId]` route needed - tours run in persistent right panel
+- Panel state switches between 'default' (welcome), 'info' (entity details), and 'tour' (active tour)
 
 ---
 

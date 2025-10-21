@@ -28,7 +28,7 @@ This document provides the detailed sprint planning and task breakdown for the T
 ### Key Metrics
 
 - **Total Sprints:** 6 (12 weeks)
-- **Total Story Points:** ~130 points
+- **Total Story Points:** ~131 points
 - **Estimated Velocity:** 20-25 points per sprint
 - **Team Size:** 2-3 developers (1 senior, 1-2 mid-level)
 
@@ -37,7 +37,7 @@ This document provides the detailed sprint planning and task breakdown for the T
 | Sprint | Milestone | Focus | Story Points |
 |--------|-----------|-------|--------------|
 | Sprint 1 | Milestone 1 | Project Setup & Core Map | 22 |
-| Sprint 2 | Milestone 1 | Progressive Disclosure & Panels | 24 |
+| Sprint 2 | Milestone 1 | Progressive Disclosure & Persistent Panels | 25 |
 | Sprint 3 | Milestone 2 | Search & Data Pipeline | 20 |
 | Sprint 4 | Milestone 2 | Organization Highlighting & Sharing | 18 |
 | Sprint 5 | Milestone 3 | Guided Tours | 26 |
@@ -274,9 +274,9 @@ Implement pan, zoom, and drag interactions with sensible min/max zoom bounds.
 
 ### Sprint 2: Progressive Disclosure & Info Panels (Week 3-4)
 
-**Goal:** Implement capability polygons with zoom-based rendering and detailed info panels
+**Goal:** Implement capability polygons with zoom-based rendering and persistent info panel with multiple states
 
-**Story Points:** 24
+**Story Points:** 25
 
 #### Tasks
 
@@ -287,7 +287,7 @@ Implement pan, zoom, and drag interactions with sensible min/max zoom bounds.
 | #11 | Implement progressive disclosure logic (zoom-based layers) | 3 | Dev 1 | #10 | P0 |
 | #12 | Create seed data: landmarks.json (20-30 papers/models) | 3 | Content | #5 | P0 |
 | #13 | Implement LandmarkMarker component | 4 | Dev 2 | #7, #12 | P0 |
-| #14 | Implement InfoPanel component (right drawer) | 5 | Dev 2 | #13 | P0 |
+| #14 | Implement persistent InfoPanel with Default/Info/Tour states | 6 | Dev 2 | #13 | P0 |
 | #15 | Implement LegendPanel component | 2 | Dev 1 | #10, #13 | P0 |
 
 #### Sprint 2 GitHub Issues
@@ -410,31 +410,34 @@ Create React component to render landmarks as custom Leaflet markers with icons.
 **Reference:** architecture.md Section 5.1, front-end-spec.md Section 6.1
 ```
 
-**Issue #14: InfoPanel Component (Right Drawer)**
+**Issue #14: InfoPanel Component (Persistent Right Panel)**
 ```markdown
-**Title:** Implement InfoPanel component for entity details
+**Title:** Implement persistent InfoPanel component with three states
 
 **Description:**
-Create right-side drawer that displays detailed information for selected map entities.
+Create persistent right panel (384px, always visible on desktop) with three states: Default/Welcome, Info (entity details), and Tour mode.
 
 **Acceptance Criteria:**
 - [ ] `src/components/panels/InfoPanel.tsx` created
-- [ ] Slide-in animation (300ms ease-out) from right
-- [ ] Close button (X) and Esc key support
-- [ ] Displays capability info (description, related landmarks)
-- [ ] Displays landmark info (abstract, authors, year, links, tags)
+- [ ] Fixed right panel in flex layout (no slide-in on desktop)
+- [ ] Three panel states implemented:
+  - Default/Welcome: "How to use" guide, features, guided tours list
+  - Info Mode: Entity details (capability/landmark/organization)
+  - Tour Mode: Tour stepper UI
+- [ ] `src/components/panels/WelcomeContent.tsx` for default state
+- [ ] Clear selection button (returns to default state)
 - [ ] Deep links to related entities
-- [ ] Scrollable content area
-- [ ] Accessible: focus trap, aria-labels, keyboard navigation
-- [ ] Uses shadcn/ui Sheet component
-- [ ] Unit test verifies open/close and content rendering
-- [ ] E2E test verifies user flow
+- [ ] Scrollable content area (overflow-y: auto)
+- [ ] Mobile responsive: hidden by default, shows as bottom sheet (shadcn/ui Sheet)
+- [ ] Accessible: focus management, aria-labels, keyboard navigation
+- [ ] Unit test verifies state transitions and content rendering
+- [ ] E2E test verifies user flow on desktop and mobile
 
-**Story Points:** 5
+**Story Points:** 6
 **Priority:** P0
 **Labels:** panel, component, P0
 **Dependencies:** #13
-**Reference:** prd.md Section 6.4, front-end-spec.md Section 6.3
+**Reference:** prd.md Section 6.4, front-end-spec.md Section 6.3, architecture.md Section 5.2
 ```
 
 **Issue #15: LegendPanel Component**
@@ -467,12 +470,15 @@ Create always-visible legend in bottom-right corner explaining map symbols and z
 
 - ✅ Capability polygons render at appropriate zoom levels
 - ✅ Landmark markers display with custom icons
-- ✅ InfoPanel opens on click with entity details
+- ✅ Persistent InfoPanel always visible on desktop (384px, three states)
+- ✅ Default/Welcome state with "How to use" guide and tours list
+- ✅ Info mode displays entity details on selection
+- ✅ Mobile: Panel shows as bottom sheet when entity selected
 - ✅ Legend explains map symbols
 - ✅ Progressive disclosure working smoothly
 - ✅ 10-15 capabilities and 20-30 landmarks seeded
 
-**Sprint 2 Demo:** Navigate map, zoom to see progressive disclosure, click landmarks to see info panel
+**Sprint 2 Demo:** Navigate map, see persistent right panel with welcome content, zoom to see progressive disclosure, click landmarks to see entity details in panel, test mobile responsive behavior
 
 ---
 
@@ -1297,7 +1303,7 @@ graph TD
 | Sprint | Dev 1 | Dev 2 | Content/Design |
 |--------|-------|-------|----------------|
 | Sprint 1 | 12 pts | 10 pts | 2 pts |
-| Sprint 2 | 9 pts | 12 pts | 6 pts |
+| Sprint 2 | 9 pts | 13 pts | 6 pts |
 | Sprint 3 | 11 pts | 7 pts | 2 pts |
 | Sprint 4 | 11 pts | 7 pts | 0 pts |
 | Sprint 5 | 14 pts | 8 pts | 4 pts |

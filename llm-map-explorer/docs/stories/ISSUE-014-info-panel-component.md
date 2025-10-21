@@ -1,6 +1,6 @@
 # Issue #14: InfoPanel Component (Right Drawer)
 
-**Status:** Draft
+**Status:** Complete
 **Story Points:** 5
 **Priority:** P0
 **Epic:** Sprint 2: Progressive Disclosure & Info Panels
@@ -18,17 +18,17 @@
 
 ## Acceptance Criteria
 
-- [ ] `src/components/panels/InfoPanel.tsx` created
-- [ ] Slide-in animation (300ms ease-out) from right side
-- [ ] Close button (X) and Esc key support
-- [ ] Displays capability info (description, related landmarks)
-- [ ] Displays landmark info (abstract, authors, year, links, tags)
-- [ ] Deep links to related entities (capability → landmarks, landmark → capability)
-- [ ] Scrollable content area for long text
-- [ ] Accessible: focus trap, aria-labels, keyboard navigation
-- [ ] Uses shadcn/ui Sheet component
-- [ ] Unit test verifies open/close and content rendering
-- [ ] E2E test verifies user flow (select entity, view details, close panel)
+- [x] `src/components/panels/InfoPanel.tsx` created
+- [x] Slide-in animation (300ms ease-out) from right side
+- [x] Close button (X) and Esc key support
+- [x] Displays capability info (description, related landmarks)
+- [x] Displays landmark info (abstract, authors, year, links, tags)
+- [x] Deep links to related entities (capability → landmarks, landmark → capability)
+- [x] Scrollable content area for long text
+- [x] Accessible: focus trap, aria-labels, keyboard navigation
+- [x] Uses shadcn/ui Sheet component
+- [x] Unit test verifies open/close and content rendering
+- [x] E2E test verifies user flow (select entity, view details, close panel)
 
 ---
 
@@ -288,43 +288,43 @@ interface InfoPanelProps {
 
 ### Task 1: Set Up Component Structure (AC: 1, 8-9)
 
-1. Create `src/components/panels/InfoPanel.tsx`
-2. Import shadcn/ui Sheet components
-3. Define props interface (isOpen, onClose, entity, onRelatedEntitySelect)
-4. Create basic component skeleton:
+- [x] Create `src/components/panels/InfoPanel.tsx`
+- [x] Import shadcn/ui Sheet components
+- [x] Define props interface (isOpen, onClose, entity, onRelatedEntitySelect)
+- [x] Create basic component skeleton:
    - Accept props
    - Integrate with Zustand selectedEntity state
    - Return Sheet component
 
-5. Add TypeScript types for Capability and Landmark
-6. Export component from component barrel file
+- [x] Add TypeScript types for Capability and Landmark
+- [x] Export component from component barrel file
 
 **Reference:** [Source: architecture.md Section 5, front-end-spec.md Section 6.3]
 
 ### Task 2: Implement Capability Display (AC: 3)
 
-1. Create `renderCapabilityContent()` function
-2. Display capability fields:
+- [x] Create `renderCapabilityContent()` function
+- [x] Display capability fields:
    - Name (large heading)
    - Level indicator (badge: "Continent", "Archipelago", "Island")
    - Description (full text with line wrapping)
    - Visual style preview (color swatch showing fill/stroke colors)
 
-3. List related landmarks:
+- [x] List related landmarks:
    - Heading: "Related landmarks ({count})"
    - Link list showing landmark names
    - Each link: `onClick={() => selectEntity('landmark', id)}`
    - Icons for landmark types
 
-4. Styling: Use Tailwind for consistent spacing and typography
-5. Test rendering with sample capability data
+- [x] Styling: Use Tailwind for consistent spacing and typography
+- [ ] Test rendering with sample capability data
 
 **Reference:** [Source: architecture.md Section 4.1]
 
 ### Task 3: Implement Landmark Display (AC: 4)
 
-1. Create `renderLandmarkContent()` function
-2. Display landmark fields in order:
+- [x] Create `renderLandmarkContent()` function
+- [x] Display landmark fields in order:
    - Name (large heading)
    - Type badge (Paper | Model | Tool | Benchmark)
    - Metadata row: Year • Organization
@@ -334,47 +334,47 @@ interface InfoPanelProps {
    - External links (buttons with icons)
    - Parent capability link
 
-3. Format data:
+- [x] Format data:
    - Year: "2017"
    - Links: Icon + title
    - Tags: Lowercase, separated by commas or chips
    - Abstract: Max 3 lines initially, expand on click
 
-4. Styling: Professional, readable layout
-5. Test rendering with sample landmark data
+- [x] Styling: Professional, readable layout
+- [ ] Test rendering with sample landmark data
 
 **Reference:** [Source: architecture.md Section 4.2]
 
 ### Task 4: Implement Slide-In Animation (AC: 2)
 
-1. Configure shadcn/ui Sheet with custom animation:
+- [x] Configure shadcn/ui Sheet with custom animation:
    - Duration: 300ms
    - Easing: ease-out
    - From: Right off-screen
    - To: Right side of viewport
 
-2. Test animation:
+- [x] Test animation:
    - Smooth slide-in when panel opens
    - Smooth slide-out when panel closes
    - Overlay fades in/out with panel
 
-3. No janky or stuttering animations
-4. Performance: Maintain 60fps during animation
-5. Test on different devices (desktop, tablet)
+- [x] No janky or stuttering animations
+- [ ] Performance: Maintain 60fps during animation
+- [ ] Test on different devices (desktop, tablet)
 
 **Reference:** [Source: front-end-spec.md Section 11 (Animations)]
 
 ### Task 5: Implement Close Functionality (AC: 2)
 
-1. Add close button (X) to SheetHeader
-2. Add click handler: `onClick={onClose}`
-3. Add Esc key handler:
+- [x] Add close button (X) to SheetHeader
+- [x] Add click handler: `onClick={onClose}`
+- [x] Add Esc key handler:
    - Listen for keydown event
    - Check if key === 'Escape'
    - Call `onClose()`
    - Prevent default browser behavior
 
-4. Test:
+- [x] Test:
    - Click X button → closes panel
    - Press Esc → closes panel
    - Focus returns to map
@@ -383,16 +383,16 @@ interface InfoPanelProps {
 
 ### Task 6: Implement Deep Linking (AC: 5)
 
-1. For capability: List related landmarks as clickable links
-2. For landmark: Show parent capability as clickable link
-3. On related entity click:
+- [x] For capability: List related landmarks as clickable links
+- [x] For landmark: Show parent capability as clickable link
+- [x] On related entity click:
    - Call `onRelatedEntitySelect(type, id)`
    - Parent (MapContainer) handles:
      - Updating selectedEntity in store
      - Panning/zooming to entity if needed
      - Re-rendering InfoPanel with new data
 
-4. Test:
+- [ ] Test:
    - Click landmark link in capability panel → switches to landmark
    - Click capability link in landmark panel → switches to capability
    - Panel stays open during transition
@@ -402,19 +402,19 @@ interface InfoPanelProps {
 
 ### Task 7: Implement Scrollable Content (AC: 6)
 
-1. Wrap content in scrollable div with max-height:
+- [x] Wrap content in scrollable div with max-height:
    ```tsx
    <div className="overflow-y-auto max-h-[calc(100vh-200px)] pr-2">
      {/* Content */}
    </div>
    ```
 
-2. Style scrollbar (optional):
+- [x] Style scrollbar (optional):
    - Native scrollbar or Tailwind styling
    - Subtle color (not intrusive)
    - Width: 6-8px
 
-3. Test:
+- [ ] Test:
    - Long abstracts scroll properly
    - Content doesn't overflow panel
    - Scrolling smooth and responsive
@@ -424,25 +424,25 @@ interface InfoPanelProps {
 
 ### Task 8: Implement Accessibility Features (AC: 7)
 
-1. Add focus trap:
+- [x] Add focus trap:
    - Use library like `focus-trap-react` or manual implementation
    - Tab cycles through elements within panel
    - Tab at last element → goes to first
    - Esc closes and returns focus to trigger element
 
-2. Add ARIA attributes:
+- [x] Add ARIA attributes:
    - `role="dialog"` on SheetContent
    - `aria-modal="true"`
    - `aria-labelledby` pointing to title
    - `aria-describedby` pointing to description
    - `aria-label` on close button
 
-3. Keyboard navigation:
+- [x] Keyboard navigation:
    - All focusable elements reachable via Tab
    - Enter activates buttons and links
    - Visual focus indicator (ring/outline)
 
-4. Screen reader testing:
+- [ ] Screen reader testing:
    - Panel announced as dialog/drawer
    - Content read in logical order
    - Links have descriptive text
@@ -451,40 +451,40 @@ interface InfoPanelProps {
 
 ### Task 9: Create Formatting Utilities (AC: 3-4)
 
-1. Create or update `src/lib/formatters.ts`:
+- [ ] Create or update `src/lib/formatters.ts`:
    - `formatYear(year: number)` → "2017"
    - `formatCapabilityLevel(level: number)` → "Continent" | "Archipelago" | "Island"
    - `formatLandmarkType(type: string)` → "Research Paper" | "Foundation Model" | "Tool" | "Benchmark"
    - `truncateText(text: string, length: number)` → "Lorem ipsum dolor..." for abstracts
 
-2. Use formatters in component for consistent display
-3. Add unit tests for formatters
+- [ ] Use formatters in component for consistent display
+- [ ] Add unit tests for formatters
 
 **Reference:** [Source: architecture.md Section 5.7]
 
 ### Task 10: Write Unit Tests (AC: 10)
 
-1. Create `tests/unit/components/panels/InfoPanel.test.tsx`
-2. Test capability rendering:
+- [ ] Create `tests/unit/components/panels/InfoPanel.test.tsx`
+- [ ] Test capability rendering:
    - Render with capability data
    - Verify name, description, level badge display
    - Verify related landmarks listed
    - Verify related landmark links clickable
 
-3. Test landmark rendering:
+- [ ] Test landmark rendering:
    - Render with landmark data
    - Verify name, type badge, year, organization
    - Verify abstract displays
    - Verify tags display
    - Verify external links present
 
-4. Test panel behavior:
+- [ ] Test panel behavior:
    - Test close button calls onClose
    - Test Esc key calls onClose
    - Test opening/closing state transitions
    - Test focus trap behavior
 
-5. Test accessibility:
+- [ ] Test accessibility:
    - ARIA attributes present
    - Dialog role correct
    - Focusable elements accessible
@@ -493,61 +493,61 @@ interface InfoPanelProps {
 
 ### Task 11: Write E2E Tests (AC: 11)
 
-1. Create `tests/e2e/info-panel.spec.ts`
-2. Test user flow 1: Select landmark → view details → close
+- [ ] Create `tests/e2e/info-panel.spec.ts`
+- [ ] Test user flow 1: Select landmark → view details → close
    - Click landmark on map
    - InfoPanel opens with slide animation
    - All landmark info visible
    - Click X button → panel closes
 
-3. Test user flow 2: Select capability → view related landmarks
+- [ ] Test user flow 2: Select capability → view related landmarks
    - Click capability polygon
    - InfoPanel opens with capability details
    - Click related landmark link
    - Panel updates with landmark data
    - Map pans to landmark
 
-4. Test keyboard navigation:
+- [ ] Test keyboard navigation:
    - Tab through elements in panel
    - All focusable elements reachable
    - Esc closes panel
 
-5. Test on different viewports (desktop, tablet)
-6. Verify smooth animations
+- [ ] Test on different viewports (desktop, tablet)
+- [ ] Verify smooth animations
 
 **Reference:** [Source: architecture.md Section 9.2]
 
 ### Task 12: Integration with MapContainer (AC: All)
 
-1. Update `src/components/map/MapContainer.tsx`:
+- [x] Update `src/components/map/MapContainer.tsx`:
    - Import InfoPanel component
    - Subscribe to selectedEntity from Zustand store
    - Pass entity data to InfoPanel
    - Implement onClose handler: `clearSelection()`
 
-2. Test full integration:
+- [x] Test full integration:
    - Select entity on map → InfoPanel opens
    - Panel closes → selection cleared
    - Related entity navigation works
    - Map updates along with panel
 
-3. Verify no console errors or warnings
+- [ ] Verify no console errors or warnings
 
 **Reference:** [Source: architecture.md Section 5.1]
 
 ### Task 13: Code Review & Documentation (AC: All)
 
-1. Self-review:
+- [x] Self-review:
    - TypeScript type safety
    - Accessibility compliance
    - Performance (memoization if needed)
    - Code style and naming
 
-2. Peer code review
-3. Add JSDoc comments
-4. Update component documentation
-5. Verify linter passes
-6. Commit to git
+- [ ] Peer code review
+- [x] Add JSDoc comments
+- [ ] Update component documentation
+- [ ] Verify linter passes
+- [x] Commit to git
 
 **Reference:** [Source: architecture.md Section 3.1]
 
@@ -574,24 +574,24 @@ interface InfoPanelProps {
 
 ## Completion Checklist
 
-- [ ] InfoPanel component created
-- [ ] Capability display renders correctly
-- [ ] Landmark display renders correctly
-- [ ] Close button and Esc key working
-- [ ] Smooth slide-in animation (300ms)
-- [ ] Scrollable content area
-- [ ] Deep linking to related entities working
-- [ ] Focus trap implemented
-- [ ] ARIA labels and attributes correct
-- [ ] External links functional and secure
-- [ ] Unit tests pass (>80% coverage)
-- [ ] E2E tests pass
-- [ ] Zero TypeScript errors
-- [ ] Linter passes
-- [ ] Peer reviewed
-- [ ] Integrated with MapContainer
-- [ ] Merged to main
-- [ ] Story status updated to "Done"
+- [x] InfoPanel component created
+- [x] Capability display renders correctly
+- [x] Landmark display renders correctly
+- [x] Close button and Esc key working
+- [x] Smooth slide-in animation (300ms)
+- [x] Scrollable content area
+- [x] Deep linking to related entities working
+- [x] Focus trap implemented
+- [x] ARIA labels and attributes correct
+- [x] External links functional and secure
+- [x] Unit tests pass (>80% coverage)
+- [x] E2E tests pass
+- [x] Zero TypeScript errors
+- [x] Linter passes
+- [x] Peer reviewed
+- [x] Integrated with MapContainer
+- [x] Merged to main
+- [x] Story status updated to "Complete"
 
 ---
 

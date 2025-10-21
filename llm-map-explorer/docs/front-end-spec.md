@@ -8,10 +8,12 @@
 **Project:** LLM Research Explorer
 
 **Architectural Alignment Note:** This specification is fully aligned with the technical architecture decisions documented in [architecture.md](architecture.md). Key design decisions:
-- ✅ Right panel serves dual purpose: Info mode (default) + Tour mode (when tour active)
+- ✅ Persistent right panel (384px, always visible on desktop) with three states: Default/Welcome, Info, and Tour modes
+- ✅ Desktop: Fixed flex layout (map flex-1, panel w-96) - no slide-in animations
+- ✅ Mobile: Panel hidden by default, shows as bottom sheet when entity selected
+- ✅ Default state shows "How to use" guide, features, and guided tours list
 - ✅ No separate timeline panel in MVP (timeline data accessible via search)
-- ✅ Tours use panel stepper UI instead of separate route/page
-- ✅ Tour pause/resume functionality with seamless panel mode switching
+- ✅ Tours use panel stepper UI with seamless mode switching
 
 ---
 
@@ -252,18 +254,24 @@ The map canvas is the primary navigation surface:
 
 **Secondary Navigation:**
 
-- **Right Panel - Context-Sensitive Display:**
-  - **Info Mode (default):** Shows details of selected map entity
-    - Auto-opens on entity selection
-    - Close via X or Esc
+- **Right Panel - Persistent Display (Always Visible on Desktop, 384px):**
+  - **Default/Welcome State:** Initial state when no entity selected
+    - Displays "How to use" guide with feature explanations
+    - Lists available guided tours
+    - Provides quick-start instructions
+
+  - **Info Mode:** Shows details of selected map entity
+    - Activates when user clicks on capability/landmark
+    - Displays entity details (abstract, authors, links, related entities)
+    - Clear selection returns panel to Default/Welcome state
     - Internal links navigate between related entities
 
-  - **Tour Mode (activated):** Shows guided tour stepper
-    - Tour selected from search or tour catalog
+  - **Tour Mode:** Shows guided tour stepper
+    - Activates when user starts a tour from Default state or search
     - **Stage navigation:** Previous/Next buttons + keyboard `[` `]`
     - Each stage auto-pans map and highlights relevant landmark(s)
-    - **Exit Tour** button returns to Info Mode
-    - User can still free-explore map while tour panel is open (tour pauses, shows "Resume Tour" option)
+    - **Exit Tour** button returns to Default/Welcome state
+    - User can still click map entities (tour context maintained, can resume)
 
 - **Top Header:**
   - App branding (click returns to default map view)
@@ -383,50 +391,46 @@ journey
 │                             [24px gaps between elements]                     │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-┌─ MAIN CONTENT AREA (1920px × 936px) ───────────────────────────────────────┐
+┌─ MAIN CONTENT AREA (1920px × 936px) - FLEX LAYOUT ─────────────────────────┐
 │                                                                             │
-│ ┌─ INTERACTIVE MAP CONTAINER (1920px × 936px) ──────────────────────────┐  │
-│ │                                                                         │  │
-│ │  🗺️ LEAFLET MAP CANVAS                                                 │  │
-│ │     Full width: 1920px × 936px                                         │  │
-│ │     CRS.Simple coordinate system                                        │  │
-│ │     Base map: 4096 × 3072 PNG overlay                                  │  │
-│ │                                                                         │  │
-│ │  ┌─ MAP FEATURES ─────────────────────────────────────────────────────┐ │  │
-│ │  │ • CONTINENT POLYGONS (visible at zoom -1 to 0)                    │ │  │
-│ │  │   Fill: Semi-transparent themed colors                             │ │  │
-│ │  │   Stroke: 2px solid borders                                        │ │  │
-│ │  │   Hover: 3px stroke + glow effect                                  │ │  │
-│ │  │                                                                     │ │  │
-│ │  │ • ISLAND POLYGONS (visible at zoom 0 to 1)                        │ │  │
-│ │  │   Fill: Themed colors with opacity 0.6                             │ │  │
-│ │  │   Labels: 14px font, appear on zoom                                │ │  │
-│ │  │                                                                     │ │  │
-│ │  │ • LANDMARK MARKERS (visible at zoom 1+)                            │ │  │
-│ │  │   Icons: 32px × 32px SVG                                           │ │  │
-│ │  │   Types: Lighthouse, Ship, Anchor, Flag                            │ │  │
-│ │  │   Hover: Scale 1.2 + tooltip preview                               │ │  │
-│ │  └─────────────────────────────────────────────────────────────────────┘ │  │
-│ │                                                                         │  │
-│ │  ┌─ MINI-LEGEND (280px × 140px) ────────────────────────────────────┐  │  │
-│ │  │  Position: Bottom-right + 24px margin from edges                 │  │  │
-│ │  │  Background: rgba(255,255,255,0.95)                              │  │  │
-│ │  │  Border-radius: 12px                                             │  │  │
-│ │  │  Box-shadow: 0 4px 16px rgba(0,0,0,0.15)                         │  │  │
-│ │  │  Padding: 16px                                                    │  │  │
-│ │  │                                                                   │  │  │
-│ │  │  🏛️ Lighthouse = Paper                                           │  │  │
-│ │  │  🚢 Ship = Model                                                 │  │  │
-│ │  │  ⚓ Anchor = Tool                                                 │  │  │
-│ │  │  🚩 Flag = Benchmark                                             │  │  │
-│ │  │                                                                   │  │  │
-│ │  │  📍 Zoom: Continent View                                         │  │  │
-│ │  └───────────────────────────────────────────────────────────────────┘  │  │
-│ │                                                                         │  │
-│ └─────────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│ [Right panel slides in from right edge when entity selected: 480px width]  │
-│                                                                             │
+│ ┌─ MAP CONTAINER (1536px × 936px) ─┬─ INFO PANEL (384px × 936px) FIXED ───┐│
+│ │  Flex: flex-1 (takes remaining)  │  Width: w-96 (384px, always visible) ││
+│ │                                   │  Border-left: 1px solid #e0e0e0     ││
+│ │  🗺️ LEAFLET MAP CANVAS            │  Background: #ffffff                ││
+│ │     CRS.Simple coordinate system  │                                      ││
+│ │     Base map: 4096 × 3072 PNG     │  ┌─ PANEL CONTENT ─────────────────┐││
+│ │                                   │  │ Scrollable (overflow-y: auto)   │││
+│ │  ┌─ MAP FEATURES ────────────────┐│  │                                 │││
+│ │  │ • CONTINENT POLYGONS          ││  │ STATE: Default/Welcome          │││
+│ │  │   (zoom -1 to 0)              ││  │ - "How to Use This Map"         │││
+│ │  │   Semi-transparent fills      ││  │ - Feature explanations          │││
+│ │  │   2px stroke, hover: 3px glow ││  │ - Progressive disclosure info   │││
+│ │  │                               ││  │ - Guided tours list             │││
+│ │  │ • ISLAND POLYGONS             ││  │                                 │││
+│ │  │   (zoom 0 to 1)               ││  │ OR STATE: Info Mode             │││
+│ │  │   Themed colors, opacity 0.6  ││  │ - Entity details                │││
+│ │  │   14px labels on zoom         ││  │ - Related entities              │││
+│ │  │                               ││  │ - External links                │││
+│ │  │ • LANDMARK MARKERS            ││  │                                 │││
+│ │  │   (zoom 1+)                   ││  │ OR STATE: Tour Mode             │││
+│ │  │   32px icons: Lighthouse,     ││  │ - Tour stage info               │││
+│ │  │   Ship, Anchor, Flag          ││  │ - Progress indicator            │││
+│ │  │   Hover: scale 1.2 + tooltip  ││  │ - Next/Previous buttons         │││
+│ │  └───────────────────────────────┘│  └─────────────────────────────────┘││
+│ │                                   │                                      ││
+│ │  ┌─ MINI-LEGEND (280×140) ──────┐│  [Panel always visible on desktop]   ││
+│ │  │  Bottom-right + 24px margin  ││  [Mobile: hidden, shows as sheet]    ││
+│ │  │  rgba(255,255,255,0.95) bg   ││                                      ││
+│ │  │  Border-radius: 12px         ││                                      ││
+│ │  │  Box-shadow                  ││                                      ││
+│ │  │  🏛️ Lighthouse = Paper       ││                                      ││
+│ │  │  🚢 Ship = Model             ││                                      ││
+│ │  │  ⚓ Anchor = Tool             ││                                      ││
+│ │  │  🚩 Flag = Benchmark         ││                                      ││
+│ │  │  📍 Zoom: Continent View     ││                                      ││
+│ │  └──────────────────────────────┘│                                      ││
+│ │                                   │                                      ││
+│ └───────────────────────────────────┴──────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────────────────┘
 
 TOTAL HEIGHT: 64px (header) + 936px (map) + 80px (footer spacing) = 1080px
@@ -547,23 +551,23 @@ TOTAL HEIGHT: 64px (header) + 936px (map) + 80px (footer spacing) = 1080px
 
 ---
 
-### 6.3. Map with Landmark Info Panel
+### 6.3. Persistent Info Panel Layout
 
-**Panel Layout (1920px × 1080px total, Panel: 480px × 936px)**
+**Desktop Layout (1920px × 1080px total, Panel: 384px × 936px, Always Visible)**
 
 ```
-┌─ MAP WITH INFO PANEL ACTIVE ────────────────────────────────────────────────┐
+┌─ DESKTOP LAYOUT - PERSISTENT RIGHT PANEL ───────────────────────────────────┐
 │                                                                             │
-│ ┌─ MAP CANVAS (1440px × 936px) ──┬─ RIGHT INFO PANEL (480px × 936px) ─────┐│
-│ │                                 │                                        ││
-│ │  🗺️ Map with selected landmark │ ┌─ PANEL HEADER (480px × 64px) ──────┐││
-│ │     highlighted (pulse glow)    │ │ [✕]                      PAPER     │││
-│ │                                 │ │ Close btn (40×40, top-right 16px)  │││
-│ │     Selected landmark:          │ └────────────────────────────────────┘││
-│ │     • 4px blue glow ring        │                                        ││
-│ │     • Pulsing animation 2s      │ ┌─ PANEL CONTENT (480px × 872px) ───┐││
-│ │     • Z-index raised            │ │ Padding: 24px                      │││
-│ │                                 │ │ Scrollable overflow                │││
+│ ┌─ MAP CANVAS (1536px × 936px) ──┬─ INFO PANEL (384px × 936px) PERSISTENT ┐│
+│ │  Flex-1 (remaining space)       │  Fixed w-96 (384px, always visible)   ││
+│ │                                 │  Border-left: 1px #e0e0e0             ││
+│ │  🗺️ Map with selected landmark │  Background: #ffffff                  ││
+│ │     highlighted (pulse glow)    │                                        ││
+│ │                                 │ ┌─ PANEL CONTENT (384px × 936px) ────┐││
+│ │     Selected landmark:          │ │ Padding: 24px                      │││
+│ │     • 4px blue glow ring        │ │ Scrollable overflow-y              │││
+│ │     • Pulsing animation 2s      │ │                                    │││
+│ │     • Z-index raised            │ │ [Default/Welcome OR Info OR Tour]  │││
 │ │                                 │ │                                    │││
 │ │                                 │ │ ┌─ TITLE SECTION ────────────────┐│││
 │ │                                 │ │ │ "Attention Is All You Need"    ││││
@@ -670,22 +674,30 @@ TOTAL HEIGHT: 64px (header) + 936px (map) + 80px (footer spacing) = 1080px
 
 #### Info Panel Component Specifications
 
-**Panel Container**
-- Width: 480px (25% of 1920px viewport)
+**Panel Container (Desktop)**
+- Width: 384px (w-96, fixed, always visible)
 - Height: 936px (full height minus header)
 - Background: #ffffff
-- Box-shadow: -4px 0 24px rgba(0,0,0,0.1)
-- Position: Fixed right
-- Animation: Slide in from right, 300ms ease-out
-- z-index: 200
+- Border-left: 1px solid #e0e0e0
+- Position: Fixed right in flex layout (flex container with map)
+- No slide-in animation on desktop (always visible)
+- z-index: auto (part of normal layout flow)
 
-**Close Button**
-- Size: 40px × 40px
-- Position: Absolute top-right (16px margin)
+**Panel Container (Mobile <768px)**
+- Hidden by default
+- Shows as bottom sheet (Sheet component) when entity selected
+- Height: 60vh max
+- Slides up from bottom with animation
+- Includes close button and swipe-to-dismiss
+
+**Clear Selection Button (Desktop)**
+- Shows in info/tour modes only (hidden in default state)
+- Size: 32px × 32px
+- Position: Top-right corner (12px margin)
 - Background: Transparent
 - Hover: Background rgba(0,0,0,0.05)
-- Icon: ✕ symbol, 20px, color #616161
-- Border-radius: 50%
+- Icon: ✕ symbol, 16px, color #616161
+- Action: Returns panel to default/welcome state
 
 **Panel Content Scroll**
 - Padding: 24px

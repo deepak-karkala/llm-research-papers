@@ -130,8 +130,9 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
 
   // Memoized event handlers
   const handleClick = useCallback(() => {
+    console.log('[LandmarkMarker] Clicked landmark:', landmark.id, landmark.name);
     onSelect(landmark.id);
-  }, [landmark.id, onSelect]);
+  }, [landmark.id, onSelect, landmark.name]);
 
   const handleMouseEnter = useCallback(() => {
     onHover?.(landmark.id);
