@@ -7,6 +7,7 @@ import {
   organizationSchema,
 } from '@/lib/schemas';
 import type { Capability, Landmark, Organization } from '@/types/data';
+import { normalizeCapability, normalizeLandmark } from '@/lib/data-normalizers';
 
 /**
  * Represents the state returned by the useDataLoader hook
@@ -151,8 +152,15 @@ export function useDataLoader(): DataLoaderState {
         let organizations: Organization[];
 
         try {
-          capabilities = z.array(capabilitySchema).parse(rawCapabilities);
-          landmarks = z.array(landmarkSchema).parse(rawLandmarks);
+          const normalizedCapabilities = (rawCapabilities as Parameters<typeof normalizeCapability>[0][]).map(
+            (capability) => normalizeCapability(capability)
+          );
+          const normalizedLandmarks = (rawLandmarks as Parameters<typeof normalizeLandmark>[0][]).map(
+            (landmark) => normalizeLandmark(landmark)
+          );
+
+          capabilities = z.array(capabilitySchema).parse(normalizedCapabilities);
+          landmarks = z.array(landmarkSchema).parse(normalizedLandmarks);
           organizations = z.array(organizationSchema).parse(rawOrganizations);
         } catch (validationError) {
           if (validationError instanceof z.ZodError) {

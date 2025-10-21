@@ -1,245 +1,808 @@
 [
   {
-    "id": "lm-001",
+    "id": "landmark-001",
     "name": "Attention Is All You Need",
     "type": "paper",
     "year": 2017,
-    "organization": "Google DeepMind",
-    "authors": [
-      "Vaswani",
-      "A.; Shazeer",
-      "N.; Parmar",
-      "N."
-    ],
-    "description": "Introduced the Transformer architecture with self-attention mechanisms.",
-    "abstract": "This paper presents the Transformer, a novel sequence-to-sequence architecture based entirely on attention mechanisms.",
+    "organization": "Google Brain",
+    "authors": [],
+    "description": "Introduced the Transformer architecture, which is the foundation for most modern large language models.",
+    "abstract": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.",
     "externalLinks": [
       {
         "type": "arxiv",
         "url": "https://arxiv.org/abs/1706.03762",
-        "label": "arXiv"
-      },
-      {
-        "type": "paper",
-        "url": "https://proceedings.neurips.cc/paper/2017/file/",
-        "label": "PDF"
+        "label": "arXiv:1706.03762"
       }
     ],
-    "coordinates": [
-      37.78,
-      -122.41
-    ],
-    "capabilityId": "cap-001",
-    "relatedLandmarks": [
-      "lm-002",
-      "lm-003"
-    ],
-    "tags": [
-      "transformer",
-      "attention",
-      "sequence-to-sequence",
-      "nlp"
-    ],
-    "icon": "\ud83d\udcc4",
-    "metadata": {},
-    "zoomThreshold": 0
-  },
-  {
-    "id": "lm-002",
-    "name": "GPT-2",
-    "type": "model",
-    "year": 2019,
-    "organization": "OpenAI",
-    "authors": [
-      "Radford",
-      "A.; Wu",
-      "J.; Child",
-      "R."
-    ],
-    "description": "Large-scale unsupervised language model with 1.5B parameters.",
-    "abstract": "Language models are unsupervised multitask learners. We demonstrate that language models begin learning these tasks without any explicit supervision when trained on a new dataset of Reddit links.",
-    "externalLinks": [
-      {
-        "type": "arxiv",
-        "url": "https://arxiv.org/abs/1902.10165",
-        "label": "arXiv"
-      },
-      {
-        "type": "github",
-        "url": "https://github.com/openai/gpt-2",
-        "label": "GitHub"
-      }
-    ],
-    "coordinates": [
-      37.79,
-      -122.4
-    ],
-    "capabilityId": "cap-002",
-    "relatedLandmarks": [
-      "lm-001",
-      "lm-003"
-    ],
-    "tags": [
-      "language-model",
-      "generation",
-      "gpt"
-    ],
-    "icon": "\ud83e\udd16",
-    "metadata": {
-      "parameters": "1.5B",
-      "architecture": "Transformer",
-      "trainingMethod": "Unsupervised pre-training",
-      "capabilities": [
-        "text-generation",
-        "few-shot-learning"
-      ],
-      "releaseDate": "2019-02-14",
-      "license": "MIT"
+    "coordinates": {
+      "lat": 800,
+      "lng": 1200
     },
-    "zoomThreshold": 1
+    "capabilityId": "attention-architecture",
+    "relatedLandmarks": [],
+    "tags": [
+      "attention",
+      "transformer",
+      "architecture"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": -1
   },
   {
-    "id": "lm-003",
+    "id": "landmark-002",
     "name": "BERT",
     "type": "model",
     "year": 2018,
-    "organization": "Google Research",
-    "authors": [
-      "Devlin",
-      "J.; Chang",
-      "M.-W.; Lee",
-      "K."
-    ],
-    "description": "Bidirectional Encoder Representations from Transformers for understanding contextual word relationships.",
-    "abstract": "We introduce BERT, a new method of pre-training language representations. Unlike recent language representation models, BERT is designed to pre-train deep bidirectional representations from unlabeled text.",
+    "organization": "Google",
+    "authors": [],
+    "description": "Bidirectional Encoder Representations from Transformers, a powerful language representation model.",
+    "abstract": null,
     "externalLinks": [
       {
         "type": "arxiv",
         "url": "https://arxiv.org/abs/1810.04805",
-        "label": "arXiv"
-      },
-      {
-        "type": "github",
-        "url": "https://github.com/google-research/bert",
-        "label": "GitHub"
+        "label": "arXiv:1810.04805"
       }
     ],
-    "coordinates": [
-      37.8,
-      -122.39
-    ],
-    "capabilityId": "cap-002",
-    "relatedLandmarks": [
-      "lm-001",
-      "lm-002"
-    ],
-    "tags": [
-      "language-model",
-      "pretraining",
-      "bert",
-      "embeddings"
-    ],
-    "icon": "\ud83e\udd16",
-    "metadata": {
-      "parameters": "340M",
-      "architecture": "Transformer",
-      "trainingMethod": "Masked Language Modeling",
-      "capabilities": [
-        "text-classification",
-        "token-classification",
-        "semantic-similarity"
-      ],
-      "releaseDate": "2018-10-11",
-      "license": "Apache-2.0"
+    "coordinates": {
+      "lat": 1000,
+      "lng": 1000
     },
-    "zoomThreshold": 1
+    "capabilityId": "attention-architecture",
+    "relatedLandmarks": [],
+    "tags": [
+      "bert",
+      "transformer",
+      "representation"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": -1
   },
   {
-    "id": "lm-004",
-    "name": "Constitutional AI",
-    "type": "paper",
-    "year": 2023,
-    "organization": "Anthropic",
-    "authors": [
-      "Bai",
-      "Y.; Jones",
-      "A.; Ndousse",
-      "K."
+    "id": "landmark-003",
+    "name": "GPT-2",
+    "type": "model",
+    "year": 2019,
+    "organization": "OpenAI",
+    "authors": [],
+    "description": "A large-scale unsupervised language model that can generate coherent paragraphs of text.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://openai.com/blog/better-language-models/",
+        "label": "OpenAI Blog"
+      }
     ],
-    "description": "Harmless and helpful AI through constitutional methods and self-critique.",
-    "abstract": "Language models demonstrate remarkable capabilities across a diverse set of tasks, but their proneness to generating harmful or misleading content remains a critical concern.",
+    "coordinates": {
+      "lat": 800,
+      "lng": 3200
+    },
+    "capabilityId": "reasoning-planning",
+    "relatedLandmarks": [],
+    "tags": [
+      "gpt-2",
+      "language-model",
+      "openai"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-004",
+    "name": "GPT-3",
+    "type": "model",
+    "year": 2020,
+    "organization": "OpenAI",
+    "authors": [],
+    "description": "Generative Pre-trained Transformer 3, an autoregressive language model with 175 billion parameters.",
+    "abstract": null,
     "externalLinks": [
       {
         "type": "arxiv",
-        "url": "https://arxiv.org/abs/2212.08073",
-        "label": "arXiv"
+        "url": "https://arxiv.org/abs/2005.14165",
+        "label": "arXiv:2005.14165"
       }
     ],
-    "coordinates": [
-      37.81,
-      -122.38
-    ],
-    "capabilityId": "cap-003",
-    "relatedLandmarks": [
-      "lm-005"
-    ],
+    "coordinates": {
+      "lat": 1000,
+      "lng": 3000
+    },
+    "capabilityId": "reasoning-planning",
+    "relatedLandmarks": [],
     "tags": [
-      "alignment",
-      "safety",
-      "constitutional-ai",
-      "harmful-content"
+      "gpt-3",
+      "language-model",
+      "openai"
     ],
-    "icon": "\ud83d\udcc4",
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": -1
+  },
+  {
+    "id": "landmark-005",
+    "name": "FLAN",
+    "type": "model",
+    "year": 2021,
+    "organization": "Google",
+    "authors": [],
+    "description": "Finetuned Language Net, a model that improves zero-shot learning by instruction tuning.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2109.01652",
+        "label": "arXiv:2109.01652"
+      }
+    ],
+    "coordinates": {
+      "lat": 1800,
+      "lng": 1600
+    },
+    "capabilityId": "lora-peft",
+    "relatedLandmarks": [],
+    "tags": [
+      "flan",
+      "instruction-tuning",
+      "google"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-006",
+    "name": "InstructGPT",
+    "type": "paper",
+    "year": 2022,
+    "organization": "OpenAI",
+    "authors": [],
+    "description": "A model that is better at following instructions than GPT-3, by using reinforcement learning from human feedback.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2203.02155",
+        "label": "arXiv:2203.02155"
+      }
+    ],
+    "coordinates": {
+      "lat": 1700,
+      "lng": 2100
+    },
+    "capabilityId": "rlhf-archipelago",
+    "relatedLandmarks": [],
+    "tags": [
+      "instructgpt",
+      "rlhf",
+      "openai"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": -1
+  },
+  {
+    "id": "landmark-007",
+    "name": "ChatGPT",
+    "type": "model",
+    "year": 2022,
+    "organization": "OpenAI",
+    "authors": [],
+    "description": "A conversational AI model based on the GPT architecture, optimized for dialogue.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://openai.com/blog/chatgpt/",
+        "label": "OpenAI Blog"
+      }
+    ],
+    "coordinates": {
+      "lat": 800,
+      "lng": 2200
+    },
+    "capabilityId": "alignment-safety",
+    "relatedLandmarks": [],
+    "tags": [
+      "chatgpt",
+      "conversational-ai",
+      "openai"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-008",
+    "name": "LLaMA",
+    "type": "model",
+    "year": 2023,
+    "organization": "Meta",
+    "authors": [],
+    "description": "Large Language Model Meta AI, a family of large language models.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2302.13971",
+        "label": "arXiv:2302.13971"
+      }
+    ],
+    "coordinates": {
+      "lat": 1200,
+      "lng": 3400
+    },
+    "capabilityId": "reasoning-planning",
+    "relatedLandmarks": [],
+    "tags": [
+      "llama",
+      "language-model",
+      "meta"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-009",
+    "name": "Alpaca",
+    "type": "model",
+    "year": 2023,
+    "organization": "Stanford",
+    "authors": [],
+    "description": "A model fine-tuned from LLaMA 7B on 52K instruction-following demonstrations.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "github",
+        "url": "https://github.com/tatsu-lab/stanford_alpaca",
+        "label": "GitHub"
+      }
+    ],
+    "coordinates": {
+      "lat": 1800,
+      "lng": 1500
+    },
+    "capabilityId": "lora-peft",
+    "relatedLandmarks": [],
+    "tags": [
+      "alpaca",
+      "instruction-following",
+      "stanford"
+    ],
+    "icon": null,
     "metadata": {},
     "zoomThreshold": 1
   },
   {
-    "id": "lm-005",
+    "id": "landmark-010",
+    "name": "LoRA",
+    "type": "paper",
+    "year": 2021,
+    "organization": "Microsoft",
+    "authors": [],
+    "description": "Low-Rank Adaptation of Large Language Models, a parameter-efficient fine-tuning method.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2106.09685",
+        "label": "arXiv:2106.09685"
+      }
+    ],
+    "coordinates": {
+      "lat": 1700,
+      "lng": 1600
+    },
+    "capabilityId": "lora-peft",
+    "relatedLandmarks": [],
+    "tags": [
+      "lora",
+      "peft",
+      "microsoft"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": -1
+  },
+  {
+    "id": "landmark-011",
+    "name": "QLoRA",
+    "type": "paper",
+    "year": 2023,
+    "organization": "UW",
+    "authors": [],
+    "description": "Quantized Low-Rank Adaptation, a method for fine-tuning large language models with even less memory.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2305.14314",
+        "label": "arXiv:2305.14314"
+      }
+    ],
+    "coordinates": {
+      "lat": 1700,
+      "lng": 1000
+    },
+    "capabilityId": "quantization-techniques",
+    "relatedLandmarks": [],
+    "tags": [
+      "qlora",
+      "quantization",
+      "uw"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
+  },
+  {
+    "id": "landmark-012",
+    "name": "GPTQ",
+    "type": "paper",
+    "year": 2023,
+    "organization": "IST",
+    "authors": [],
+    "description": "A one-shot weight quantization method for large language models.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2210.17323",
+        "label": "arXiv:2210.17323"
+      }
+    ],
+    "coordinates": {
+      "lat": 1800,
+      "lng": 900
+    },
+    "capabilityId": "quantization-techniques",
+    "relatedLandmarks": [],
+    "tags": [
+      "gptq",
+      "quantization",
+      "ist"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
+  },
+  {
+    "id": "landmark-013",
+    "name": "CLIP",
+    "type": "model",
+    "year": 2021,
+    "organization": "OpenAI",
+    "authors": [],
+    "description": "Contrastive Language-Image Pre-training, a model that learns visual concepts from natural language supervision.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2103.00020",
+        "label": "arXiv:2103.00020"
+      }
+    ],
+    "coordinates": {
+      "lat": 1700,
+      "lng": 4000
+    },
+    "capabilityId": "vision-language",
+    "relatedLandmarks": [],
+    "tags": [
+      "clip",
+      "multimodal",
+      "openai"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-014",
+    "name": "DALL-E",
+    "type": "model",
+    "year": 2021,
+    "organization": "OpenAI",
+    "authors": [],
+    "description": "A neural network that creates images from text captions for a wide range of concepts expressible in natural language.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://openai.com/blog/dall-e/",
+        "label": "OpenAI Blog"
+      }
+    ],
+    "coordinates": {
+      "lat": 1800,
+      "lng": 3950
+    },
+    "capabilityId": "vision-language",
+    "relatedLandmarks": [],
+    "tags": [
+      "dall-e",
+      "multimodal",
+      "openai"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-015",
+    "name": "Flamingo",
+    "type": "paper",
+    "year": 2022,
+    "organization": "DeepMind",
+    "authors": [],
+    "description": "A Visual Language Model for few-shot learning.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2204.14178",
+        "label": "arXiv:2204.14178"
+      }
+    ],
+    "coordinates": {
+      "lat": 1000,
+      "lng": 3900
+    },
+    "capabilityId": "multimodal-capabilities",
+    "relatedLandmarks": [],
+    "tags": [
+      "flamingo",
+      "multimodal",
+      "deepmind"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-016",
+    "name": "RoBERTa",
+    "type": "model",
+    "year": 2019,
+    "organization": "Facebook",
+    "authors": [],
+    "description": "A Robustly Optimized BERT Pretraining Approach.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/1907.11692",
+        "label": "arXiv:1907.11692"
+      }
+    ],
+    "coordinates": {
+      "lat": 1200,
+      "lng": 1400
+    },
+    "capabilityId": "attention-architecture",
+    "relatedLandmarks": [],
+    "tags": [
+      "roberta",
+      "bert",
+      "facebook"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-017",
+    "name": "T5",
+    "type": "model",
+    "year": 2019,
+    "organization": "Google",
+    "authors": [],
+    "description": "Text-to-Text Transfer Transformer, a unified framework for NLP tasks.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/1910.10683",
+        "label": "arXiv:1910.10683"
+      }
+    ],
+    "coordinates": {
+      "lat": 900,
+      "lng": 900
+    },
+    "capabilityId": "attention-architecture",
+    "relatedLandmarks": [],
+    "tags": [
+      "t5",
+      "transformer",
+      "google"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-018",
     "name": "GPT-4",
     "type": "model",
     "year": 2023,
     "organization": "OpenAI",
-    "authors": [
-      "OpenAI Team"
-    ],
-    "description": "Multimodal large language model with improved reasoning and reduced hallucinations.",
-    "abstract": "GPT-4 is a large multimodal model that, while less capable than humans in many real-world scenarios, exhibits human-level performance on various professional and academic benchmarks.",
+    "authors": [],
+    "description": "A large-scale, multimodal model that can accept image and text inputs and produce text outputs.",
+    "abstract": null,
     "externalLinks": [
       {
-        "type": "paper",
+        "type": "arxiv",
         "url": "https://arxiv.org/abs/2303.08774",
-        "label": "Technical Report"
+        "label": "arXiv:2303.08774"
       }
     ],
-    "coordinates": [
-      37.82,
-      -122.37
-    ],
-    "capabilityId": "cap-002",
-    "relatedLandmarks": [
-      "lm-002",
-      "lm-004"
-    ],
-    "tags": [
-      "language-model",
-      "gpt",
-      "multimodal",
-      "frontier"
-    ],
-    "icon": "\ud83e\udd16",
-    "metadata": {
-      "parameters": "Unknown",
-      "architecture": "Transformer",
-      "trainingMethod": "RLHF with constitutional AI",
-      "capabilities": [
-        "text-generation",
-        "vision",
-        "code-generation",
-        "reasoning"
-      ],
-      "releaseDate": "2023-03-14",
-      "license": "Proprietary"
+    "coordinates": {
+      "lat": 800,
+      "lng": 3000
     },
+    "capabilityId": "reasoning-planning",
+    "relatedLandmarks": [],
+    "tags": [
+      "gpt-4",
+      "multimodal",
+      "openai"
+    ],
+    "icon": null,
+    "metadata": {},
     "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-019",
+    "name": "Mistral-7B",
+    "type": "model",
+    "year": 2023,
+    "organization": "Mistral AI",
+    "authors": [],
+    "description": "A 7-billion parameter language model that outperforms Llama 2 13B on all benchmarks.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2310.06825",
+        "label": "arXiv:2310.06825"
+      }
+    ],
+    "coordinates": {
+      "lat": 1200,
+      "lng": 3200
+    },
+    "capabilityId": "reasoning-planning",
+    "relatedLandmarks": [],
+    "tags": [
+      "mistral-7b",
+      "language-model",
+      "mistral-ai"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
+  },
+  {
+    "id": "landmark-020",
+    "name": "CodeLLaMA",
+    "type": "model",
+    "year": 2023,
+    "organization": "Meta",
+    "authors": [],
+    "description": "A family of large language models for code generation.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2308.12950",
+        "label": "arXiv:2308.12950"
+      }
+    ],
+    "coordinates": {
+      "lat": 1800,
+      "lng": 3600
+    },
+    "capabilityId": "tool-use-agents",
+    "relatedLandmarks": [],
+    "tags": [
+      "codellama",
+      "code-generation",
+      "meta"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
+  },
+  {
+    "id": "landmark-021",
+    "name": "PEFT",
+    "type": "tool",
+    "year": 2023,
+    "organization": "Hugging Face",
+    "authors": [],
+    "description": "Parameter-Efficient Fine-Tuning (PEFT) library.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "github",
+        "url": "https://github.com/huggingface/peft",
+        "label": "GitHub"
+      }
+    ],
+    "coordinates": {
+      "lat": 1800,
+      "lng": 1700
+    },
+    "capabilityId": "lora-peft",
+    "relatedLandmarks": [],
+    "tags": [
+      "peft",
+      "tool",
+      "hugging-face"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
+  },
+  {
+    "id": "landmark-022",
+    "name": "Transformer-XL",
+    "type": "paper",
+    "year": 2019,
+    "organization": "Google",
+    "authors": [],
+    "description": "A transformer architecture that can learn dependency beyond a fixed length without disrupting temporal coherence.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/1901.02860",
+        "label": "arXiv:1901.02860"
+      }
+    ],
+    "coordinates": {
+      "lat": 1100,
+      "lng": 1200
+    },
+    "capabilityId": "attention-architecture",
+    "relatedLandmarks": [],
+    "tags": [
+      "transformer-xl",
+      "architecture",
+      "google"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-023",
+    "name": "BLIP",
+    "type": "model",
+    "year": 2022,
+    "organization": "Salesforce",
+    "authors": [],
+    "description": "Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2201.12086",
+        "label": "arXiv:2201.12086"
+      }
+    ],
+    "coordinates": {
+      "lat": 1200,
+      "lng": 3950
+    },
+    "capabilityId": "multimodal-capabilities",
+    "relatedLandmarks": [],
+    "tags": [
+      "blip",
+      "multimodal",
+      "salesforce"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
+  },
+  {
+    "id": "landmark-024",
+    "name": "Falcon",
+    "type": "model",
+    "year": 2023,
+    "organization": "TII",
+    "authors": [],
+    "description": "A powerful open-source language model.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://falconllm.tii.ae/",
+        "label": "Official Website"
+      }
+    ],
+    "coordinates": {
+      "lat": 1000,
+      "lng": 3400
+    },
+    "capabilityId": "reasoning-planning",
+    "relatedLandmarks": [],
+    "tags": [
+      "falcon",
+      "language-model",
+      "tii"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
+  },
+  {
+    "id": "landmark-025",
+    "name": "DPO",
+    "type": "paper",
+    "year": 2023,
+    "organization": "Stanford",
+    "authors": [],
+    "description": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "arxiv",
+        "url": "https://arxiv.org/abs/2305.18290",
+        "label": "arXiv:2305.18290"
+      }
+    ],
+    "coordinates": {
+      "lat": 1800,
+      "lng": 2200
+    },
+    "capabilityId": "rlhf-archipelago",
+    "relatedLandmarks": [],
+    "tags": [
+      "dpo",
+      "rlhf",
+      "stanford"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 0
+  },
+  {
+    "id": "landmark-026",
+    "name": "SFT - Supervised Fine-Tuning",
+    "type": "tool",
+    "year": 2021,
+    "organization": "Various",
+    "authors": [],
+    "description": "A common technique for adapting pre-trained language models to specific tasks.",
+    "abstract": null,
+    "externalLinks": [
+      {
+        "type": "website",
+        "url": "https://huggingface.co/docs/trl/sft_trainer",
+        "label": "Hugging Face TRL"
+      }
+    ],
+    "coordinates": {
+      "lat": 2000,
+      "lng": 1600
+    },
+    "capabilityId": "training-optimization",
+    "relatedLandmarks": [],
+    "tags": [
+      "sft",
+      "fine-tuning",
+      "tool"
+    ],
+    "icon": null,
+    "metadata": {},
+    "zoomThreshold": 1
   }
 ]

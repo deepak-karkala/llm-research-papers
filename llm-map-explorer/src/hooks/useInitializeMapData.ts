@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react';
 import { useMapStore } from '@/lib/store';
+import { normalizeCapability, normalizeLandmark } from '@/lib/data-normalizers';
 import type { Capability, Landmark } from '@/types/data';
 
 export function useInitializeMapData() {
@@ -27,8 +28,11 @@ export function useInitializeMapData() {
           return;
         }
 
-        const capabilitiesData = (await capabilitiesRes.json()) as Capability[];
-        const landmarksData = (await landmarksRes.json()) as Landmark[];
+        const rawCapabilities = (await capabilitiesRes.json()) as Parameters<typeof normalizeCapability>[0][];
+        const rawLandmarks = (await landmarksRes.json()) as Parameters<typeof normalizeLandmark>[0][];
+
+        const capabilitiesData: Capability[] = rawCapabilities.map((capability) => normalizeCapability(capability));
+        const landmarksData: Landmark[] = rawLandmarks.map((landmark) => normalizeLandmark(landmark));
 
         setCapabilities(capabilitiesData);
         setLandmarks(landmarksData);

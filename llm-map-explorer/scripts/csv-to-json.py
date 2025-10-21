@@ -15,7 +15,7 @@ import os
 import sys
 import subprocess
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Sequence
 
 
 class CSVToJSONConverter:
@@ -29,6 +29,9 @@ class CSVToJSONConverter:
         self.output_dir = self.project_root / "public" / "data"
         self.errors: List[str] = []
         self.warnings: List[str] = []
+        # Map dimensions for CRS.Simple projection (see design/MAP-COORDINATES.md)
+        self.map_height = 3072
+        self.map_width = 4096
 
     def run(self) -> int:
         """
@@ -193,7 +196,14 @@ class CSVToJSONConverter:
     def _coerce_capability(self, record: Dict[str, Any]) -> Dict[str, Any]:
         """Coerce capability record."""
         try:
-            polygon_coords = self._parse_json(record.get("polygonCoordinates", "[]"))
+            polygon_coords = self._ensure_list(
+                self._parse_json(record.get("polygonCoordinates", "[]")) or [],
+                "polygonCoordinates"
+            )
+            normalized_polygon = [
+                self._coerce_coordinate(coord, f"capability '{record.get('id', '')}' polygon vertex {idx + 1}")
+                for idx, coord in enumerate(polygon_coords)
+            ]
             visual_hints = self._parse_json(record.get("visualStyleHints", "{}"))
 
             return {
@@ -202,7 +212,7 @@ class CSVToJSONConverter:
                 "description": self._strip_string(record.get("description", "")),
                 "shortDescription": self._strip_string(record.get("shortDescription", "")),
                 "level": self._strip_string(record.get("level", "")),
-                "polygonCoordinates": polygon_coords,
+                "polygonCoordinates": normalized_polygon,
                 "visualStyleHints": visual_hints,
                 "relatedLandmarks": self._parse_array(record.get("relatedLandmarks", "[]")),
                 "parentCapabilityId": self._optional_string(record.get("parentCapabilityId", "")),
@@ -215,7 +225,10 @@ class CSVToJSONConverter:
         """Coerce landmark record."""
         try:
             external_links = self._parse_json(record.get("externalLinks", "[]"))
-            coordinates = self._parse_json(record.get("coordinates", "{}"))
+            coordinates = self._coerce_coordinate(
+                self._parse_json(record.get("coordinates", "{}")),
+                f"landmark '{record.get('id', '')}' coordinates"
+            )
             tags = self._parse_array(record.get("tags", "[]"))
 
             return {
@@ -281,6 +294,17 @@ class CSVToJSONConverter:
             raise ValueError(f"Cannot parse '{value}' as number")
 
     @staticmethod
+    def _parse_float(value: Any) -> float:
+        """Parse value as float."""
+        try:
+            stripped = CSVToJSONConverter._strip_string(value)
+            if not stripped:
+                raise ValueError("empty value")
+            return float(stripped)
+        except (ValueError, TypeError):
+            raise ValueError(f"Cannot parse '{value}' as float")
+
+    @staticmethod
     def _parse_json(value: Any) -> Any:
         """Parse value as JSON."""
         try:
@@ -314,6 +338,68 @@ class CSVToJSONConverter:
             if isinstance(value, str):
                 return [item.strip() for item in value.split(",") if item.strip()]
             return []
+
+    @staticmethod
+    def _ensure_list(value: Any, context: str) -> List[Any]:
+        """Ensure a value is a list."""
+        if value is None:
+            return []
+        if isinstance(value, list):
+            return value
+        if isinstance(value, tuple):
+            return list(value)
+        raise ValueError(f"{context}: expected a list, got {type(value).__name__}")
+
+    def _coerce_coordinate(self, value: Any, context: str) -> Dict[str, int]:
+        """
+        Convert various coordinate formats into pixel-based {lat, lng} dictionaries.
+
+        Supported input formats:
+          - {"lat": 1200, "lng": 800}
+          - [1200, 800]
+          - "[1200, 800]" (stringified JSON)
+
+        Coordinates must already be expressed in CRS.Simple pixel space
+        where lat ∈ [0, map_height] and lng ∈ [0, map_width].
+        """
+        if isinstance(value, str):
+            parsed = self._parse_json(value)
+            return self._coerce_coordinate(parsed, context)
+
+        lat: Optional[float] = None
+        lng: Optional[float] = None
+
+        if isinstance(value, dict):
+            if "lat" not in value or "lng" not in value:
+                raise ValueError(f"{context}: coordinate object must contain 'lat' and 'lng'")
+            lat = self._parse_float(value["lat"])
+            lng = self._parse_float(value["lng"])
+        elif isinstance(value, Sequence):
+            if len(value) != 2:
+                raise ValueError(f"{context}: coordinate array must have exactly 2 values, got {len(value)}")
+            lat = self._parse_float(value[0])
+            lng = self._parse_float(value[1])
+        else:
+            raise ValueError(f"{context}: unsupported coordinate format ({value!r})")
+
+        # Detect accidental geographic coordinates (latitude ±90, longitude ±180) and fail fast.
+        if -90.0 <= lat <= 90.0 and -180.0 <= lng <= 180.0:
+            raise ValueError(
+                f"{context}: detected geographic coordinates ({lat}, {lng}). "
+                "Please provide pixel-based coordinates (0 ≤ lat ≤ 3072, 0 ≤ lng ≤ 4096) "
+                "matching the CRS.Simple map projection."
+            )
+
+        lat_int = int(round(lat))
+        lng_int = int(round(lng))
+
+        if not (0 <= lat_int <= self.map_height) or not (0 <= lng_int <= self.map_width):
+            self.warnings.append(
+                f"{context}: coordinate ({lat_int}, {lng_int}) is outside map bounds "
+                f"[0,{self.map_height}]x[0,{self.map_width}]"
+            )
+
+        return {"lat": lat_int, "lng": lng_int}
 
     def _validate_json_file(self, json_path: Path) -> bool:
         """
