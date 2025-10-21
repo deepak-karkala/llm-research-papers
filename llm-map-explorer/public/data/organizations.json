@@ -1,0 +1,191 @@
+[
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "description": "AI research and deployment company focused on developing large language models and safe AI systems including GPT series and RLHF techniques.",
+    "website": "https://openai.com",
+    "landmarkIds": ["landmark-003", "landmark-004", "landmark-006", "landmark-007", "landmark-013", "landmark-014", "landmark-018"],
+    "color": "#10A37F",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/OpenAI_Logo.svg/1200px-OpenAI_Logo.svg.png"
+  },
+  {
+    "id": "google-deepmind",
+    "name": "Google DeepMind",
+    "description": "Research lab advancing AI through breakthroughs in foundation models, language models, and multimodal systems including BERT, LaMDA, and Gemini foundations.",
+    "website": "https://www.deepmind.com",
+    "landmarkIds": ["landmark-001", "landmark-002", "landmark-005", "landmark-015", "landmark-017", "landmark-022"],
+    "color": "#4285F4",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Deepmind_logo.svg/320px-Deepmind_logo.svg.png"
+  },
+  {
+    "id": "meta-ai",
+    "name": "Meta AI",
+    "description": "Meta's AI research division (FAIR) developing open-source large language models and foundational AI techniques including LLaMA and CodeLLaMA.",
+    "website": "https://ai.facebook.com",
+    "landmarkIds": ["landmark-008", "landmark-016", "landmark-020"],
+    "color": "#0A66C2",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meta_Platforms_Inc._logo.svg/1024px-Meta_Platforms_Inc._logo.svg.png"
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "description": "AI safety company focused on developing constitutional AI methods and responsible AI research practices.",
+    "website": "https://www.anthropic.com",
+    "landmarkIds": [],
+    "color": "#C73E1D",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Anthropic_PBC_logo.svg/400px-Anthropic_PBC_logo.svg.png"
+  },
+  {
+    "id": "microsoft-research",
+    "name": "Microsoft Research",
+    "description": "Technology research organization advancing AI through transformer architectures, parameter-efficient fine-tuning, and partnerships with industry.",
+    "website": "https://www.microsoft.com/en-us/research/",
+    "landmarkIds": ["landmark-010"],
+    "color": "#00A4EF",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/1024px-Microsoft_logo_%282012%29.svg.png"
+  },
+  {
+    "id": "stanford",
+    "name": "Stanford University",
+    "description": "Leading research institution contributing foundational NLP research, instruction-following models, and optimization techniques like DPO.",
+    "website": "https://www.stanford.edu",
+    "landmarkIds": ["landmark-009", "landmark-025"],
+    "color": "#8B0000",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Stanford_Cardinal_logo.svg/240px-Stanford_Cardinal_logo.svg.png"
+  },
+  {
+    "id": "uc-berkeley",
+    "name": "UC Berkeley",
+    "description": "Major research university advancing deep learning, optimization research, and foundational machine learning techniques.",
+    "website": "https://www.berkeley.edu",
+    "landmarkIds": [],
+    "color": "#003262",
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/2/24/University_of_California_Berkeley_logo.svg/320px-University_of_California_Berkeley_logo.svg.png"
+  },
+  {
+    "id": "carnegie-mellon",
+    "name": "Carnegie Mellon University",
+    "description": "Elite research institution specializing in natural language processing and machine learning research.",
+    "website": "https://www.cmu.edu",
+    "landmarkIds": [],
+    "color": "#EB6E1F",
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8d/CMU_seal.svg/320px-CMU_seal.svg.png"
+  },
+  {
+    "id": "mit-ibm-watson",
+    "name": "MIT-IBM Watson AI Lab",
+    "description": "Collaborative research lab focused on LLM benchmarking, evaluation, and development of robust AI systems.",
+    "website": "https://mitibmwatsonailab.mit.edu",
+    "landmarkIds": [],
+    "color": "#A31C1C",
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/4/44/Massachusetts_Institute_of_Technology_logo.svg/320px-Massachusetts_Institute_of_Technology_logo.svg.png"
+  },
+  {
+    "id": "allen-institute",
+    "name": "Allen Institute for AI",
+    "description": "AI research institute developing open-source NLP tools, benchmarks, and advancing scientific AI research.",
+    "website": "https://allenai.org",
+    "landmarkIds": [],
+    "color": "#005C8B",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Allen_Institute_logo.svg/400px-Allen_Institute_logo.svg.png"
+  },
+  {
+    "id": "university-toronto",
+    "name": "University of Toronto",
+    "description": "Research institution pioneering deep learning and neural network innovations fundamental to modern AI.",
+    "website": "https://www.utoronto.ca",
+    "landmarkIds": [],
+    "color": "#002A5C",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/University_of_Toronto_logo.svg/320px-University_of_Toronto_logo.svg.png"
+  },
+  {
+    "id": "national-university-singapore",
+    "name": "National University of Singapore",
+    "description": "Leading Asian research university contributing to NLP and natural language understanding research.",
+    "website": "https://www.nus.edu.sg",
+    "landmarkIds": [],
+    "color": "#003366",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/National_University_of_Singapore_Logo.svg/320px-National_University_of_Singapore_Logo.svg.png"
+  },
+  {
+    "id": "ibm-research",
+    "name": "IBM Research",
+    "description": "Technology research division developing foundational machine learning techniques and exploring quantum computing integration.",
+    "website": "https://www.ibm.com/research/",
+    "landmarkIds": [],
+    "color": "#0F62FE",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/320px-IBM_logo.svg.png"
+  },
+  {
+    "id": "hugging-face",
+    "name": "Hugging Face",
+    "description": "AI community platform providing model hub, transformer libraries, and parameter-efficient fine-tuning tools for the open-source community.",
+    "website": "https://huggingface.co",
+    "landmarkIds": ["landmark-021"],
+    "color": "#FFD21E",
+    "logo": "https://huggingface.co/front/assets/huggingface_logo-nobg.svg"
+  },
+  {
+    "id": "stability-ai",
+    "name": "Stability AI",
+    "description": "AI company focused on developing and open-sourcing diffusion models and large language models for accessibility.",
+    "website": "https://stability.ai",
+    "landmarkIds": [],
+    "color": "#0099FF",
+    "logo": "https://pbs.twimg.com/profile_images/1620146905929195521/PnkALgZV_400x400.jpg"
+  },
+  {
+    "id": "mistral-ai",
+    "name": "Mistral AI",
+    "description": "AI research company creating efficient open-source language models with strong performance across benchmarks.",
+    "website": "https://mistral.ai",
+    "landmarkIds": ["landmark-019"],
+    "color": "#ED9455",
+    "logo": "https://www.mistral.ai/images/mistral-ai-logo.svg"
+  },
+  {
+    "id": "technology-innovation-institute",
+    "name": "Technology Innovation Institute",
+    "description": "UAE-based research institute advancing AI research including efficient quantization techniques for large language models.",
+    "website": "https://www.tii.ae",
+    "landmarkIds": ["landmark-024"],
+    "color": "#D4A373",
+    "logo": "https://pbs.twimg.com/profile_images/1523622763876020227/x1mFHNAy_400x400.jpg"
+  },
+  {
+    "id": "university-washington",
+    "name": "University of Washington",
+    "description": "Research institution contributing to efficient language model fine-tuning and quantization techniques.",
+    "website": "https://www.washington.edu",
+    "landmarkIds": ["landmark-011"],
+    "color": "#4B2F36",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/University_of_Washington_seal.svg/320px-University_of_Washington_seal.svg.png"
+  },
+  {
+    "id": "instituto-superior-tecnico",
+    "name": "Instituto Superior Técnico",
+    "description": "Portuguese research institution contributing to quantization and compression techniques for large language models.",
+    "website": "https://tecnico.ulisboa.pt",
+    "landmarkIds": ["landmark-012"],
+    "color": "#006B5C",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/IST_Logo.svg/320px-IST_Logo.svg.png"
+  },
+  {
+    "id": "salesforce",
+    "name": "Salesforce",
+    "description": "Enterprise AI company developing multimodal models and vision-language systems for business applications.",
+    "website": "https://www.salesforce.com",
+    "landmarkIds": ["landmark-023"],
+    "color": "#00A1DF",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Salesforce.com_logo.svg/320px-Salesforce.com_logo.svg.png"
+  },
+  {
+    "id": "google-brain",
+    "name": "Google Brain",
+    "description": "Google's foundational AI research team that developed transformer architecture and pioneering deep learning techniques.",
+    "website": "https://research.google/teams/brain/",
+    "landmarkIds": [],
+    "color": "#EA4335",
+    "logo": "https://www.gstatic.com/devrel-devsite/prod/v2210deb39920cd4a55bd580441aa58e853afc04b39a9d9ac4198e1cd7fbe04ef/google/images/lockup.svg"
+  }
+]
