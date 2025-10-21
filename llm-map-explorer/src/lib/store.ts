@@ -33,6 +33,10 @@ interface MapState {
    */
   currentZoom: number;
   /**
+   * The center position of the map as [latitude, longitude].
+   */
+  mapCenter: [number, number];
+  /**
    * The currently selected entity (capability or landmark) on the map.
    */
   selectedEntity: SelectedEntity | null;
@@ -72,6 +76,11 @@ interface MapState {
    * @param zoom - The new zoom level.
    */
   setCurrentZoom: (zoom: number) => void;
+  /**
+   * Sets the center position of the map.
+   * @param center - The center position as [latitude, longitude].
+   */
+  setMapCenter: (center: [number, number]) => void;
   /**
    * Sets the currently selected entity.
    * @param type - The type of the entity ('capability', 'landmark', or 'organization').
@@ -116,6 +125,7 @@ export const useMapStore = create<MapState>((set, get) => ({
   landmarks: [],
   organizations: [],
   currentZoom: 0,
+  mapCenter: [1536, 2048], // Default to center of map (MAP_HEIGHT/2, MAP_WIDTH/2)
   selectedEntity: null,
   infoPanelOpen: false,
   mapRef: null,
@@ -125,6 +135,7 @@ export const useMapStore = create<MapState>((set, get) => ({
   setLandmarks: (landmarks) => set({ landmarks }),
   setOrganizations: (organizations) => set({ organizations }),
   setCurrentZoom: (zoom) => set({ currentZoom: zoom }),
+  setMapCenter: (center) => set({ mapCenter: center }),
   selectEntity: (type, id) => set({ selectedEntity: { type, id }, infoPanelOpen: true }),
   clearSelection: () => set({ selectedEntity: null, infoPanelOpen: false }),
   setInfoPanelOpen: (isOpen) => set({ infoPanelOpen: isOpen }),

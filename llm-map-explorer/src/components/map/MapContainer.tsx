@@ -31,18 +31,25 @@ interface MapContainerProps {
 function MapEvents() {
   const { useMapEvents } = require('react-leaflet');
   const setCurrentZoom = useMapStore((state) => state.setCurrentZoom);
+  const setMapCenter = useMapStore((state) => state.setMapCenter);
   const setMapRef = useMapStore((state) => state.setMapRef);
 
   const map = useMapEvents({
     zoomend: () => {
       setCurrentZoom(map.getZoom());
     },
+    moveend: () => {
+      const center = map.getCenter();
+      setMapCenter([center.lat, center.lng]);
+    },
   });
 
   useEffect(() => {
     setCurrentZoom(map.getZoom());
+    const center = map.getCenter();
+    setMapCenter([center.lat, center.lng]);
     setMapRef(map);
-  }, [map, setCurrentZoom, setMapRef]);
+  }, [map, setCurrentZoom, setMapCenter, setMapRef]);
 
   return null;
 }

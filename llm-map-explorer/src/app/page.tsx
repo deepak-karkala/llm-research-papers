@@ -4,6 +4,12 @@ import { SearchBar } from '@/components/search/SearchBar';
 // Skip static generation since MapContainer requires browser APIs
 export const dynamic = 'force-dynamic';
 
+// Dynamically import MapAppClient to avoid SSR issues with URL hooks
+const MapAppClient = dynamicImport(
+  () => import('@/components/MapAppClient').then((mod) => mod.MapAppClient),
+  { ssr: false }
+);
+
 // Dynamically import all map-related components to avoid SSR issues with Leaflet
 const MapContainer = dynamicImport(
   () => import('@/components/map/MapContainer').then((mod) => mod.MapContainer),
@@ -30,30 +36,32 @@ const LegendPanel = dynamicImport(
 
 export default function Home() {
   return (
-    <main className="flex h-screen w-screen">
-      {/* Map on left - takes remaining space */}
-      <div className="flex-1 overflow-hidden relative">
-        {/* Search bar overlaid on map - positioned in top-right */}
-        <div className="absolute top-4 right-4 z-[1200] w-full max-w-md px-4 sm:px-0">
-          <SearchBar className="shadow-lg" />
+    <MapAppClient>
+      <main className="flex h-screen w-screen">
+        {/* Map on left - takes remaining space */}
+        <div className="flex-1 overflow-hidden relative">
+          {/* Search bar overlaid on map - positioned in top-right */}
+          <div className="absolute top-4 right-4 z-[1200] w-full max-w-md px-4 sm:px-0">
+            <SearchBar className="shadow-lg" />
+          </div>
+
+          <MapContainer>
+            <LandmarkMarkersLayer />
+          </MapContainer>
+          {/* Legend panel overlaid on map */}
+          <LegendPanel />
         </div>
 
-        <MapContainer>
-          <LandmarkMarkersLayer />
-        </MapContainer>
-        {/* Legend panel overlaid on map */}
-        <LegendPanel />
-      </div>
+        {/* Info panel on right - fixed width, persistent on desktop, responsive on mobile */}
+        <div className="hidden lg:flex w-96 border-l bg-background flex-col overflow-hidden">
+          <InfoPanel variant="persistent" />
+        </div>
 
-      {/* Info panel on right - fixed width, persistent on desktop, responsive on mobile */}
-      <div className="hidden lg:flex w-96 border-l bg-background flex-col overflow-hidden">
-        <InfoPanel variant="persistent" />
-      </div>
-
-      {/* Mobile bottom sheet - shown on small screens when entity selected */}
-      <div className="lg:hidden">
-        <InfoPanel variant="mobile" />
-      </div>
-    </main>
+        {/* Mobile bottom sheet - shown on small screens when entity selected */}
+        <div className="lg:hidden">
+          <InfoPanel variant="mobile" />
+        </div>
+      </main>
+    </MapAppClient>
   );
 }
