@@ -4,6 +4,16 @@ import type { Map as LeafletMap } from 'leaflet';
 import type { Capability, Landmark, LatLng } from '@/types/data';
 import { useMapStore } from '@/lib/store';
 
+/**
+ * Bounding box for geographic area with 20% buffer applied
+ */
+export interface BoundingBox {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -119,4 +129,30 @@ export function focusEntity(
   // Update store to select the entity and open InfoPanel
   const store = useMapStore.getState();
   store.selectEntity(type as 'capability' | 'landmark', id);
+}
+
+/**
+ * Debounce utility for performance optimization
+ * Delays function execution until specified milliseconds have elapsed without new calls
+ *
+ * @param func - The function to debounce
+ * @param wait - Wait time in milliseconds
+ * @returns Debounced function
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+
+  return function executedFunction(...args: Parameters<T>) {
+    const later = () => {
+      timeout = null;
+      func(...args);
+    };
+
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
 }
