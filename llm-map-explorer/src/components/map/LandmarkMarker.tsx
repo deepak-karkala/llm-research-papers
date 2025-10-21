@@ -5,6 +5,7 @@ import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import { Marker, Tooltip } from 'react-leaflet';
 import type L from 'leaflet';
 import type { Landmark } from '@/types/data';
+import { useMapStore } from '@/lib/store';
 
 /**
  * Props for LandmarkMarker component
@@ -44,23 +45,37 @@ function createLandmarkIcon(
   iconUrl: string,
   isSelected: boolean,
   isDimmed: boolean,
-  type: Landmark['type']
+  isHighlighted: boolean,
+  type: Landmark['type'],
+  orgColor?: string
 ) {
   // Dynamic import to avoid SSR issues with Leaflet
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const L = require('leaflet');
 
   // Determine visual state styling
-  const opacity = isDimmed ? '0.4' : '1';
-  const scale = isDimmed ? '0.85' : isSelected ? '1.2' : '1';
-  const filter = isSelected
-    ? 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.8))'
-    : isDimmed
-      ? 'grayscale(0.6) opacity(0.5)'
-      : 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))';
+  const opacity = isDimmed ? '0.3' : '1';
+  const scale = isHighlighted ? '1.2' : isDimmed ? '0.85' : isSelected ? '1.2' : '1';
+  const filter = isHighlighted
+    ? `drop-shadow(0 0 8px ${orgColor || 'rgba(59, 130, 246, 0.6)'})`
+    : isSelected
+      ? 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.8))'
+      : isDimmed
+        ? 'grayscale(0.8)'
+        : 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))';
+
+  // Build class list for highlighting
+  const classes = [
+    'landmark-marker',
+    `landmark-marker-${type}`,
+    isHighlighted && 'landmark-marker-highlighted',
+    isDimmed && 'landmark-marker-dimmed',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const html = `
-    <div class="landmark-marker landmark-marker-${type}"
+    <div class="${classes}"
          style="
            width: 32px;
            height: 32px;
@@ -70,7 +85,7 @@ function createLandmarkIcon(
            transform: scale(${scale});
            opacity: ${opacity};
            filter: ${filter};
-           transition: transform 200ms ease-in-out, opacity 200ms ease-in-out, filter 200ms ease-in-out;
+           transition: transform 200ms ease-in-out, opacity 300ms ease-out, filter 200ms ease-in;
            cursor: pointer;
            position: relative;
          ">
@@ -109,11 +124,30 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
 }: LandmarkMarkerProps) {
   const markerRef = useRef<L.Marker>(null);
 
-  // Create accessible label for the landmark
-  const ariaLabel = useMemo(
-    () => `${landmark.name} · ${landmark.type} · ${landmark.year} · ${landmark.organization}`,
-    [landmark.name, landmark.type, landmark.year, landmark.organization]
+  // Get highlighting state from store
+  const { highlightedLandmarkIds, highlightedOrgId, organizations } = useMapStore();
+
+  // Determine if this landmark is highlighted
+  const isHighlighted = highlightedLandmarkIds.includes(landmark.id);
+  // If highlighting is active but this landmark is not highlighted, dim it
+  // Also support isDimmed prop for backward compatibility
+  const shouldDim = isDimmed || (highlightedOrgId !== null && !isHighlighted);
+
+  // Get organization color for highlighted state
+  const highlightedOrg = useMemo(
+    () => organizations.find((o) => o.id === highlightedOrgId),
+    [organizations, highlightedOrgId]
   );
+  const orgColor = highlightedOrg?.color;
+
+  // Create accessible label for the landmark
+  const ariaLabel = useMemo(() => {
+    let label = `${landmark.name} · ${landmark.type} · ${landmark.year} · ${landmark.organization}`;
+    if (isHighlighted) {
+      label += ` · Highlighted from ${highlightedOrg?.name || 'organization'}`;
+    }
+    return label;
+  }, [landmark.name, landmark.type, landmark.year, landmark.organization, isHighlighted, highlightedOrg?.name]);
 
   // Create tooltip text
   const tooltipText = useMemo(
@@ -126,10 +160,12 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
     () => createLandmarkIcon(
       iconMap[landmark.type],
       isSelected,
-      isDimmed,
-      landmark.type
+      shouldDim,
+      isHighlighted,
+      landmark.type,
+      orgColor
     ),
-    [landmark.type, isSelected, isDimmed]
+    [landmark.type, isSelected, shouldDim, isHighlighted, orgColor]
   );
 
   // Memoized event handlers

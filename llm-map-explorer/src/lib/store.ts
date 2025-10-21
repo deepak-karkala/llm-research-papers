@@ -44,6 +44,14 @@ interface MapState {
    */
   mapRef: LeafletMap | null;
   /**
+   * The ID of the organization currently being highlighted, or null if no highlighting is active.
+   */
+  highlightedOrgId: string | null;
+  /**
+   * An array of landmark IDs that belong to the currently highlighted organization.
+   */
+  highlightedLandmarkIds: string[];
+  /**
    * Sets the capabilities data in the store.
    * @param capabilities - An array of capability objects.
    */
@@ -88,6 +96,15 @@ interface MapState {
    * @returns An array of visible capabilities.
    */
   getVisibleCapabilities: () => Capability[];
+  /**
+   * Highlights all landmarks belonging to a specific organization.
+   * @param orgId - The ID of the organization to highlight.
+   */
+  highlightOrganization: (orgId: string) => void;
+  /**
+   * Clears the current highlighting, resetting the highlighted organization and landmarks.
+   */
+  clearHighlights: () => void;
 }
 
 /**
@@ -101,6 +118,8 @@ export const useMapStore = create<MapState>((set, get) => ({
   selectedEntity: null,
   infoPanelOpen: false,
   mapRef: null,
+  highlightedOrgId: null,
+  highlightedLandmarkIds: [],
   setCapabilities: (capabilities) => set({ capabilities }),
   setLandmarks: (landmarks) => set({ landmarks }),
   setOrganizations: (organizations) => set({ organizations }),
@@ -121,5 +140,19 @@ export const useMapStore = create<MapState>((set, get) => ({
     }
     // Z2 (Island): 2 <= zoom <= 3
     return capabilities;
+  },
+  highlightOrganization: (orgId: string) => {
+    const { organizations } = get();
+    const org = organizations.find((o) => o.id === orgId);
+    set({
+      highlightedOrgId: orgId,
+      highlightedLandmarkIds: org?.landmarkIds || [],
+    });
+  },
+  clearHighlights: () => {
+    set({
+      highlightedOrgId: null,
+      highlightedLandmarkIds: [],
+    });
   },
 }));

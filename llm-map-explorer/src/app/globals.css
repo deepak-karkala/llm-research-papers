@@ -42,3 +42,29 @@
       sans-serif;
   }
 }
+
+/* Pulse animation for highlighted markers */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Styles for highlighted markers */
+.landmark-marker-highlighted {
+  animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+  z-index: 40;
+  transition: filter 200ms ease-in;
+}
+
+/* Styles for dimmed markers when highlighting is active */
+.landmark-marker-dimmed {
+  opacity: 0.3;
+  filter: grayscale(80%);
+  transition: opacity 300ms ease-out, filter 300ms ease-out;
+}
