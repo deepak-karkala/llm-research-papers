@@ -68,3 +68,16 @@
   filter: grayscale(80%);
   transition: opacity 300ms ease-out, filter 300ms ease-out;
 }
+
+/* Highlight button active state */
+.highlight-button-active {
+  color: white;
+  border-width: 2px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+  transition: all 200ms ease-out;
+}
+
+.highlight-button-active:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+}

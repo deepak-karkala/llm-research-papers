@@ -126,7 +126,7 @@ export interface SearchBarProps {
  * - Keyboard navigation (built into Command component)
  * - Accessibility features
  */
-export function SearchBar({ className, placeholder = 'Search papers, models, and capabilities...', onResultSelect }: SearchBarProps) {
+export function SearchBar({ className, placeholder = 'Search papers, models, capabilities, and organizations...', onResultSelect }: SearchBarProps) {
   const [query, setQuery] = React.useState('');
   const [isOpen, setIsOpen] = React.useState(false);
   const [results, setResults] = React.useState<SearchResult[]>([]);
@@ -135,6 +135,7 @@ export function SearchBar({ className, placeholder = 'Search papers, models, and
   // Get data from store
   const capabilities = useMapStore((state) => state.capabilities);
   const landmarks = useMapStore((state) => state.landmarks);
+  const organizations = useMapStore((state) => state.organizations);
   const focusEntity = useFocusEntity();
 
   // Debounce the query
@@ -142,14 +143,14 @@ export function SearchBar({ className, placeholder = 'Search papers, models, and
 
   // Initialize search index when data is loaded
   React.useEffect(() => {
-    if (capabilities.length > 0 || landmarks.length > 0) {
+    if (capabilities.length > 0 || landmarks.length > 0 || organizations.length > 0) {
       searchIndexRef.current = initializeSearchIndex({
         capabilities,
         landmarks,
-        organizations: [], // TODO: Load organizations when available
+        organizations,
       });
     }
-  }, [capabilities, landmarks]);
+  }, [capabilities, landmarks, organizations]);
 
   // Perform search when debounced query changes
   React.useEffect(() => {

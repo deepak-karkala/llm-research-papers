@@ -2,12 +2,13 @@
 import { create } from 'zustand';
 import type { Capability, Landmark, Organization } from '@/types/data';
 import type { Map as LeafletMap } from 'leaflet';
+import { getOrganizationLandmarks } from '@/lib/organization-utils';
 
 /**
- * Represents a selected entity on the map, which can be a capability or a landmark.
+ * Represents a selected entity on the map, which can be a capability, landmark, or organization.
  */
 export type SelectedEntity = {
-  type: 'capability' | 'landmark';
+  type: 'capability' | 'landmark' | 'organization';
   id: string;
 };
 
@@ -73,10 +74,10 @@ interface MapState {
   setCurrentZoom: (zoom: number) => void;
   /**
    * Sets the currently selected entity.
-   * @param type - The type of the entity ('capability' or 'landmark').
+   * @param type - The type of the entity ('capability', 'landmark', or 'organization').
    * @param id - The ID of the entity.
    */
-  selectEntity: (type: 'capability' | 'landmark', id: string) => void;
+  selectEntity: (type: 'capability' | 'landmark' | 'organization', id: string) => void;
   /**
    * Clears the currently selected entity.
    */
@@ -142,11 +143,15 @@ export const useMapStore = create<MapState>((set, get) => ({
     return capabilities;
   },
   highlightOrganization: (orgId: string) => {
-    const { organizations } = get();
+    const { organizations, landmarks } = get();
     const org = organizations.find((o) => o.id === orgId);
+    if (!org) {
+      return;
+    }
+    const matchedLandmarks = getOrganizationLandmarks(org, landmarks);
     set({
       highlightedOrgId: orgId,
-      highlightedLandmarkIds: org?.landmarkIds || [],
+      highlightedLandmarkIds: matchedLandmarks.map((landmark) => landmark.id),
     });
   },
   clearHighlights: () => {

@@ -1,14 +1,15 @@
 
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useMapStore } from '@/lib/store';
 import {
   Sheet,
   SheetContent,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import type { Capability, Landmark } from '@/types/data';
+import type { Capability, Landmark, Organization } from '@/types/data';
+import { OrganizationDetails } from './OrganizationDetails';
 import {
   formatCapabilityLevel,
   formatLandmarkType,
@@ -17,6 +18,8 @@ import {
   getLandmarkTypeIcon,
   formatYear,
 } from '@/lib/formatters';
+import { cn, focusEntity as focusEntityUtil } from '@/lib/utils';
+import { findOrganizationForLandmark } from '@/lib/organization-utils';
 
 type InfoPanelVariant = 'persistent' | 'mobile';
 
@@ -119,11 +122,17 @@ function CapabilityDetails({
 function LandmarkDetails({
   landmark,
   onParentCapabilityClick,
+  onOrganizationClick,
 }: {
   landmark: Landmark;
   onParentCapabilityClick: (id: string) => void;
+  onOrganizationClick?: (orgName: string) => void;
 }) {
-  const { capabilities } = useMapStore();
+  const { capabilities, organizations } = useMapStore();
+  const matchedOrganization = useMemo(
+    () => findOrganizationForLandmark(organizations, landmark),
+    [organizations, landmark]
+  );
 
   const parentCapability = useMemo(
     () => capabilities.find((c) => c.id === landmark.capabilityId),
@@ -150,9 +159,30 @@ function LandmarkDetails({
           </div>
 
           {/* Organization */}
-          <p className="text-sm text-muted-foreground">
-            {landmark.organization}
-          </p>
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                if (matchedOrganization && onOrganizationClick) {
+                  onOrganizationClick(matchedOrganization.id);
+                }
+              }}
+              className={cn(
+                'text-sm',
+                matchedOrganization
+                  ? 'text-muted-foreground hover:text-primary hover:underline transition-colors cursor-pointer'
+                  : 'text-muted-foreground cursor-not-allowed'
+              )}
+              title={
+                matchedOrganization
+                  ? `View ${matchedOrganization.name} details`
+                  : `${landmark.organization} (organization details unavailable)`
+              }
+              disabled={!matchedOrganization}
+            >
+              {matchedOrganization?.name ?? landmark.organization}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -375,11 +405,15 @@ function PersistentPanelContent({
   entity,
   onRelatedLandmarkClick,
   onParentCapabilityClick,
+  onLandmarkClick,
+  onOrganizationClick,
 }: {
-  selectedEntity: { type: 'capability' | 'landmark'; id: string } | null;
-  entity: Capability | Landmark | null;
+  selectedEntity: { type: 'capability' | 'landmark' | 'organization'; id: string } | null;
+  entity: Capability | Landmark | Organization | null;
   onRelatedLandmarkClick: (id: string) => void;
   onParentCapabilityClick: (id: string) => void;
+  onLandmarkClick: (id: string) => void;
+  onOrganizationClick: (id: string) => void;
 }) {
   if (!entity) {
     return <WelcomeContent />;
@@ -392,10 +426,16 @@ function PersistentPanelContent({
           capability={entity as Capability}
           onRelatedLandmarkClick={onRelatedLandmarkClick}
         />
-      ) : (
+      ) : selectedEntity?.type === 'landmark' ? (
         <LandmarkDetails
           landmark={entity as Landmark}
           onParentCapabilityClick={onParentCapabilityClick}
+          onOrganizationClick={onOrganizationClick}
+        />
+      ) : (
+        <OrganizationDetails
+          organization={entity as Organization}
+          onLandmarkClick={onLandmarkClick}
         />
       )}
     </div>
@@ -416,22 +456,65 @@ function PersistentPanelContent({
  * - Tour Active: Shows tour stepper (future)
  */
 export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVariant }) {
-  const { selectedEntity, capabilities, landmarks, clearSelection, selectEntity } = useMapStore();
+  const { selectedEntity, capabilities, landmarks, organizations, clearSelection, selectEntity } = useMapStore();
+  const mapRef = useMapStore((state) => state.mapRef);
 
   const isOpen = !!selectedEntity;
 
-  const entity: Capability | Landmark | null = selectedEntity
+  const entity: Capability | Landmark | Organization | null = selectedEntity
     ? selectedEntity.type === 'capability'
       ? capabilities.find((c) => c.id === selectedEntity.id) ?? null
-      : landmarks.find((l) => l.id === selectedEntity.id) ?? null
+      : selectedEntity.type === 'landmark'
+        ? landmarks.find((l) => l.id === selectedEntity.id) ?? null
+        : organizations.find((o) => o.id === selectedEntity.id) ?? null
     : null;
 
-  const handleRelatedLandmarkClick = (landmarkId: string) => {
-    selectEntity('landmark', landmarkId);
-  };
+  const focusLandmark = useCallback(
+    (landmarkId: string) => {
+      const landmarkEntity = landmarks.find((l) => l.id === landmarkId);
+      if (!landmarkEntity) {
+        return;
+      }
+      if (mapRef) {
+        focusEntityUtil(landmarkId, 'landmark', mapRef, landmarkEntity, landmarks);
+      } else {
+        selectEntity('landmark', landmarkId);
+      }
+    },
+    [landmarks, mapRef, selectEntity]
+  );
 
-  const handleParentCapabilityClick = (capabilityId: string) => {
-    selectEntity('capability', capabilityId);
+  const focusCapability = useCallback(
+    (capabilityId: string) => {
+      const capabilityEntity = capabilities.find((c) => c.id === capabilityId);
+      if (!capabilityEntity) {
+        return;
+      }
+      if (mapRef) {
+        focusEntityUtil(capabilityId, 'capability', mapRef, capabilityEntity, landmarks);
+      } else {
+        selectEntity('capability', capabilityId);
+      }
+    },
+    [capabilities, mapRef, landmarks, selectEntity]
+  );
+
+  const handleRelatedLandmarkClick = useCallback(
+    (landmarkId: string) => {
+      focusLandmark(landmarkId);
+    },
+    [focusLandmark]
+  );
+
+  const handleParentCapabilityClick = useCallback(
+    (capabilityId: string) => {
+      focusCapability(capabilityId);
+    },
+    [focusCapability]
+  );
+
+  const handleOrganizationClick = (orgId: string) => {
+    selectEntity('organization', orgId);
   };
 
   // Desktop variant - always visible, scrollable
@@ -446,7 +529,9 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
                 ? (entity as Capability).name
                 : entity && selectedEntity?.type === 'landmark'
                   ? (entity as Landmark).name
-                  : 'Map Guide'}
+                  : entity && selectedEntity?.type === 'organization'
+                    ? (entity as Organization).name
+                    : 'Map Guide'}
             </h2>
             <button
               onClick={clearSelection}
@@ -472,6 +557,8 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
             entity={entity}
             onRelatedLandmarkClick={handleRelatedLandmarkClick}
             onParentCapabilityClick={handleParentCapabilityClick}
+            onLandmarkClick={handleRelatedLandmarkClick}
+            onOrganizationClick={handleOrganizationClick}
           />
         </div>
       </div>
@@ -507,10 +594,16 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
                   capability={entity as Capability}
                   onRelatedLandmarkClick={handleRelatedLandmarkClick}
                 />
-              ) : (
+              ) : selectedEntity?.type === 'landmark' ? (
                 <LandmarkDetails
                   landmark={entity as Landmark}
                   onParentCapabilityClick={handleParentCapabilityClick}
+                  onOrganizationClick={handleOrganizationClick}
+                />
+              ) : (
+                <OrganizationDetails
+                  organization={entity as Organization}
+                  onLandmarkClick={handleRelatedLandmarkClick}
                 />
               )}
             </>
