@@ -3,7 +3,7 @@
 
 import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import { Marker, Tooltip } from 'react-leaflet';
-import L from 'leaflet';
+import type L from 'leaflet';
 import type { Landmark } from '@/types/data';
 
 /**
@@ -45,7 +45,11 @@ function createLandmarkIcon(
   isSelected: boolean,
   isDimmed: boolean,
   type: Landmark['type']
-): L.DivIcon {
+) {
+  // Dynamic import to avoid SSR issues with Leaflet
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const L = require('leaflet');
+
   // Determine visual state styling
   const opacity = isDimmed ? '0.4' : '1';
   const scale = isDimmed ? '0.85' : isSelected ? '1.2' : '1';

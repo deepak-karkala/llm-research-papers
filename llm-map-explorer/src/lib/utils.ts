@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import type L from 'leaflet';
+import type { Map as LeafletMap } from 'leaflet';
 import type { Capability, Landmark, LatLng } from '@/types/data';
 import { useMapStore } from '@/lib/store';
 
@@ -79,7 +79,7 @@ export function getEntityCoordinates(
 export function focusEntity(
   id: string,
   type: 'capability' | 'landmark' | 'organization',
-  mapRef: L.Map | null,
+  mapRef: LeafletMap | null,
   entity?: Capability | Landmark | null,
   allLandmarks?: Landmark[]
 ): void {

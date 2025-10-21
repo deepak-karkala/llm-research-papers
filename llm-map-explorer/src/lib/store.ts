@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 import type { Capability, Landmark } from '@/types/data';
-import type L from 'leaflet';
+import type { Map as LeafletMap } from 'leaflet';
 
 /**
  * Represents a selected entity on the map, which can be a capability or a landmark.
@@ -38,7 +38,7 @@ interface MapState {
   /**
    * Reference to the Leaflet map instance for programmatic control.
    */
-  mapRef: L.Map | null;
+  mapRef: LeafletMap | null;
   /**
    * Sets the capabilities data in the store.
    * @param capabilities - An array of capability objects.
@@ -73,7 +73,7 @@ interface MapState {
    * Sets the map reference for programmatic control.
    * @param mapRef - The Leaflet map instance or null.
    */
-  setMapRef: (mapRef: L.Map | null) => void;
+  setMapRef: (mapRef: LeafletMap | null) => void;
   /**
    * Returns a filtered list of capabilities that should be visible at the current zoom level.
    * @returns An array of visible capabilities.
