@@ -1,5 +1,6 @@
 import dynamicImport from 'next/dynamic';
 import { SearchBar } from '@/components/search/SearchBar';
+import { CopyLinkButton } from '@/components/CopyLinkButton';
 
 // Skip static generation since MapContainer requires browser APIs
 export const dynamic = 'force-dynamic';
@@ -40,8 +41,9 @@ export default function Home() {
       <main className="flex h-screen w-screen">
         {/* Map on left - takes remaining space */}
         <div className="flex-1 overflow-hidden relative">
-          {/* Search bar overlaid on map - positioned in top-right */}
-          <div className="absolute top-4 right-4 z-[1200] w-full max-w-md px-4 sm:px-0">
+          {/* Header with Search and Copy Link buttons - overlaid on map */}
+          <div className="absolute top-4 right-4 z-[1200] w-full max-w-2xl px-4 sm:px-0 flex gap-2 justify-end">
+            <CopyLinkButton />
             <SearchBar className="shadow-lg" />
           </div>
 
