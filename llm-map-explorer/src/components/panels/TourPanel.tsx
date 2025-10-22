@@ -17,6 +17,7 @@ export const TourPanel: React.FC = () => {
     advanceTourStage,
     exitTour,
     isTourPaused,
+    landmarks,
   } = useMapStore();
 
   // Handle keyboard navigation
@@ -145,12 +146,15 @@ export const TourPanel: React.FC = () => {
           <div className="mt-6 p-3 bg-blue-50 rounded-lg border border-blue-100">
             <p className="text-xs font-semibold text-blue-900 mb-2">Key Landmarks</p>
             <ul className="text-xs text-blue-800 space-y-1">
-              {currentStage.landmarkIds.map((id) => (
-                <li key={id} className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0"></span>
-                  <span className="truncate">{id}</span>
-                </li>
-              ))}
+              {currentStage.landmarkIds.map((id) => {
+                const landmark = landmarks.find((l) => l.id === id);
+                return (
+                  <li key={id} className="flex items-center gap-2">
+                    <span className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0"></span>
+                    <span className="truncate">{landmark?.name || id}</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}

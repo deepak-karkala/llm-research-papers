@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import type { Capability, Landmark, Organization } from '@/types/data';
 import { OrganizationDetails } from './OrganizationDetails';
+import { TourPanel } from './TourPanel';
 import {
   formatCapabilityLevel,
   formatLandmarkType,
@@ -456,10 +457,10 @@ function PersistentPanelContent({
  * - Tour Active: Shows tour stepper (future)
  */
 export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVariant }) {
-  const { selectedEntity, capabilities, landmarks, organizations, clearSelection, selectEntity } = useMapStore();
+  const { selectedEntity, capabilities, landmarks, organizations, clearSelection, selectEntity, currentTour } = useMapStore();
   const mapRef = useMapStore((state) => state.mapRef);
 
-  const isOpen = !!selectedEntity;
+  const isOpen = !!selectedEntity || !!currentTour;
 
   const entity: Capability | Landmark | Organization | null = selectedEntity
     ? selectedEntity.type === 'capability'
@@ -519,6 +520,11 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
 
   // Desktop variant - always visible, scrollable
   if (variant === 'persistent') {
+    // Show TourPanel when a tour is active
+    if (currentTour) {
+      return <TourPanel />;
+    }
+
     return (
       <div className="flex flex-col h-full bg-background">
         {/* Header with close button */}
@@ -575,7 +581,7 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
     <Sheet open={isOpen} onOpenChange={(open) => !open && clearSelection()}>
       <SheetContent
         side="bottom"
-        className="w-full h-[70vh] overflow-hidden flex flex-col rounded-t-lg"
+        className={`w-full overflow-hidden flex flex-col rounded-t-lg ${currentTour ? 'h-[75vh]' : 'h-[70vh]'}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="panel-title"
@@ -586,31 +592,35 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-4 pb-4">
-          {entity ? (
-            <>
-              {selectedEntity?.type === 'capability' ? (
-                <CapabilityDetails
-                  capability={entity as Capability}
-                  onRelatedLandmarkClick={handleRelatedLandmarkClick}
-                />
-              ) : selectedEntity?.type === 'landmark' ? (
-                <LandmarkDetails
-                  landmark={entity as Landmark}
-                  onParentCapabilityClick={handleParentCapabilityClick}
-                  onOrganizationClick={handleOrganizationClick}
-                />
-              ) : (
-                <OrganizationDetails
-                  organization={entity as Organization}
-                  onLandmarkClick={handleRelatedLandmarkClick}
-                />
-              )}
-            </>
-          ) : (
-            <WelcomeContent />
-          )}
-        </div>
+        {currentTour ? (
+          <TourPanel />
+        ) : (
+          <div className="flex-1 overflow-y-auto px-4 pb-4">
+            {entity ? (
+              <>
+                {selectedEntity?.type === 'capability' ? (
+                  <CapabilityDetails
+                    capability={entity as Capability}
+                    onRelatedLandmarkClick={handleRelatedLandmarkClick}
+                  />
+                ) : selectedEntity?.type === 'landmark' ? (
+                  <LandmarkDetails
+                    landmark={entity as Landmark}
+                    onParentCapabilityClick={handleParentCapabilityClick}
+                    onOrganizationClick={handleOrganizationClick}
+                  />
+                ) : (
+                  <OrganizationDetails
+                    organization={entity as Organization}
+                    onLandmarkClick={handleRelatedLandmarkClick}
+                  />
+                )}
+              </>
+            ) : (
+              <WelcomeContent />
+            )}
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
