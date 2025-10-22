@@ -141,7 +141,10 @@ export const TourPanel: React.FC = () => {
   // When tour is paused, show pause banner and landmark details
   if (isTourPaused) {
     return (
-      <div className="flex flex-col h-full bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+      <div
+        className="flex flex-col h-full bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+        data-testid="tour-panel"
+      >
         <TourPauseBanner
           tourTitle={currentTour.title}
           onResume={resumeTour}
@@ -163,7 +166,10 @@ export const TourPanel: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-lg shadow-lg border border-gray-200">
+    <div
+      className="flex flex-col h-full bg-white rounded-lg shadow-lg border border-gray-200"
+      data-testid="tour-panel"
+    >
       {/* aria-live region for stage announcements */}
       <div
         className="sr-only"
@@ -200,7 +206,10 @@ export const TourPanel: React.FC = () => {
       {/* Progress */}
       <div className="px-4 pt-4">
         <Progress value={progressPercent} className="h-2 mb-2" />
-        <p className="text-xs text-gray-600 text-center">
+        <p
+          className="text-xs text-gray-600 text-center"
+          data-testid="tour-stage-indicator"
+        >
           Stage {currentTourStageIndex + 1} of {totalStages}
         </p>
       </div>

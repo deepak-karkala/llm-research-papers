@@ -4,7 +4,7 @@
 **Story Points:** 2
 **Priority:** P1
 **Assignee:** Dev 2 (Mid-Level Full-Stack Developer)
-**Status:** 🔄 Ready for Implementation
+**Status:** ✅ Ready for Review
 
 ---
 
@@ -730,3 +730,38 @@ Before marking complete:
 - **Milestone:** Milestone 3 - Guided Tours
 - **Labels:** `P1`, `tour`, `discovery`, `UI`, `sprint-5`
 - **Story Points:** 2
+
+---
+
+## 🤖 Dev Agent Record
+
+**Agent Model Used:** GPT-5 Codex (dev)
+
+### Completion Notes
+- Reworked the welcome InfoPanel so new users see the full “how to use the map” guidance with tours presented as a lightweight, keyboard-friendly list that launches tours on click.
+- Added the `TourList` component and rewired the catalog flow to load tour data from `tours.json` via `useInitializeMapData`, ensuring the list stays in sync with the source data.
+- Hardened client-only Leaflet integrations (LandmarkMarker) and stabilized the tour start experience with deterministic selectors for Playwright and SSR-safe imports.
+- Tuned `useTourMapSync` and `MapContainer` to stop in-flight animations, clamp zoom, and use quicker easing so the camera snaps crisply to each stage without over-zooming.
+
+### Debug Log References
+- N/A (no new debug log entries)
+
+### Testing Results
+- Unit/E2E: Not re-run (per request)
+- Manual: Verified tour list renders, launches tours, and camera transitions smoothly between stages.
+
+### File List
+- `src/components/map/LandmarkMarker.tsx`
+- `src/components/map/MapContainer.tsx`
+- `src/components/panels/InfoPanel.tsx`
+- `src/components/panels/TourPanel.tsx`
+- `src/components/tours/TourList.tsx`
+- `src/hooks/useInitializeMapData.ts`
+- `src/hooks/useTourMapSync.ts`
+- `tests/e2e/tour-catalog.spec.ts`
+
+### 📄 Change Log
+
+| Date | Version | Description | Author |
+|------|---------|-------------|--------|
+| 2025-02-14 | 0.9 | Implemented tour list UI, Leaflet SSR guards, tour data loading, and stabilized tour camera sync. | GPT-5 Codex (Dev Agent) |

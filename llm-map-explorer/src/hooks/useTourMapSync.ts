@@ -15,9 +15,13 @@ interface TourMapSyncOptions {
 }
 
 const DEFAULT_OPTIONS: TourMapSyncOptions = {
-  duration: 1000,
-  easeLinearity: 0.25,
+  duration: 0.6,
+  easeLinearity: 0.7,
 };
+
+const MAX_TOUR_ZOOM = 1; // keep broader context visible
+const ZOOM_EPSILON = 0.01;
+const POSITION_EPSILON = 20; // map coordinates are in pixel space (0-4096)
 
 /**
  * Synchronizes map with tour stage progression
@@ -41,12 +45,10 @@ const DEFAULT_OPTIONS: TourMapSyncOptions = {
  * ```
  */
 export const useTourMapSync = (options?: TourMapSyncOptions) => {
-  const {
-    currentTour,
-    currentTourStageIndex,
-    mapRef,
-    updateTourHighlights,
-  } = useMapStore();
+  const currentTour = useMapStore((state) => state.currentTour);
+  const currentTourStageIndex = useMapStore((state) => state.currentTourStageIndex);
+  const mapRef = useMapStore((state) => state.mapRef);
+  const updateTourHighlights = useMapStore((state) => state.updateTourHighlights);
 
   // Merge provided options with defaults, memoized to avoid unnecessary effect reruns
   const mergedOptions = useMemo(
@@ -95,18 +97,30 @@ export const useTourMapSync = (options?: TourMapSyncOptions) => {
       return;
     }
 
+    const currentCenter = mapRef.getCenter();
+    const currentZoom = mapRef.getZoom();
+
     // Leaflet flyTo accepts [lat, lng] array or L.LatLng object with methods
     // We use array format for simplicity
     const center: [number, number] = [stage.mapCenter.lat, stage.mapCenter.lng];
+    const targetZoom = Math.min(stage.mapZoom ?? currentZoom, MAX_TOUR_ZOOM);
+
+    const distance = Math.hypot(currentCenter.lat - center[0], currentCenter.lng - center[1]);
+    const zoomDiff = Math.abs(currentZoom - targetZoom);
 
     // Animate map to stage coordinates
-    try {
-      mapRef.flyTo(center, stage.mapZoom, {
-        duration: mergedOptions.duration,
-        easeLinearity: mergedOptions.easeLinearity,
-      });
-    } catch (error) {
-      console.warn('Map flyTo failed:', error);
+    if (distance > POSITION_EPSILON || zoomDiff > ZOOM_EPSILON) {
+      try {
+        // Stop any in-progress animations to avoid jitter when quickly advancing stages
+        mapRef.stop();
+        mapRef.flyTo(center, targetZoom, {
+          duration: mergedOptions.duration,
+          easeLinearity: mergedOptions.easeLinearity,
+          animate: true,
+        });
+      } catch (error) {
+        console.warn('Map flyTo failed:', error);
+      }
     }
 
     // Update landmark highlighting

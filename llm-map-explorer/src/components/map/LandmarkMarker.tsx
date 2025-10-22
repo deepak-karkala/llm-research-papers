@@ -2,10 +2,21 @@
 'use client';
 
 import React, { useMemo, useCallback, useRef, useEffect } from 'react';
-import { Marker, Tooltip } from 'react-leaflet';
 import type L from 'leaflet';
 import type { Landmark } from '@/types/data';
 import { useMapStore } from '@/lib/store';
+
+const isBrowser = typeof window !== 'undefined';
+const LeafletInstance: typeof import('leaflet') | null = isBrowser
+  ? // Lazy load leaflet only in the browser to avoid SSR window references
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, global-require
+    require('leaflet')
+  : null;
+const ReactLeafletInstance: typeof import('react-leaflet') | null = isBrowser
+  ? // Lazy load react-leaflet only on the client to avoid window references during SSR
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, global-require
+    require('react-leaflet')
+  : null;
 
 /**
  * Props for LandmarkMarker component
@@ -56,7 +67,7 @@ interface IconState {
 function createLandmarkIcon(
   iconUrl: string,
   iconState: IconState
-) {
+): L.DivIcon | undefined {
   const {
     isSelected,
     isDimmed,
@@ -67,9 +78,11 @@ function createLandmarkIcon(
     type,
     orgColor,
   } = iconState;
-  // Dynamic import to avoid SSR issues with Leaflet
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const L = require('leaflet');
+  if (!LeafletInstance) {
+    return undefined;
+  }
+
+  const L = LeafletInstance;
 
   // Determine visual state styling based on tour or org highlighting
   let opacity: string;
@@ -173,6 +186,8 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
   onHover,
 }: LandmarkMarkerProps) {
   const markerRef = useRef<L.Marker>(null);
+  const MarkerComponent = ReactLeafletInstance?.Marker;
+  const TooltipComponent = ReactLeafletInstance?.Tooltip;
 
   // Get highlighting state from store (both org-based and tour-based)
   const { highlightedLandmarkIds, highlightedOrgId, organizations, tourHighlights, currentTour, pauseTour } = useMapStore();
@@ -240,6 +255,10 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
     ]
   );
 
+  if (!icon || !MarkerComponent || !TooltipComponent) {
+    return null;
+  }
+
   // Memoized event handlers
   const handleClick = useCallback(() => {
     console.log('[LandmarkMarker] Clicked landmark:', landmark.id, landmark.name);
@@ -284,14 +303,14 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
   }), [handleClick, handleMouseEnter, handleMouseLeave]);
 
   return (
-    <Marker
+    <MarkerComponent
       ref={markerRef}
       position={[landmark.coordinates.lat, landmark.coordinates.lng]}
       icon={icon}
       eventHandlers={eventHandlers}
       title={ariaLabel}
     >
-      <Tooltip
+      <TooltipComponent
         permanent={false}
         interactive={false}
         direction="top"
@@ -301,8 +320,8 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
         <div className="text-sm font-medium whitespace-nowrap">
           {tooltipText}
         </div>
-      </Tooltip>
-    </Marker>
+      </TooltipComponent>
+    </MarkerComponent>
   );
 });
 

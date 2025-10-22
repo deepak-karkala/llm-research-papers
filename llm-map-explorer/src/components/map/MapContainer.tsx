@@ -64,7 +64,7 @@ export function MapContainer({ children, className }: MapContainerProps) {
 
   useInitializeMapData();
   const visibleCapabilities = useProgressiveDisclosure();
-  useTourMapSync({ duration: 1000, easeLinearity: 0.25 });
+  useTourMapSync();
 
   useEffect(() => {
     let isMounted = true;

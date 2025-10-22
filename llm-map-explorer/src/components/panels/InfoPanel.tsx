@@ -8,9 +8,10 @@ import {
   SheetContent,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import type { Capability, Landmark, Organization } from '@/types/data';
+import type { Capability, Landmark, Organization, Tour } from '@/types/data';
 import { OrganizationDetails } from './OrganizationDetails';
 import { TourPanel } from './TourPanel';
+import { TourList } from '@/components/tours/TourList';
 import {
   formatCapabilityLevel,
   formatLandmarkType,
@@ -280,7 +281,7 @@ function LandmarkDetails({
  * WelcomeContent Component
  * Displays welcome message and guide for using the map
  */
-function WelcomeContent() {
+function WelcomeContent({ tours = [] }: { tours?: Tour[] }) {
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
@@ -387,12 +388,16 @@ function WelcomeContent() {
         </ul>
       </div>
 
-      {/* Placeholder for future features */}
-      <div className="pt-2 mt-4 border-t">
-        <p className="text-xs text-muted-foreground italic">
-          ✨ Guided tours coming soon! Follow curated paths through the research landscape.
-        </p>
-      </div>
+      {/* Guided Tours */}
+      {tours.length > 0 && (
+        <div className="space-y-3" data-testid="welcome-tours">
+          <h2 className="text-lg font-semibold">🎯 Featured Guided Tours</h2>
+          <p className="text-sm text-muted-foreground">
+            Choose a learning path to explore the landscape. Each tour highlights key landmarks and moves the map for you.
+          </p>
+          <TourList tours={tours} />
+        </div>
+      )}
     </div>
   );
 }
@@ -408,6 +413,7 @@ function PersistentPanelContent({
   onParentCapabilityClick,
   onLandmarkClick,
   onOrganizationClick,
+  tours = [],
 }: {
   selectedEntity: { type: 'capability' | 'landmark' | 'organization'; id: string } | null;
   entity: Capability | Landmark | Organization | null;
@@ -415,9 +421,16 @@ function PersistentPanelContent({
   onParentCapabilityClick: (id: string) => void;
   onLandmarkClick: (id: string) => void;
   onOrganizationClick: (id: string) => void;
+  tours?: Tour[];
 }) {
   if (!entity) {
-    return <WelcomeContent />;
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto">
+          <WelcomeContent tours={tours} />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -457,7 +470,7 @@ function PersistentPanelContent({
  * - Tour Active: Shows tour stepper (future)
  */
 export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVariant }) {
-  const { selectedEntity, capabilities, landmarks, organizations, clearSelection, selectEntity, currentTour } = useMapStore();
+  const { selectedEntity, capabilities, landmarks, organizations, clearSelection, selectEntity, currentTour, tours } = useMapStore();
   const mapRef = useMapStore((state) => state.mapRef);
 
   const isOpen = !!selectedEntity || !!currentTour;
@@ -565,6 +578,7 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
             onParentCapabilityClick={handleParentCapabilityClick}
             onLandmarkClick={handleRelatedLandmarkClick}
             onOrganizationClick={handleOrganizationClick}
+            tours={tours}
           />
         </div>
       </div>
@@ -617,7 +631,7 @@ export function InfoPanel({ variant = 'persistent' }: { variant?: InfoPanelVaria
                 )}
               </>
             ) : (
-              <WelcomeContent />
+              <WelcomeContent tours={tours} />
             )}
           </div>
         )}
