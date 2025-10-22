@@ -1,0 +1,155 @@
+/**
+ * Tour Highlighting Styles
+ * Visual effects for landmark markers during guided tours
+ */
+
+/* Current stage landmark - bright glow effect */
+.landmark-marker-tour-current {
+  animation: tour-glow-current 2s ease-in-out infinite;
+}
+
+@keyframes tour-glow-current {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 1)) drop-shadow(0 0 4px rgba(37, 99, 235, 0.8));
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgba(59, 130, 246, 1)) drop-shadow(0 0 8px rgba(37, 99, 235, 1));
+  }
+}
+
+/* Previous stage landmark - dimmed with grey tint */
+.landmark-marker-tour-previous {
+  animation: tour-dim-previous 300ms ease-out forwards;
+  opacity: 0.4;
+}
+
+@keyframes tour-dim-previous {
+  from {
+    opacity: 1;
+    filter: grayscale(0);
+  }
+  to {
+    opacity: 0.4;
+    filter: grayscale(0.6) opacity(0.6);
+  }
+}
+
+/* Future stage landmark - subtle outline */
+.landmark-marker-tour-future {
+  animation: tour-outline-future 300ms ease-out forwards;
+  opacity: 0.6;
+}
+
+@keyframes tour-outline-future {
+  from {
+    opacity: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+  to {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px rgba(100, 116, 139, 0.8)) opacity(0.7);
+  }
+}
+
+/* Smooth transitions between states */
+.landmark-marker {
+  transition: opacity 300ms ease-out, filter 300ms ease-out, transform 200ms ease-in-out;
+}
+
+/* Ensure tour highlighting takes precedence over organization highlighting */
+.landmark-marker-tour-current,
+.landmark-marker-tour-previous,
+.landmark-marker-tour-future {
+  position: relative;
+}
+
+/* Capability polygon highlighting during tours */
+.capability-polygon-tour-highlighted {
+  animation: polygon-highlight-current 600ms ease-in-out;
+}
+
+@keyframes polygon-highlight-current {
+  0% {
+    stroke-opacity: 0.8;
+    fill-opacity: 0.4;
+  }
+  50% {
+    stroke-opacity: 1;
+    fill-opacity: 0.5;
+  }
+  100% {
+    stroke-opacity: 0.9;
+    fill-opacity: 0.45;
+  }
+}
+
+/* Dimmed polygons during tour */
+.capability-polygon-tour-dimmed {
+  animation: polygon-dim-previous 300ms ease-out forwards;
+}
+
+@keyframes polygon-dim-previous {
+  from {
+    stroke-opacity: 0.8;
+    fill-opacity: 0.4;
+  }
+  to {
+    stroke-opacity: 0.3;
+    fill-opacity: 0.1;
+  }
+}
+
+/* Smooth polygon transitions */
+.leaflet-interactive {
+  transition: stroke-opacity 300ms ease-out, fill-opacity 300ms ease-out;
+}
+
+/* Reduce motion for users with prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .landmark-marker,
+  .landmark-marker-tour-current,
+  .landmark-marker-tour-previous,
+  .landmark-marker-tour-future,
+  .capability-polygon-tour-highlighted,
+  .capability-polygon-tour-dimmed {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .landmark-marker-tour-current {
+    filter: drop-shadow(0 0 12px rgba(59, 130, 246, 1)) drop-shadow(0 0 6px rgba(37, 99, 235, 1)) !important;
+  }
+
+  .landmark-marker-tour-previous {
+    opacity: 0.3 !important;
+    filter: grayscale(1) opacity(0.4) !important;
+  }
+
+  .landmark-marker-tour-future {
+    opacity: 0.5 !important;
+    filter: drop-shadow(0 0 3px rgba(100, 116, 139, 1)) opacity(0.6) !important;
+  }
+}
+
+/* Dark mode considerations */
+@media (prefers-color-scheme: dark) {
+  .landmark-marker-tour-current {
+    animation: tour-glow-current-dark 2s ease-in-out infinite;
+  }
+
+  @keyframes tour-glow-current-dark {
+    0%, 100% {
+      filter: drop-shadow(0 0 12px rgba(96, 165, 250, 1)) drop-shadow(0 0 6px rgba(59, 130, 246, 0.9));
+    }
+    50% {
+      filter: drop-shadow(0 0 16px rgba(96, 165, 250, 1)) drop-shadow(0 0 10px rgba(59, 130, 246, 1));
+    }
+  }
+
+  .landmark-marker-tour-future {
+    filter: drop-shadow(0 0 3px rgba(148, 163, 184, 0.8)) opacity(0.7) !important;
+  }
+}

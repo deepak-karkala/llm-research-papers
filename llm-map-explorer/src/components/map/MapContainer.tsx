@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { useInitializeMapData } from '@/hooks/useInitializeMapData';
 import { useProgressiveDisclosure } from '@/hooks/useProgressiveDisclosure';
+import { useTourMapSync } from '@/hooks/useTourMapSync';
 import { useMapStore } from '@/lib/store';
 
 // Lazy load CapabilityPolygonsLayer to avoid SSR issues
@@ -63,6 +64,7 @@ export function MapContainer({ children, className }: MapContainerProps) {
 
   useInitializeMapData();
   const visibleCapabilities = useProgressiveDisclosure();
+  useTourMapSync({ duration: 1000, easeLinearity: 0.25 });
 
   useEffect(() => {
     let isMounted = true;

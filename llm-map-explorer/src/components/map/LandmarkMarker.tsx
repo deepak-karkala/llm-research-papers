@@ -37,38 +37,88 @@ const iconMap: Record<Landmark['type'], string> = {
   benchmark: '/icons/landmarks/target.svg',
 };
 
+interface IconState {
+  isSelected: boolean;
+  isDimmed: boolean;
+  isHighlighted: boolean;
+  isCurrentTourLandmark?: boolean;
+  isPreviousTourLandmark?: boolean;
+  isFutureTourLandmark?: boolean;
+  type: Landmark['type'];
+  orgColor?: string;
+}
+
 /**
  * Creates a custom icon for Leaflet markers
  * Uses DivIcon to support CSS-based visual states and transitions
+ * Supports both organization-based and tour-based highlighting
  */
 function createLandmarkIcon(
   iconUrl: string,
-  isSelected: boolean,
-  isDimmed: boolean,
-  isHighlighted: boolean,
-  type: Landmark['type'],
-  orgColor?: string
+  iconState: IconState
 ) {
+  const {
+    isSelected,
+    isDimmed,
+    isHighlighted,
+    isCurrentTourLandmark = false,
+    isPreviousTourLandmark = false,
+    isFutureTourLandmark = false,
+    type,
+    orgColor,
+  } = iconState;
   // Dynamic import to avoid SSR issues with Leaflet
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const L = require('leaflet');
 
-  // Determine visual state styling
-  const opacity = isDimmed ? '0.3' : '1';
-  const scale = isHighlighted ? '1.2' : isDimmed ? '0.85' : isSelected ? '1.2' : '1';
-  const filter = isHighlighted
-    ? `drop-shadow(0 0 8px ${orgColor || 'rgba(59, 130, 246, 0.6)'})`
-    : isSelected
-      ? 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.8))'
-      : isDimmed
-        ? 'grayscale(0.8)'
-        : 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))';
+  // Determine visual state styling based on tour or org highlighting
+  let opacity: string;
+  let scale: string;
+  let filter: string;
+
+  if (isCurrentTourLandmark) {
+    // Current stage: bright glow effect
+    opacity = '1';
+    scale = '1.3';
+    filter = 'drop-shadow(0 0 10px rgba(59, 130, 246, 1)) drop-shadow(0 0 4px rgba(37, 99, 235, 0.8))';
+  } else if (isPreviousTourLandmark) {
+    // Previous stage: dimmed appearance
+    opacity = '0.4';
+    scale = isDimmed ? '0.85' : '1';
+    filter = 'grayscale(0.6) opacity(0.6)';
+  } else if (isFutureTourLandmark) {
+    // Future stage: subtle outline
+    opacity = '0.6';
+    scale = '1';
+    filter = 'drop-shadow(0 0 2px rgba(100, 116, 139, 0.8)) opacity(0.7)';
+  } else if (isHighlighted) {
+    // Organization highlighting
+    opacity = '1';
+    scale = '1.2';
+    filter = `drop-shadow(0 0 8px ${orgColor || 'rgba(59, 130, 246, 0.6)'})`;
+  } else if (isSelected) {
+    opacity = '1';
+    scale = '1.2';
+    filter = 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.8))';
+  } else if (isDimmed) {
+    opacity = '0.3';
+    scale = '0.85';
+    filter = 'grayscale(0.8)';
+  } else {
+    // Normal state
+    opacity = '1';
+    scale = '1';
+    filter = 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))';
+  }
 
   // Build class list for highlighting
   const classes = [
     'landmark-marker',
     `landmark-marker-${type}`,
     isHighlighted && 'landmark-marker-highlighted',
+    isCurrentTourLandmark && 'landmark-marker-tour-current',
+    isPreviousTourLandmark && 'landmark-marker-tour-previous',
+    isFutureTourLandmark && 'landmark-marker-tour-future',
     isDimmed && 'landmark-marker-dimmed',
   ]
     .filter(Boolean)
@@ -124,14 +174,25 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
 }: LandmarkMarkerProps) {
   const markerRef = useRef<L.Marker>(null);
 
-  // Get highlighting state from store
-  const { highlightedLandmarkIds, highlightedOrgId, organizations } = useMapStore();
+  // Get highlighting state from store (both org-based and tour-based)
+  const { highlightedLandmarkIds, highlightedOrgId, organizations, tourHighlights } = useMapStore();
 
-  // Determine if this landmark is highlighted
-  const isHighlighted = highlightedLandmarkIds.includes(landmark.id);
+  // Determine if this landmark is highlighted by organization
+  const isHighlightedByOrg = highlightedLandmarkIds.includes(landmark.id);
+
+  // Determine if this landmark is highlighted by tour
+  const isCurrentTourLandmark = tourHighlights.current.includes(landmark.id);
+  const isPreviousTourLandmark = tourHighlights.previous.includes(landmark.id);
+  const isFutureTourLandmark = tourHighlights.future.includes(landmark.id);
+  const isTourHighlighted = isCurrentTourLandmark || isPreviousTourLandmark || isFutureTourLandmark;
+
+  // Determine combined highlighting state
+  const isHighlighted = isHighlightedByOrg || isTourHighlighted;
+
   // If highlighting is active but this landmark is not highlighted, dim it
   // Also support isDimmed prop for backward compatibility
-  const shouldDim = isDimmed || (highlightedOrgId !== null && !isHighlighted);
+  // Tour highlighting takes precedence over org highlighting for dimming
+  const shouldDim = isDimmed || (!isTourHighlighted && tourHighlights.current.length > 0) || (highlightedOrgId !== null && !isHighlighted);
 
   // Get organization color for highlighted state
   const highlightedOrg = useMemo(
@@ -157,15 +218,26 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
 
   // Create icon with proper memoization
   const icon = useMemo(
-    () => createLandmarkIcon(
-      iconMap[landmark.type],
+    () => createLandmarkIcon(iconMap[landmark.type], {
+      isSelected,
+      isDimmed: shouldDim,
+      isHighlighted,
+      isCurrentTourLandmark,
+      isPreviousTourLandmark,
+      isFutureTourLandmark,
+      type: landmark.type,
+      orgColor,
+    }),
+    [
+      landmark.type,
       isSelected,
       shouldDim,
       isHighlighted,
-      landmark.type,
-      orgColor
-    ),
-    [landmark.type, isSelected, shouldDim, isHighlighted, orgColor]
+      isCurrentTourLandmark,
+      isPreviousTourLandmark,
+      isFutureTourLandmark,
+      orgColor,
+    ]
   );
 
   // Memoized event handlers

@@ -9,12 +9,14 @@ import type { Capability } from '@/types/data';
 interface CapabilityPolygonProps {
   capability: Capability;
   isSelected: boolean;
+  isInCurrentTourStage?: boolean;
   onSelect: (id: string) => void;
 }
 
 export const CapabilityPolygon = React.memo(({
   capability,
   isSelected,
+  isInCurrentTourStage = false,
   onSelect,
 }: CapabilityPolygonProps) => {
   // Convert LatLng[] to [number, number][] for React-Leaflet
@@ -32,7 +34,7 @@ export const CapabilityPolygon = React.memo(({
     fillRule: 'evenodd' as const,
   }), [capability.visualStyleHints]);
 
-  // Enhanced path options for selected state
+  // Enhanced path options for selected state or tour highlighting
   const pathOptions = useMemo(() => {
     if (isSelected) {
       return {
@@ -43,8 +45,19 @@ export const CapabilityPolygon = React.memo(({
         color: '#1976d2',
       };
     }
+
+    // Enhance visibility when capability contains current tour stage landmarks
+    if (isInCurrentTourStage) {
+      return {
+        ...basePathOptions,
+        fillOpacity: Math.min(basePathOptions.fillOpacity + 0.15, 0.8),
+        weight: 3,
+        color: '#3b82f6', // Bright blue for tour context
+      };
+    }
+
     return basePathOptions;
-  }, [basePathOptions, isSelected]);
+  }, [basePathOptions, isSelected, isInCurrentTourStage]);
 
   // Event handlers
   const handleClick = useCallback((e: LeafletMouseEvent) => {
