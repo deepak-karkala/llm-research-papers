@@ -56,6 +56,40 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      keyframes: {
+        slideInRight: {
+          from: { transform: 'translateX(100%)', opacity: '0' },
+          to: { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideOutRight: {
+          from: { transform: 'translateX(0)', opacity: '1' },
+          to: { transform: 'translateX(100%)', opacity: '0' },
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        fadeOut: {
+          from: { opacity: '1' },
+          to: { opacity: '0' },
+        },
+        scaleIn: {
+          from: { transform: 'scale(0.95)', opacity: '0' },
+          to: { transform: 'scale(1)', opacity: '1' },
+        },
+      },
+      animation: {
+        slideInRight: 'slideInRight 300ms cubic-bezier(0, 0, 0.2, 1)',
+        slideOutRight: 'slideOutRight 200ms cubic-bezier(0.4, 0, 1, 1)',
+        fadeIn: 'fadeIn 300ms cubic-bezier(0, 0, 0.2, 1)',
+        fadeOut: 'fadeOut 200ms cubic-bezier(0.4, 0, 1, 1)',
+        scaleIn: 'scaleIn 300ms cubic-bezier(0, 0, 0.2, 1)',
+      },
+      transitionDuration: {
+        fast: '150ms',
+        normal: '300ms',
+        slow: '500ms',
+      },
     },
   },
   plugins: [],
