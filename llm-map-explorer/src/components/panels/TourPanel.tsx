@@ -62,21 +62,38 @@ export const TourPanel: React.FC = () => {
     const isLastStage = currentTourStageIndex === totalStages - 1;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === '[' && !isFirstStage) {
+      // [ key = previous stage
+      if (e.key === '[') {
         e.preventDefault();
-        advanceTourStage('previous');
-      } else if (e.key === ']' && !isLastStage) {
+        if (!isFirstStage) {
+          advanceTourStage('previous');
+        }
+      }
+      // ] key = next stage
+      else if (e.key === ']') {
         e.preventDefault();
-        advanceTourStage('next');
-      } else if (e.key === 'Escape') {
+        if (!isLastStage) {
+          advanceTourStage('next');
+        }
+      }
+      // Escape = exit tour
+      else if (e.key === 'Escape') {
         e.preventDefault();
         exitTour();
-      } else if (e.key === 'ArrowLeft' && !isFirstStage) {
+      }
+      // ArrowLeft = previous stage (alternative)
+      else if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        advanceTourStage('previous');
-      } else if (e.key === 'ArrowRight' && !isLastStage) {
+        if (!isFirstStage) {
+          advanceTourStage('previous');
+        }
+      }
+      // ArrowRight = next stage (alternative)
+      else if (e.key === 'ArrowRight') {
         e.preventDefault();
-        advanceTourStage('next');
+        if (!isLastStage) {
+          advanceTourStage('next');
+        }
       }
     };
 
