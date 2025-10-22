@@ -1,0 +1,305 @@
+[
+  {
+    "id": "gpt-evolution",
+    "title": "GPT Evolution: From Transformers to GPT-4",
+    "description": "Trace the evolutionary journey from the original Transformer architecture through GPT-3 to modern iterations. Discover how language models grew larger and more capable with each generation.",
+    "difficulty": "beginner",
+    "estimatedDuration": 10,
+    "tags": ["gpt", "transformers", "language-models", "evolution"],
+    "stages": [
+      {
+        "index": 0,
+        "title": "The Transformer Foundation",
+        "description": "Explore the foundational 'Attention Is All You Need' paper that started it all. Understand how the Transformer architecture revolutionized natural language processing.",
+        "narration": "The Transformer architecture, introduced in 2017, fundamentally changed how we approach language modeling. Instead of relying on recurrent neural networks that process text sequentially, Transformers use self-attention mechanisms that allow models to consider all words in a sequence simultaneously. This parallelizable approach became the foundation for all modern large language models. The 'Attention Is All You Need' paper demonstrated that attention mechanisms alone, without recurrence, could achieve state-of-the-art results on translation tasks.",
+        "landmarkIds": ["landmark-001", "landmark-022"],
+        "mapCenter": {
+          "lat": 800,
+          "lng": 1200
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 1,
+        "title": "GPT & GPT-2: Early Language Models",
+        "description": "Discover OpenAI's early generative language models that first demonstrated the power of scaling. See how GPT-2 shocked the world with its ability to generate coherent text.",
+        "narration": "OpenAI's first GPT model applied the Transformer decoder architecture to generative language modeling at scale. But it was GPT-2 that truly captured public imagination, as it demonstrated impressive zero-shot task performance without explicit task-specific training. GPT-2's ability to generate coherent multi-paragraph text samples raised important questions about AI safety and capabilities. The model's surprising competence sparked widespread discussion about the implications of large-scale language models.",
+        "landmarkIds": ["landmark-003", "landmark-002"],
+        "mapCenter": {
+          "lat": 800,
+          "lng": 3200
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 2,
+        "title": "GPT-3: The Scaling Law Discovery",
+        "description": "Witness the breakthrough moment when scaling laws showed that larger models exhibit emergent capabilities. GPT-3 demonstrated few-shot learning at unprecedented scale.",
+        "narration": "GPT-3 represented a 100-fold scale increase from GPT-2, with 175 billion parameters. This scale jump revealed crucial insights about language model behavior: larger models develop emergent abilities to perform tasks with just a few examples (few-shot learning) rather than requiring extensive fine-tuning. GPT-3 showed unexpected proficiency at coding, mathematics, and reasoning tasks, demonstrating that scale alone could unlock capabilities not explicitly trained for. This discovery fundamentally changed how researchers thought about building intelligent systems.",
+        "landmarkIds": ["landmark-004", "landmark-005"],
+        "mapCenter": {
+          "lat": 1000,
+          "lng": 3000
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 3,
+        "title": "InstructGPT & ChatGPT: Human Alignment",
+        "description": "Explore how reinforcement learning from human feedback improved safety and usability. See how instruction following became a key capability.",
+        "narration": "While GPT-3 was powerful, it sometimes produced harmful, biased, or unhelpful content. InstructGPT introduced a new training paradigm: fine-tune large language models using human feedback on model outputs. This approach, called RLHF (Reinforcement Learning from Human Feedback), made models more aligned with human values and intentions. ChatGPT applied these techniques at scale, significantly improving safety, instruction-following, and user satisfaction. This marked a shift from pure capability scaling toward making models more usable and trustworthy.",
+        "landmarkIds": ["landmark-006", "landmark-007"],
+        "mapCenter": {
+          "lat": 1700,
+          "lng": 2100
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 4,
+        "title": "GPT-4: Multimodal & Advanced Reasoning",
+        "description": "Discover the latest frontier with GPT-4, featuring multimodal capabilities and enhanced reasoning. See how large models continue to evolve.",
+        "narration": "GPT-4 represents the next evolution in language model capabilities. Built on even larger scale and with multimodal input support (text and images), GPT-4 demonstrates improved reasoning, coding ability, and consistency compared to GPT-3.5. GPT-4 can handle longer contexts and shows better performance on complex tasks requiring multi-step reasoning. The model also exhibits improved safety and alignment compared to earlier versions, continuing OpenAI's focus on responsible AI development and practical utility.",
+        "landmarkIds": ["landmark-018", "landmark-007"],
+        "mapCenter": {
+          "lat": 1800,
+          "lng": 2000
+        },
+        "mapZoom": 3
+      }
+    ],
+    "tags": ["gpt", "evolution", "transformers", "beginner", "openai"]
+  },
+  {
+    "id": "rlhf-pipeline",
+    "title": "RLHF Pipeline: Training with Human Feedback",
+    "description": "Deep dive into reinforcement learning from human feedback. Learn how human preferences guide model behavior, making AI systems more aligned and helpful.",
+    "difficulty": "intermediate",
+    "estimatedDuration": 13,
+    "stages": [
+      {
+        "index": 0,
+        "title": "Supervised Fine-Tuning Foundation",
+        "description": "Begin with the supervised fine-tuning phase where human experts provide high-quality examples. This creates the base model for RLHF.",
+        "narration": "The RLHF process starts with supervised fine-tuning (SFT). Expert annotators create demonstration datasets showing how the model should respond to various prompts. A large base model (like GPT-3) is then fine-tuned on these demonstrations to become more helpful and less harmful. This SFT phase creates an intermediate model that understands the general instruction-following task. The quality of SFT examples significantly impacts the final model quality, as human annotators essentially teach the model what good behavior looks like.",
+        "landmarkIds": ["landmark-026", "landmark-004"],
+        "mapCenter": {
+          "lat": 1000,
+          "lng": 3000
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 1,
+        "title": "Reward Model Training",
+        "description": "Understand how reward models learn to predict human preferences. These models become the signal that guides further training.",
+        "narration": "Next, human annotators score or rank model outputs, providing preference data. For example, they might rank four different model responses to the same prompt from best to worst. This preference data trains a 'reward model'—a neural network that learns to predict how good a given text is according to human preferences. The reward model distills human judgment into a scalar score, enabling automated evaluation of model outputs. Training a good reward model is critical because all subsequent training relies on its signals.",
+        "landmarkIds": ["landmark-006", "landmark-007"],
+        "mapCenter": {
+          "lat": 1700,
+          "lng": 2100
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 2,
+        "title": "Policy Optimization",
+        "description": "Apply reinforcement learning to optimize model behavior. Learn how models are fine-tuned using reward signals.",
+        "narration": "With a trained reward model in hand, we can use reinforcement learning to improve the model's performance on the reward. Proximal Policy Optimization (PPO) is the algorithm typically used here. PPO adjusts the model's parameters to maximize expected reward while staying close to the original model (to avoid catastrophic performance degradation). The policy optimization phase is where the model learns human preferences—it generates outputs, receives scores from the reward model, and adjusts its weights to produce higher-scoring outputs.",
+        "landmarkIds": ["landmark-005", "landmark-025"],
+        "mapCenter": {
+          "lat": 1400,
+          "lng": 2200
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 3,
+        "title": "Iteration & Improvement",
+        "description": "The RLHF process often repeats with new human feedback data and adversarial testing. Continuous improvement through iteration.",
+        "narration": "RLHF is not a one-shot process. As the model improves, it may discover new failure modes or develop unexpected behaviors. Red-teaming—adversarially probing the model for failures—generates new examples for SFT and reward model training. Teams iterate on this cycle: deploy the model, collect failure cases, retrain components, and improve. This iterative refinement is how modern systems like ChatGPT and Claude achieve high standards of safety and helpfulness.",
+        "landmarkIds": ["landmark-018", "landmark-007"],
+        "mapCenter": {
+          "lat": 1400,
+          "lng": 2200
+        },
+        "mapZoom": 3
+      }
+    ],
+    "tags": ["rlhf", "training", "alignment", "intermediate"]
+  },
+  {
+    "id": "peft-finetuning",
+    "title": "PEFT Fine-tuning: Efficient Model Adaptation",
+    "description": "Explore parameter-efficient fine-tuning techniques that reduce computational cost. Learn how to adapt large models without retraining everything.",
+    "difficulty": "intermediate",
+    "estimatedDuration": 11,
+    "stages": [
+      {
+        "index": 0,
+        "title": "The Fine-tuning Challenge",
+        "description": "Understand why fine-tuning all parameters of a large model is expensive and slow.",
+        "narration": "Large language models with billions or trillions of parameters are expensive to fine-tune. Traditional fine-tuning requires computing and storing gradients for every parameter, which demands massive GPU memory and compute resources. For a 70B parameter model, full fine-tuning might require 8+ high-end GPUs. This cost barrier prevents many organizations and researchers from customizing models to their specific domains or tasks. Parameter-efficient fine-tuning (PEFT) techniques aim to achieve strong adaptation results while training far fewer parameters.",
+        "landmarkIds": ["landmark-008", "landmark-021"],
+        "mapCenter": {
+          "lat": 1800,
+          "lng": 1600
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 1,
+        "title": "LoRA: Low-Rank Adaptation",
+        "description": "Discover LoRA, which trains small rank-decomposed weight matrices instead of full weight updates.",
+        "narration": "LoRA (Low-Rank Adaptation) is a technique that freezes the large model and trains small learnable matrices that are added to the weights. Instead of updating every parameter in a weight matrix W (shape: m × n), LoRA introduces two smaller matrices A (m × r) and B (r × n) where r << n. During fine-tuning, only A and B are trained. This reduces trainable parameters from millions to thousands while maintaining high-quality adaptation. LoRA is especially effective for instruction tuning and task-specific adaptation.",
+        "landmarkIds": ["landmark-010", "landmark-009"],
+        "mapCenter": {
+          "lat": 1800,
+          "lng": 1600
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 2,
+        "title": "QLoRA & Quantized Efficiency",
+        "description": "Combine quantization with LoRA for even greater efficiency. Quantize base model weights while adapting with LoRA.",
+        "narration": "QLoRA takes PEFT further by quantizing the base model to lower precision (e.g., 4-bit) while using LoRA for adaptation. This reduces memory usage dramatically—a 70B parameter model can be fine-tuned on a single consumer GPU. QLoRA achieves this by: (1) quantizing model weights to 4-bit precision, (2) using LoRA adapters for fine-tuning, and (3) employing double quantization and paged optimizers to save memory. QLoRA makes large model fine-tuning accessible without professional-grade hardware.",
+        "landmarkIds": ["landmark-011", "landmark-012"],
+        "mapCenter": {
+          "lat": 1800,
+          "lng": 1600
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 3,
+        "title": "Practical Applications & Variants",
+        "description": "Explore how PEFT techniques are used in practice and variants that offer different trade-offs.",
+        "narration": "PEFT techniques have enabled new use cases: researchers can quickly adapt large open-source models like LLaMA to specialized tasks, organizations can fine-tune models on proprietary data without excessive compute costs, and educators can experiment with model adaptation. Various PEFT methods offer different trade-offs: LoRA provides good quality-to-parameter efficiency, QLoRA adds quantization for memory efficiency, and other approaches like prefix tuning or adapter modules offer alternatives. The availability of efficient fine-tuning techniques has accelerated research and deployment of customized language models.",
+        "landmarkIds": ["landmark-008", "landmark-019"],
+        "mapCenter": {
+          "lat": 1800,
+          "lng": 1600
+        },
+        "mapZoom": 3
+      }
+    ],
+    "tags": ["peft", "finetuning", "lora", "intermediate", "efficiency"]
+  },
+  {
+    "id": "multimodal-vision-language",
+    "title": "Multimodal Learning: Vision-Language Models",
+    "description": "Journey through the development of models that understand both text and images. See how vision and language are unified.",
+    "difficulty": "intermediate",
+    "estimatedDuration": 11,
+    "tags": ["multimodal", "vision-language", "clip", "dall-e", "intermediate"],
+    "stages": [
+      {
+        "index": 0,
+        "title": "CLIP: Vision-Text Alignment",
+        "description": "Explore OpenAI's CLIP model that learns visual concepts through text descriptions. A breakthrough in multimodal learning.",
+        "narration": "CLIP (Contrastive Language-Image Pre-training) was a breakthrough in multimodal learning. The insight was elegant: if you have images and descriptions of them, you can train models to align visual and textual representations by contrasting matching image-text pairs against non-matching ones. CLIP learned to understand images based on natural language descriptions, without requiring human-labeled categories. This approach, called contrastive learning, proved far more scalable than traditional supervised learning and opened the door to zero-shot visual classification.",
+        "landmarkIds": ["landmark-013", "landmark-002"],
+        "mapCenter": {
+          "lat": 1500,
+          "lng": 1000
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 1,
+        "title": "DALL-E: Image Generation from Text",
+        "description": "See how language models can generate images. DALL-E demonstrates creative synthesis from text prompts.",
+        "narration": "DALL-E applies the Transformer architecture to image generation. The model was trained to generate images from text descriptions by tokenizing images into discrete tokens (using a learned autoencoder) and concatenating them with text tokens. It then predicts image tokens autoregressively, much like a language model. DALL-E demonstrated that language model techniques could be repurposed for creative image generation. Users could prompt it with creative descriptions and receive novel, never-before-seen images, showcasing compositionality and generalization.",
+        "landmarkIds": ["landmark-014", "landmark-001"],
+        "mapCenter": {
+          "lat": 1400,
+          "lng": 1200
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 2,
+        "title": "LLaVA & Visual Instruction Following",
+        "description": "Understand how to adapt language models for visual understanding. Connect vision encoders with language model capabilities.",
+        "narration": "LLaVA (Large Language and Vision Assistant) demonstrates that a relatively simple architecture—a vision encoder (like CLIP) connected to a language model—can produce strong visual understanding. The model was trained on image-question-answer pairs where humans provide instructions about images. A vision encoder extracts visual features, which are projected into the language model's embedding space. The language model then generates responses about the image. This approach efficiently bridged vision and language capabilities without requiring massive architectural innovation.",
+        "landmarkIds": ["landmark-023", "landmark-004"],
+        "mapCenter": {
+          "lat": 1300,
+          "lng": 1400
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 3,
+        "title": "Modern Multimodal Systems",
+        "description": "See how modern systems like GPT-4V handle images. Understand the convergence of vision and language.",
+        "narration": "GPT-4V and similar modern systems represent the convergence of vision and language capabilities. These models can process multiple images simultaneously, reason about spatial relationships, read text within images, and even understand charts and diagrams. They handle variable image sizes and aspect ratios while maintaining strong language capabilities. Modern multimodal models demonstrate how scaling vision-language systems produces emergent abilities in visual reasoning and understanding. This convergence represents the frontier of AI systems that understand the world through multiple modalities.",
+        "landmarkIds": ["landmark-018", "landmark-015"],
+        "mapCenter": {
+          "lat": 1200,
+          "lng": 1600
+        },
+        "mapZoom": 3
+      }
+    ]
+  },
+  {
+    "id": "llm-efficiency",
+    "title": "LLM Efficiency: Scaling Down Without Losing Performance",
+    "description": "Explore techniques for making language models more efficient. Discover how quantization and optimization make powerful models accessible.",
+    "difficulty": "advanced",
+    "estimatedDuration": 12,
+    "tags": ["efficiency", "quantization", "compression", "optimization", "advanced"],
+    "stages": [
+      {
+        "index": 0,
+        "title": "The Efficiency Challenge",
+        "description": "Understand why model efficiency matters. Learn the computational constraints that drive innovation.",
+        "narration": "Large language models like GPT-3 (175B parameters) require massive compute resources: running inference might need GPU clusters costing millions of dollars. This creates a deployment challenge: how can organizations use state-of-the-art models without breaking their budgets? The answer lies in efficiency techniques that compress models, reduce computational requirements, or optimize inference. These innovations have democratized access to large model capabilities, enabling researchers and organizations with limited compute to still benefit from advanced language models.",
+        "landmarkIds": ["landmark-004", "landmark-019"],
+        "mapCenter": {
+          "lat": 900,
+          "lng": 2400
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 1,
+        "title": "Quantization & Model Compression",
+        "description": "Discover quantization techniques that reduce model size and memory requirements. Maintain quality with lower precision.",
+        "narration": "Quantization reduces the precision of model weights and activations. Instead of storing weights as 32-bit floats, quantization might use 8-bit or even 4-bit integers. This reduces model size by 4-8x, making it easier to fit large models in memory or on edge devices. Quantization research has shown that models can often tolerate significant precision reduction without quality loss. Techniques like post-training quantization and quantization-aware training make this practical. GPTQ is an example of sophisticated quantization that maintains quality while dramatically reducing model size.",
+        "landmarkIds": ["landmark-012", "landmark-011"],
+        "mapCenter": {
+          "lat": 1000,
+          "lng": 2200
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 2,
+        "title": "Model Optimization & Inference",
+        "description": "Learn techniques that speed up model inference. From caching to architecture optimization.",
+        "narration": "Beyond compression, inference optimization makes models faster to run. Techniques include: key-value caching to avoid recomputing attention, flash attention for faster attention computation, pruning to remove unnecessary weights, and distillation to create smaller student models from larger teachers. Modern inference frameworks like vLLM and TensorRT apply these optimizations automatically. These techniques can reduce inference latency by 10-50x, making real-time applications feasible. Inference optimization is crucial for deployed systems where latency and throughput directly impact user experience.",
+        "landmarkIds": ["landmark-008", "landmark-009"],
+        "mapCenter": {
+          "lat": 1100,
+          "lng": 2000
+        },
+        "mapZoom": 3
+      },
+      {
+        "index": 3,
+        "title": "Efficient Open-Source Models",
+        "description": "See how efficiency innovations enable smaller open-source models. Discover alternatives to massive proprietary models.",
+        "narration": "Efficiency techniques have enabled a new generation of smaller, more efficient models that rival larger proprietary models in capability. LLaMA (a 7B-65B model family) demonstrates that well-optimized open models can compete with much larger proprietary systems. Efficient models enable on-device inference, lower-cost API services, and customization for specific domains. The combination of efficient training (using techniques like FlashAttention), efficient fine-tuning (LoRA, QLoRA), and efficient inference creates a complete toolkit for practical LLM deployment. This democratization of access is reshaping how organizations use language models.",
+        "landmarkIds": ["landmark-008", "landmark-024"],
+        "mapCenter": {
+          "lat": 1200,
+          "lng": 1800
+        },
+        "mapZoom": 3
+      }
+    ]
+  }
+]

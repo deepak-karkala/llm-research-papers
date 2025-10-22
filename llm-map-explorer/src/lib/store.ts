@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import type { Capability, Landmark, Organization } from '@/types/data';
+import type { Capability, Landmark, Organization, Tour } from '@/types/data';
 import type { Map as LeafletMap } from 'leaflet';
 import { getOrganizationLandmarks } from '@/lib/organization-utils';
 
@@ -29,6 +29,10 @@ interface MapState {
    */
   organizations: Organization[];
   /**
+   * An array of all guided tours available to the user.
+   */
+  tours: Tour[];
+  /**
    * The current zoom level of the map.
    */
   currentZoom: number;
@@ -56,6 +60,26 @@ interface MapState {
    * An array of landmark IDs that belong to the currently highlighted organization.
    */
   highlightedLandmarkIds: string[];
+  /**
+   * The currently active guided tour, if any.
+   */
+  currentTour: Tour | null;
+  /**
+   * The index of the current stage in the active tour.
+   */
+  currentTourStageIndex: number;
+  /**
+   * Whether the current tour is paused.
+   */
+  isTourPaused: boolean;
+  /**
+   * Landmarks to highlight during the tour (by stage type).
+   */
+  tourHighlights: {
+    current: string[];
+    previous: string[];
+    future: string[];
+  };
   /**
    * Sets the capabilities data in the store.
    * @param capabilities - An array of capability objects.
@@ -115,6 +139,40 @@ interface MapState {
    * Clears the current highlighting, resetting the highlighted organization and landmarks.
    */
   clearHighlights: () => void;
+  /**
+   * Sets the tours data in the store.
+   * @param tours - An array of tour objects.
+   */
+  setTours: (tours: Tour[]) => void;
+  /**
+   * Starts a new guided tour.
+   * @param tour - The tour to start.
+   */
+  startTour: (tour: Tour) => void;
+  /**
+   * Advances the tour to the next or previous stage.
+   * @param direction - Whether to go 'next' or 'previous'.
+   */
+  advanceTourStage: (direction: 'next' | 'previous') => void;
+  /**
+   * Exits the current tour.
+   */
+  exitTour: () => void;
+  /**
+   * Pauses the current tour.
+   */
+  pauseTour: () => void;
+  /**
+   * Resumes the paused tour.
+   */
+  resumeTour: () => void;
+  /**
+   * Updates the tour stage highlights.
+   * @param current - Current stage landmark IDs.
+   * @param previous - Previous stage landmark IDs.
+   * @param future - Future stage landmark IDs.
+   */
+  updateTourHighlights: (current: string[], previous: string[], future: string[]) => void;
 }
 
 /**
@@ -124,6 +182,7 @@ export const useMapStore = create<MapState>((set, get) => ({
   capabilities: [],
   landmarks: [],
   organizations: [],
+  tours: [],
   currentZoom: 0,
   mapCenter: [1536, 2048], // Default to center of map (MAP_HEIGHT/2, MAP_WIDTH/2)
   selectedEntity: null,
@@ -131,6 +190,14 @@ export const useMapStore = create<MapState>((set, get) => ({
   mapRef: null,
   highlightedOrgId: null,
   highlightedLandmarkIds: [],
+  currentTour: null,
+  currentTourStageIndex: 0,
+  isTourPaused: false,
+  tourHighlights: {
+    current: [],
+    previous: [],
+    future: [],
+  },
   setCapabilities: (capabilities) => set({ capabilities }),
   setLandmarks: (landmarks) => set({ landmarks }),
   setOrganizations: (organizations) => set({ organizations }),
@@ -169,6 +236,53 @@ export const useMapStore = create<MapState>((set, get) => ({
     set({
       highlightedOrgId: null,
       highlightedLandmarkIds: [],
+    });
+  },
+  setTours: (tours) => set({ tours }),
+  startTour: (tour: Tour) => {
+    set({
+      currentTour: tour,
+      currentTourStageIndex: 0,
+      isTourPaused: false,
+      infoPanelOpen: true,
+    });
+  },
+  advanceTourStage: (direction: 'next' | 'previous') => {
+    const { currentTour, currentTourStageIndex, isTourPaused } = get();
+    if (!currentTour || isTourPaused) return;
+
+    const totalStages = currentTour.stages.length;
+    let newIndex = currentTourStageIndex;
+
+    if (direction === 'next' && currentTourStageIndex < totalStages - 1) {
+      newIndex = currentTourStageIndex + 1;
+    } else if (direction === 'previous' && currentTourStageIndex > 0) {
+      newIndex = currentTourStageIndex - 1;
+    }
+
+    set({ currentTourStageIndex: newIndex });
+  },
+  exitTour: () => {
+    set({
+      currentTour: null,
+      currentTourStageIndex: 0,
+      isTourPaused: false,
+      tourHighlights: { current: [], previous: [], future: [] },
+    });
+  },
+  pauseTour: () => {
+    set({ isTourPaused: true });
+  },
+  resumeTour: () => {
+    set({ isTourPaused: false });
+  },
+  updateTourHighlights: (current, previous, future) => {
+    set({
+      tourHighlights: {
+        current,
+        previous,
+        future,
+      },
     });
   },
 }));
