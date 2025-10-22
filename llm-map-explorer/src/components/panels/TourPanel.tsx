@@ -5,10 +5,41 @@ import { useMapStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { TourPauseBanner } from './TourPauseBanner';
+
+/**
+ * LandmarkDetailsForPause Component
+ * Displays landmark details when a tour is paused
+ */
+function LandmarkDetailsForPause({ landmarkId }: { landmarkId: string }) {
+  const { landmarks } = useMapStore();
+  const landmark = landmarks.find((l) => l.id === landmarkId);
+
+  if (!landmark) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        <p className="text-sm">Landmark not found</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 space-y-4">
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{landmark.name}</h3>
+        <p className="text-sm text-gray-600 mb-4">{landmark.description}</p>
+        {landmark.year && (
+          <p className="text-xs text-gray-500">Year: {landmark.year}</p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 /**
  * TourPanel displays the current stage of a guided tour with navigation controls.
  * Shows tour progress, narration, and landmarks for the current stage.
+ * When paused, displays a pause banner and the selected landmark details.
  */
 export const TourPanel: React.FC = () => {
   const {
@@ -16,8 +47,10 @@ export const TourPanel: React.FC = () => {
     currentTourStageIndex,
     advanceTourStage,
     exitTour,
+    resumeTour,
     isTourPaused,
     landmarks,
+    selectedEntity,
   } = useMapStore();
 
   // Handle keyboard navigation
@@ -87,6 +120,30 @@ export const TourPanel: React.FC = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  // When tour is paused, show pause banner and landmark details
+  if (isTourPaused) {
+    return (
+      <div className="flex flex-col h-full bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+        <TourPauseBanner
+          tourTitle={currentTour.title}
+          onResume={resumeTour}
+          onExit={exitTour}
+        />
+
+        {/* Paused content area with landmark details or empty state */}
+        <div className="flex-1 overflow-y-auto">
+          {selectedEntity && selectedEntity.type === 'landmark' ? (
+            <LandmarkDetailsForPause landmarkId={selectedEntity.id} />
+          ) : (
+            <div className="p-4 text-center text-gray-500">
+              <p className="text-sm">Explore other landmarks, then click Resume to continue.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full bg-white rounded-lg shadow-lg border border-gray-200">

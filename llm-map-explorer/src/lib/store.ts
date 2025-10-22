@@ -13,6 +13,15 @@ export type SelectedEntity = {
 };
 
 /**
+ * Represents the state of a paused tour.
+ */
+export type TourPauseState = {
+  tourId: string;
+  stageIndex: number;
+  pausedAt: Date;
+};
+
+/**
  * Represents the state of the interactive map.
  */
 interface MapState {
@@ -72,6 +81,10 @@ interface MapState {
    * Whether the current tour is paused.
    */
   isTourPaused: boolean;
+  /**
+   * The state of the paused tour (tourId, stageIndex, pausedAt).
+   */
+  tourPauseState?: TourPauseState;
   /**
    * Landmarks to highlight during the tour (by stage type).
    */
@@ -159,13 +172,17 @@ interface MapState {
    */
   exitTour: () => void;
   /**
-   * Pauses the current tour.
+   * Pauses the current tour, storing the current stage for later resumption.
    */
   pauseTour: () => void;
   /**
-   * Resumes the paused tour.
+   * Resumes the paused tour from the saved stage.
    */
   resumeTour: () => void;
+  /**
+   * Exits the current tour completely, clearing pause state.
+   */
+  clearTourPauseState: () => void;
   /**
    * Updates the tour stage highlights.
    * @param current - Current stage landmark IDs.
@@ -193,6 +210,7 @@ export const useMapStore = create<MapState>((set, get) => ({
   currentTour: null,
   currentTourStageIndex: 0,
   isTourPaused: false,
+  tourPauseState: undefined,
   tourHighlights: {
     current: [],
     previous: [],
@@ -267,14 +285,42 @@ export const useMapStore = create<MapState>((set, get) => ({
       currentTour: null,
       currentTourStageIndex: 0,
       isTourPaused: false,
+      tourPauseState: undefined,
       tourHighlights: { current: [], previous: [], future: [] },
     });
   },
   pauseTour: () => {
-    set({ isTourPaused: true });
+    const { currentTour, currentTourStageIndex } = get();
+
+    if (!currentTour) return;
+
+    // Store the pause state with tour ID and stage index
+    set({
+      isTourPaused: true,
+      tourPauseState: {
+        tourId: currentTour.id,
+        stageIndex: currentTourStageIndex,
+        pausedAt: new Date(),
+      },
+    });
   },
   resumeTour: () => {
-    set({ isTourPaused: false });
+    const { tourPauseState } = get();
+
+    if (!tourPauseState) return;
+
+    // Restore the tour to the paused stage
+    set({
+      isTourPaused: false,
+      currentTourStageIndex: tourPauseState.stageIndex,
+      tourPauseState: undefined,
+    });
+  },
+  clearTourPauseState: () => {
+    set({
+      tourPauseState: undefined,
+      isTourPaused: false,
+    });
   },
   updateTourHighlights: (current, previous, future) => {
     set({

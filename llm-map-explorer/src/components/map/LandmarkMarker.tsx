@@ -175,7 +175,7 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
   const markerRef = useRef<L.Marker>(null);
 
   // Get highlighting state from store (both org-based and tour-based)
-  const { highlightedLandmarkIds, highlightedOrgId, organizations, tourHighlights } = useMapStore();
+  const { highlightedLandmarkIds, highlightedOrgId, organizations, tourHighlights, currentTour, pauseTour } = useMapStore();
 
   // Determine if this landmark is highlighted by organization
   const isHighlightedByOrg = highlightedLandmarkIds.includes(landmark.id);
@@ -243,8 +243,14 @@ export const LandmarkMarker = React.memo(function LandmarkMarker({
   // Memoized event handlers
   const handleClick = useCallback(() => {
     console.log('[LandmarkMarker] Clicked landmark:', landmark.id, landmark.name);
+
+    // If a tour is active, pause it when clicking a non-tour landmark
+    if (currentTour && !isCurrentTourLandmark) {
+      pauseTour();
+    }
+
     onSelect(landmark.id);
-  }, [landmark.id, onSelect, landmark.name]);
+  }, [landmark.id, onSelect, landmark.name, currentTour, isCurrentTourLandmark, pauseTour]);
 
   const handleMouseEnter = useCallback(() => {
     onHover?.(landmark.id);
