@@ -6,3 +6,7 @@ node_modules/
 # BMAD (local only)
 .bmad-core/
 .bmad-*/
+
+AGENTS.md
+GEMINI.md
+.claude
